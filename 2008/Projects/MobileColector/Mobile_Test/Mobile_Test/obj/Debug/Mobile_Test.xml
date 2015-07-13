@@ -1,0 +1,80 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Mobile_Test
+</name>
+</assembly>
+<members>
+<member name="M:Mobile_Test.frmPrincipal.preencherDataTableProduto">
+	<summary>
+ Preenche um data table com uma lista de produtos
+ </summary>
+	<remarks></remarks>
+</member><member name="P:Mobile_Test.My.Resources.Resources.ResourceManager">
+	<summary>
+   Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:Mobile_Test.My.Resources.Resources.Culture">
+	<summary>
+   Overrides the current thread's CurrentUICulture property for all
+   resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:Mobile_Test.My.Resources.Resources">
+	<summary>
+   A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:Mobile_Test.clsServices.salvarArquivoTexto(System.String)">
+	<summary>
+ Criar um arquivo de texto
+ </summary>
+	<param name="strTexto">Texto a ser salvo no arquivo</param>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.gerarTextFilePedido(System.String,System.Collections.ArrayList)">
+	<summary>
+ Recebe um objeto Produto e salva um arquivo de texto separado por | entre cada parâmetro
+ </summary>
+	<param name="strTexto"></param>
+	<param name="listaProduto">Array list com objetos Produto.</param>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.readTextFile">
+	<summary>
+ Lê um arquivo de texto disponível na rede
+ </summary>
+	<returns>Um array list contendo os dados do arquivo de texto</returns>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.getArquivosDiretorio(System.String,System.String)">
+	<summary>
+ Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
+ </summary>
+	<param name="extensao">tipo de extensão do arquivo a ser encontrado  EX= ".txt"</param>
+	<param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
+	<returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.getDiretorio">
+	<summary>
+ Retorna os diretórios existentes no caminho informado
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.datagridDetail(System.Windows.Forms.DataGrid,System.Windows.Forms.MouseEventArgs,System.Windows.Forms.Label,System.Windows.Forms.Label,System.Windows.Forms.Label,System.Windows.Forms.Label)">
+	<summary>
+ Detalha os dados de um datagrid
+ </summary>
+	<param name="datagrid"> DataGrid</param>
+	<param name="e">Evento</param>
+	<param name="lbValor"></param>
+	<param name="lbRow"></param>
+	<param name="lbColuna"></param>
+	<param name="lbTipo"></param>
+	<remarks></remarks>
+</member><member name="M:Mobile_Test.clsServices.AddText(System.IO.FileStream,System.String)">
+	<summary>
+ Utilizado para montar um arquivo de texto
+ </summary>
+	<param name="fs">FileStream</param>
+	<param name="value">Texto</param>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

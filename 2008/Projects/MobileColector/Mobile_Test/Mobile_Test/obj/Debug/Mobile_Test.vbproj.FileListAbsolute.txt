@@ -1,0 +1,20 @@
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\bin\Debug\Mobile_Test.exe
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\bin\Debug\Mobile_Test.pdb
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\bin\Debug\Mobile_Test.xml
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.Form1.resources
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.Resources.resources
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.vbproj.GenerateResource.Cache
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.exe
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.xml
+C:\Users\sebastiao.martins\AppData\Local\Temporary Projects\Mobile_Test\obj\Debug\Mobile_Test.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\bin\Debug\Mobile_Test.exe
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\bin\Debug\Mobile_Test.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\bin\Debug\Mobile_Test.xml
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.Resources.resources
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.vbproj.GenerateResource.Cache
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.exe
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.xml
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Mobile_Test\Mobile_Test\obj\Debug\Mobile_Test.frmPrincipal.resources
