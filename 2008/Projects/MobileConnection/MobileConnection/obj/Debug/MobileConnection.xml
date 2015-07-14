@@ -6,7 +6,30 @@ MobileConnection
 </name>
 </assembly>
 <members>
-<member name="M:MobileConnection.clsServices.salvarArquivoTexto(System.String)">
+<member name="P:MobileConnection.My.Resources.Resources.ResourceManager">
+	<summary>
+   Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:MobileConnection.My.Resources.Resources.Culture">
+	<summary>
+   Overrides the current thread's CurrentUICulture property for all
+   resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:MobileConnection.My.Resources.Resources">
+	<summary>
+   A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="M:MobileConnection.clsSqlServerConn.initConnection(System.String,System.String,System.String,System.String,System.Boolean)">
+	<summary>
+ Redefine os atributos da string de conexão
+ </summary>
+	<param name="strPassword"></param>
+	<param name="strUserID"></param>
+	<param name="strInitialCatalog"></param>
+	<param name="strDataSource"></param>
+	<param name="booSecurity">Optional ---True or False</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.clsServices.salvarArquivoTexto(System.String)">
 	<summary>
  Criar um arquivo de texto
  </summary>
@@ -56,29 +79,6 @@ MobileConnection
  </summary>
 	<param name="fs">FileStream</param>
 	<param name="value">Texto</param>
-	<remarks></remarks>
-</member><member name="P:MobileConnection.My.Resources.Resources.ResourceManager">
-	<summary>
-   Returns the cached ResourceManager instance used by this class.
-</summary>
-</member><member name="P:MobileConnection.My.Resources.Resources.Culture">
-	<summary>
-   Overrides the current thread's CurrentUICulture property for all
-   resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:MobileConnection.My.Resources.Resources">
-	<summary>
-   A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
-</member><member name="M:MobileConnection.clsSqlServerConn.iniConnection(System.String,System.String,System.String,System.String,System.Boolean)">
-	<summary>
- Redefine os atributos da string de conexão
- </summary>
-	<param name="strPassword"></param>
-	<param name="strUserID"></param>
-	<param name="strInitialCatalog"></param>
-	<param name="strDataSource"></param>
-	<param name="booSecurity">Optional ---True or False</param>
 	<remarks></remarks>
 </member>
 </members>

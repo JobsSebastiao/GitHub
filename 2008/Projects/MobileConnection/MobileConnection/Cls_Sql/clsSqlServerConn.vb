@@ -113,7 +113,7 @@ Public NotInheritable Class clsSqlServerConn
 #End Region
 
     Public Shared Sub setStrConnection()
-        clsSqlServerConn.strConnection = "Password=" + Password().ToString + ";Persist Security Info=" + Security().ToString + ";User ID=" + UserId().ToString + ";Initial Catalog=" + Catalog().ToString + ";Data Source=" + DataSource().ToString
+        clsSqlServerConn.strConnection = "Password=" + Password() + ";Persist Security Info=" + Security().ToString + ";User ID=" + UserId().ToString + ";Initial Catalog=" + Catalog().ToString + ";Data Source=" + DataSource().ToString
     End Sub
 
 #Region "Open & Close"
@@ -126,8 +126,12 @@ Public NotInheritable Class clsSqlServerConn
                 sqlConn = New SqlConnection(strConn)
                 sqlConn.Open()
             End If
+        Catch sqlEx As SqlException
+            Throw New Exception("Ocorre um problema durante a conexão com a base de dados." & Environment.NewLine & _
+            "Erro:" & sqlEx.Message & sqlEx.Number)
+
         Catch ex As Exception
-            Throw New Exception("Ocorre um problema na conexão com a base de dados." & vbCrLf & "Erro : " + ex.Message)
+            Throw New Exception("Ocorre um problema durante a interação com a base de dados" & vbCrLf & "Erro : " + ex.Message)
         End Try
 
     End Sub
@@ -226,14 +230,14 @@ Public NotInheritable Class clsSqlServerConn
 
     End Sub
 
-    Public Overloads Shared Sub iniConnection()
+    Public Overloads Shared Sub initConnection()
 
         ''Classe de conexão SqlServer (TESTES)
         Dim strPassword = "tec9TIT16"
         Dim booSecutity = False
         Dim strUserId = "sa"
-        Dim strCatalog = "teste2"
-        Dim strDataSource = "pefilcam2.no-ip.org,1433"
+        Dim strCatalog = "teste3"
+        Dim strDataSource = "179.153.110.116"
 
         ''Monta a string de conexão
         clsSqlServerConn.Password = strPassword
@@ -254,12 +258,12 @@ Public NotInheritable Class clsSqlServerConn
     ''' <param name="strDataSource"></param>
     ''' <param name="booSecurity">Optional ---True or False</param>
     ''' <remarks></remarks>
-    Public Overloads Shared Sub iniConnection(ByVal strPassword As String, ByVal strUserID As String, ByVal strInitialCatalog As String _
-                   , ByVal strDataSource As String, Optional ByVal booSecurity As Boolean = False)
+    Public Overloads Shared Sub initConnection(ByVal strPassword As String, ByVal strUserID As String, ByVal strInitialCatalog As String, _
+                                              ByVal strDataSource As String, Optional ByVal booSecurity As Boolean = False)
 
         ''Monta a string de conexão
         clsSqlServerConn.Password = strPassword
-        clsSqlServerConn.UserId = strUserId
+        clsSqlServerConn.UserId = strUserID
         clsSqlServerConn.Catalog = strCatalog
         clsSqlServerConn.DataSource = strDataSource
         clsSqlServerConn.Security = booSecurity
