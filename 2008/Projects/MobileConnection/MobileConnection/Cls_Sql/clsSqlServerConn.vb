@@ -127,8 +127,9 @@ Public NotInheritable Class clsSqlServerConn
                 sqlConn.Open()
             End If
         Catch sqlEx As SqlException
-            Throw New Exception("Ocorre um problema durante a conexão com a base de dados." & Environment.NewLine & _
-            "Erro:" & sqlEx.Message & sqlEx.Number)
+
+            Throw (New Exception("Ocorre um problema durante a conexão com a base de dados." & Environment.NewLine & _
+            "Erro:" & sqlEx.Message & sqlEx.Number))
 
         Catch ex As Exception
             Throw New Exception("Ocorre um problema durante a interação com a base de dados" & vbCrLf & "Erro : " + ex.Message)
@@ -153,6 +154,8 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub fillDataSet(ByVal ds As DataSet, ByVal sql01 As String)
 
+        clsSqlServerConn.initConnection()
+
         Try
             Dim da As New SqlDataAdapter(sql01, sqlConn)
             da.Fill(ds)
@@ -164,10 +167,26 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub fillDataTable(ByVal dt As DataTable, ByVal sql01 As String)
 
+        clsSqlServerConn.initConnection()
+
         openConn()
+
         Try
+
             Dim da As New SqlDataAdapter(sql01, sqlConn)
             da.Fill(dt)
+
+        Catch sqlEx As SqlException
+            If (sqlEx.Number = 11) Then
+                Throw New Exception("Não foi possível se comunicar com a base de dados devido problemas com a rede." & vbCrLf & _
+                                    "Erro : " & sqlEx.Message & vbCrLf & _
+                                    "Number:" & sqlEx.Number)
+            Else
+                Throw New Exception("Problemas durante a carga do DataTable:" & vbCrLf & _
+                    "Erro : " & sqlEx.Message & vbCrLf & _
+                    "Number:" & sqlEx.Number)
+            End If
+
         Catch ex As Exception
             Throw New Exception("Ocorre um problema na conexão com a base de dados." & vbCrLf & "Erro : " + ex.Message)
         Finally
@@ -177,6 +196,8 @@ Public NotInheritable Class clsSqlServerConn
     End Sub
 
     Public Shared Function fillDataReader(ByVal sql01 As String) As SqlDataReader
+
+        clsSqlServerConn.initConnection()
 
         openConn()
 
@@ -190,6 +211,8 @@ Public NotInheritable Class clsSqlServerConn
     End Function
 
     Public Shared Sub execCommandSql(ByVal sql01 As String)
+
+        clsSqlServerConn.initConnection()
 
         openConn()
 
@@ -205,6 +228,8 @@ Public NotInheritable Class clsSqlServerConn
     End Sub
 
     Public Shared Sub beginTransaction()
+
+        clsSqlServerConn.initConnection()
 
         openConn()
 
@@ -236,8 +261,8 @@ Public NotInheritable Class clsSqlServerConn
         Dim strPassword = "tec9TIT16"
         Dim booSecutity = False
         Dim strUserId = "sa"
-        Dim strCatalog = "teste3"
-        Dim strDataSource = "179.153.110.116"
+        Dim strCatalog = "TESTE2"
+        Dim strDataSource = "pefilcam2.no-ip.org,1433"
 
         ''Monta a string de conexão
         clsSqlServerConn.Password = strPassword

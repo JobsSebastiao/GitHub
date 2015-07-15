@@ -18,7 +18,7 @@ Public Class frmPedido
         sql01 = strSql01.ToString
         Dim dtPedidos = New DataTable("Pedidos")
 
-        FillObjects.preencheComboBox(cbCodigoPedido, sql01, dtPedidos, "Código")
+        preencheComboBox(cbCodigoPedido, sql01, dtPedidos, "Código")
 
     End Sub
 

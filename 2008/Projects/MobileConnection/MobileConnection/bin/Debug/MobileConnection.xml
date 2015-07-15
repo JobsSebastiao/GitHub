@@ -80,6 +80,56 @@ MobileConnection
 	<param name="fs">FileStream</param>
 	<param name="value">Texto</param>
 	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.pbLoginConfig(System.Windows.Forms.PictureBox,System.Windows.Forms.Form,System.Windows.Forms.ImageList@,System.Int32)">
+	<summary>
+ Configura o Picture Box (pbLogin) com a imagens passada como parâmetro
+ </summary>
+	<param name="pb"></param>
+	<param name="frm"></param>
+	<param name="imglist"></param>
+	<param name="imgIndex"></param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.preencheComboBoxUsuario(System.Windows.Forms.ComboBox,System.Collections.ArrayList,MobileConnection.clsUsuario.usuarioPropety)">
+	<summary>
+ Carrega uma Combo com uma das propriedades(Codigo,Nome ou NomeCompleto) de um objeto cslUsuario
+ </summary>
+	<param name="cb">ComboBox a ser prenchido</param>
+	<param name="list">Array List previamente carregada</param>
+	<param name="propriedade">Uma das propriedades do objeto usuário (Codigo,Nome ou NomeCompleto)</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.mdUtilitarios.preencheComboBox(System.Windows.Forms.ComboBox,System.String,System.Data.DataTable,System.String)">
+	<summary>
+ Preenche uma combo Utilizando um dataTable preenchido com um select na base de dados
+ </summary>
+	<param name="cb"></param>
+	<param name="sql01"></param>
+	<param name="dt"></param>
+	<param name="columnName"></param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.mdUtilitarios.fillArrayListUsuarios(System.Data.DataTable,System.String)">
+	<summary>
+ Carrega um array list com objetos da classe clsUsuario
+ </summary>
+	<param name="dt">Data a ser preenchido com um commando Sql.</param>
+	<param name="sql01">Comando SqlServer</param>
+	<returns>Array List preenchido com objetos da classe clsUsuario</returns>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.mdUtilitarios.DisplayAll(System.Object)">
+	<summary>
+ Loop em todas as propriedades da instância de um objeto
+ </summary>
+	<param name="obj">Objeto ao qual será feito o loop em seus Atributos(Propriedades)</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.mdUtilitarios.validaComboBox(System.Windows.Forms.ComboBox,System.Windows.Forms.Control,System.Windows.Forms.KeyEventArgs)">
+	<summary>
+ Valida o item selecionado na Combo e impede que o foco seja alterado caso
+ o texto digitado não pertença aos itens contidos na combobox
+ </summary>
+	<param name="cb">ComboBox a ser verificado</param>
+	<param name="control">Controle que recebera o foco após a válidação</param>
+	<param name="eKey">tecla pressionada (o enter(13) é o validador)</param>
+	<history>[Sebastiao Martins] 15/07/2015 Criado</history>
+	<remarks>A validação do ComboBox ocorre quando a tecla ENTER(13) for passada no parametro eKey</remarks>
 </member>
 </members>
 </doc>

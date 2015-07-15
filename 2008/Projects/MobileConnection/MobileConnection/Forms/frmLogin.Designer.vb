@@ -59,6 +59,7 @@ Partial Public Class frmLogin
         '
         'txtSenha
         '
+        Me.txtSenha.Enabled = False
         Me.txtSenha.Location = New System.Drawing.Point(75, 199)
         Me.txtSenha.Name = "txtSenha"
         Me.txtSenha.PasswordChar = Global.Microsoft.VisualBasic.ChrW(42)

@@ -6,14 +6,27 @@
     Private strSenha As String
     Private strNomeCompleto As String
 
+    Public Sub New()
+
+    End Sub
+
+    Public Sub New(ByVal codigoUsuario As Integer, ByVal pastaUsuario As Integer, ByVal nomeUsuario As String, ByVal senhaUsuario As String, ByVal nomeCompletoUsuario As String)
+        Codigo = codigoUsuario
+        Pasta = pastaUsuario
+        Nome = nomeUsuario
+        Senha = senhaUsuario
+        NomeCompleto = nomeCompletoUsuario
+    End Sub
+
     Public Property Codigo() As Integer
         Get
             Return Me.intCodigo
         End Get
 
         Set(ByVal value As Integer)
-            If (value <> "" And IsNumeric(value) And value <> Me.intCodigo) Then
-                intCodigo = value
+            Dim v As Integer = CInt(value)
+            If (v <> Nothing And IsNumeric(v) And v <> Me.intCodigo) Then
+                intCodigo = v
             End If
         End Set
 
@@ -25,7 +38,7 @@
         End Get
 
         Set(ByVal value As Integer)
-            If (value <> "" And IsNumeric(value) And value <> Me.intPasta) Then
+            If (value <> Nothing And IsNumeric(value) And value <> Me.intPasta) Then
                 intPasta = value
             End If
         End Set
@@ -38,7 +51,7 @@
         End Get
 
         Set(ByVal value As String)
-            If (value <> "" And Trim(value) <> Trim(Me.strNome)) Then
+            If (value <> Nothing And Trim(value) <> Trim(Me.strNome)) Then
                 strNome = Trim(value)
             End If
         End Set
@@ -51,7 +64,7 @@
         End Get
 
         Set(ByVal value As String)
-            If (value <> "" And Trim(value) <> Trim(Me.strSenha)) Then
+            If (value <> Nothing And Trim(value) <> Trim(Me.strSenha)) Then
                 strSenha = Trim(value)
             End If
         End Set
@@ -65,7 +78,7 @@
         End Get
 
         Set(ByVal value As String)
-            If (value <> "" And Trim(value) <> Trim(Me.strNomeCompleto)) Then
+            If (value <> Nothing And Trim(value) <> Trim(Me.strNomeCompleto)) Then
                 strNomeCompleto = Trim(value)
             End If
         End Set
@@ -79,7 +92,6 @@
               +"Senha : " + Senha() + vbCrLf + _
               +"Nome : " + Nome() + vbCrLf + _
               +"Nome Completo :" + NomeCompleto()
-
     End Function
 
     Public Overrides Function Equals(ByVal obj As Object) As Boolean
@@ -91,5 +103,13 @@
         End If
 
     End Function
+
+    Enum usuarioPropety
+        Codigo = 1
+        Pasta = 2
+        Nome = 3
+        Senha = 4
+        NomeCompleto = 5
+    End Enum
 
 End Class
