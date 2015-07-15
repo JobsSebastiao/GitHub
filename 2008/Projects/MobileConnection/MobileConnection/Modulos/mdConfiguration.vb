@@ -183,4 +183,22 @@ Module mdUtilitarios
 
     End Sub
 
+    'SELECT top 100 codigoPEDIDOCOMPRA AS Codigo,sistemaPEDIDOCOMPRA AS Sistema,statusPEDIDOCOMPRA AS Status,dataPEDIDOCOMPRA AS Data,
+    'fornecedorPEDIDOCOMPRA AS Fornecedor,transportadoraPEDIDOCOMPRA AS Transportadora,quantidadeprodutosPEDIDOCOMPRA AS Quantidade
+    'FROM tb1402_Pedidos 
+    'WHERE statusPEDIDOCOMPRA = 1 
+    'ORDER BY codigoPEDIDOCOMPRA DESC
+
+    'SELECT top 1 codigoPEDIDOCOMPRA AS Codigo,sistemaPEDIDOCOMPRA AS Sistema,statusPEDIDOCOMPRA AS Status,dataPEDIDOCOMPRA AS Data,
+    'fornecedorPEDIDOCOMPRA AS CodigoFornecedor,F.nomeEmpresa AS Fornecedor,
+    'transportadoraPEDIDOCOMPRA AS CodigoTransportadora,T.nomeEMPRESA AS Transportadora,
+    'quantidadeprodutosPEDIDOCOMPRA AS Quantidade
+    'FROM tb1402_Pedidos
+    'INNER JOIN tb0301_Empresas F ON F.codigoEMPRESA = fornecedorPEDIDOCOMPRA
+    'INNER JOIN tb0301_Empresas T ON T.codigoEMPRESA = transportadoraPEDIDOCOMPRA
+    'WHERE statusPEDIDOCOMPRA = 1 
+    'ORDER BY codigoPEDIDOCOMPRA DESC
+
+
+
 End Module
