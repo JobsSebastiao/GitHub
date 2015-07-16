@@ -6,7 +6,6 @@ Imports System.IO
 Public Class frmLogin
 
     Private objUsuario As clsUsuario
-    'Private objSqlConn As New clsSqlConn
     Private objFile As New clsFile()   'ao ser instanciada configura um caminho padrão e um arquivo padrão onde será buscado o arquivo .txt contendo a string de conexão
     Private alUsuarios As ArrayList
     Dim sql01 As String
@@ -16,15 +15,21 @@ Public Class frmLogin
     End Sub
 
     Private Sub frmConfig()
-        strConnectionConfig()
-        pbLoginConfig(pbLogin, Me, imgLogin, 2)
-        carregarComboUsuarios()
 
-        'Campos
-        lbSenha.Visible = False
-        lbUsuario.Visible = False
-        cbUsuario.Enabled = True
-        txtSenha.Enabled = False
+        If (strConnectionConfig()) Then
+            pbLoginConfig(pbLogin, Me, imgLogin, 2)
+            carregarComboUsuarios()
+
+            'Campos
+            lbSenha.Visible = False
+            lbUsuario.Visible = False
+            cbUsuario.Enabled = True
+            txtSenha.Enabled = False
+        Else
+            Application.Exit()
+            Exit Sub
+        End If
+
     End Sub
 
     Private Sub mnuLogin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLogin.Click
@@ -161,7 +166,7 @@ Public Class frmLogin
     ''' utiliza a classe statica clsSqlConn para definir os parâmetros da string de conexão
     ''' configura a string de conexão na classe static clsSqlConn
     ''' </remarks>
-    Private Sub strConnectionConfig()
+    Private Function strConnectionConfig() As Boolean
 
         Try
 
@@ -172,11 +177,15 @@ Public Class frmLogin
                 Dim arrayStringConn As String() = objFile.arrayOfTextFile(str(0).ToString, clsFile.splitType.PONTO_VIRGULA)
                 'configura a string de conexão
                 clsSqlConn.configStringConnection(arrayStringConn)
+                Return True
+
             Else
+
                 MsgBox("O arquivo de configuração strConn.txt não foi encontrado." & vbCrLf & _
                        "Local de busca do arquivo:" & Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), _
                        MsgBoxStyle.Information + MsgBoxStyle.OkOnly, "TecwareColector")
-                Application.Exit()
+                Return False
+
             End If
 
         Catch ex As Exception
@@ -188,7 +197,7 @@ Public Class frmLogin
 
         End Try
 
-    End Sub
+    End Function
 
     Private Sub cbUsuario_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles cbUsuario.KeyUp
         validaComboBox(cbUsuario, txtSenha, e)

@@ -12,3 +12,17 @@ C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileCon
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlClient.dll
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlServerCe.dll
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.frmAcoes.resources
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\MobileConnection.exe
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\MobileConnection.pdb
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\MobileConnection.xml
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlClient.dll
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlServerCe.dll
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\ResolveAssemblyReference.cache
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.frmPedido.resources
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.frmLogin.resources
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.frmAcoes.resources
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.Resources.resources
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileColector.vbproj.GenerateResource.Cache
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.exe
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.xml
+D:\ProjetosTecware\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.pdb
