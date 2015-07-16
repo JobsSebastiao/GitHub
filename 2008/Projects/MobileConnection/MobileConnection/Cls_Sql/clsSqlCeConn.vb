@@ -4,7 +4,7 @@ Imports System.Data.SqlServerCe
 Imports System.Text
 Imports System.Collections.Generic
 
-Public Class clsConnectionCeSql
+Public Class clsCeConn
 
     ''sqlCE
     Private sqlCeConn As New SqlCeConnection()

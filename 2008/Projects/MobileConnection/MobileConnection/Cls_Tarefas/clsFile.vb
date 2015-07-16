@@ -5,49 +5,86 @@ Imports System.Windows
 Imports System.Reflection
 
 
-Public Class clsServices
+Public Class clsFile
 
-    Private _arquivoPedido As String 'path diretório mobile
-    Private _fullPath As String
+    Private _pathMobile As String 'path diretório onde está salva a aplicação.
+    Private _fileName As String 'nome do arquivo a ser utilizado (ex : exemplo.txt)
+    Private _fullPath As String 'caminho completo para o arquivo a ser utilizado
 
 #Region "Contrutures Gets e Sets"
 
     Public Sub New() 'contrutor define caminho default de arquivo
-        ArquivoPedido = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase) + "\Pedido_2.txt"
-        FullPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase) + "\"
+        PathMobile() = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
+        FileName() = "text" & Date.Now.DayOfYear & ".txt"
+        setFullPath()
     End Sub
 
-    Public Sub New(ByVal strDiretorio As String)
-        ArquivoPedido = strDiretorio
+    Public Sub New(ByVal strPathMobile As String, ByVal strFileName As String)
+        PathMobile() = strPathMobile
+        FileName() = strFileName
+        setFullPath()
     End Sub
 
-    Public Property ArquivoPedido() As String
+    Public Property PathMobile() As String
         Get
-            Return _arquivoPedido
+            Return _pathMobile
         End Get
 
         Set(ByVal value As String)
             If (value <> "") Then
-                _arquivoPedido = value
+                If (value.Substring(value.Length - 1) <> "\") Then
+                    value += value + "\"
+                End If
+                _pathMobile = value
             Else
-                _arquivoPedido = Nothing
+                _pathMobile = Nothing
             End If
         End Set
     End Property
 
-    Public Property FullPath() As String
+    Public Property FileName() As String
         Get
-            Return _fullPath
+            Return _fileName
         End Get
 
         Set(ByVal value As String)
             If (value <> "") Then
-                _fullPath = value
-            Else
-                _fullPath = Nothing
+                If (value.Substring(0, 1) = "\") Then
+                    value = value.Substring(1)
+                End If
+                _fileName = value
             End If
         End Set
+
     End Property
+
+    Public Function getFullPath() As String
+        Return _fullPath
+    End Function
+
+    Public Sub setFullPath()
+
+        If (PathMobile() <> "" And FileName() <> "") Then
+            _fullPath = PathMobile() + FileName()
+        ElseIf (PathMobile() <> "" And FileName() = "") Then
+            _fullPath = PathMobile() & "text" & Date.Now.DayOfYear & ".txt"
+        Else
+            _fullPath = Nothing
+        End If
+
+    End Sub
+
+    Public Sub setFullPath(ByVal pathMobile As String, ByVal fileName As String)
+
+        If (pathMobile <> "" And fileName <> "") Then
+            _fullPath = pathMobile + fileName
+        ElseIf (pathMobile <> "" And fileName = "") Then
+            _fullPath = pathMobile & "text" & Date.Now.DayOfYear & ".txt"
+        Else
+            _fullPath = Nothing
+        End If
+
+    End Sub
 
 
 #End Region
@@ -60,7 +97,7 @@ Public Class clsServices
     Public Overloads Sub salvarArquivoTexto(ByVal strTexto As String)
 
         'caminho onde será salvo o arquivo
-        Dim fullPath As String = Path.GetFullPath(ArquivoPedido())
+        Dim fullPath As String = Path.GetFullPath(PathMobile())
 
         'Deleta o arquivo caso ele já exista 
         If File.Exists(fullPath) Then
@@ -91,9 +128,9 @@ Public Class clsServices
     ''' <param name="strTexto"></param>
     ''' <param name="listaProduto">Array list com objetos Produto.</param>
     ''' <remarks></remarks>
-    Public Overloads Sub gerarTextFilePedido(ByVal strTexto As String, ByVal listaProduto As ArrayList)
+    Public Overloads Sub gerarTextFile(ByVal strTexto As String, ByVal listaProduto As ArrayList)
 
-        Dim fullPath As String = Path.GetFullPath(ArquivoPedido())
+        Dim fullPath As String = Path.GetFullPath(PathMobile())
 
         Try
 
@@ -133,9 +170,9 @@ Public Class clsServices
     ''' </summary>
     ''' <returns>Um array list contendo os dados do arquivo de texto</returns>
     ''' <remarks></remarks>
-    Public Function readTextFile() As ArrayList
+    Public Overloads Function readTextFile() As ArrayList
 
-        Dim fullPath As String = Path.GetFullPath(ArquivoPedido())
+        Dim fullPath As String = Path.GetFullPath(getFullPath())
         Dim alTextFile As New ArrayList()
 
         Try
@@ -158,6 +195,39 @@ Public Class clsServices
     End Function
 
     ''' <summary>
+    ''' Lê um arquivo de texto disponível na rede
+    ''' </summary>
+    ''' <returns>Um array list contendo os dados do arquivo de texto</returns>
+    ''' <remarks></remarks>
+    Public Overloads Function readTextFile(ByVal strPathMobile As String, ByVal strNomeArquivo As String) As ArrayList
+
+        ''Seta o novo caminho para o parametro _fullPath
+        setFullPath(strPathMobile, strNomeArquivo)
+
+        Dim fullPath As String = Path.GetFullPath(getFullPath())
+        Dim alTextFile As New ArrayList()
+
+        Try
+            'instancia um streamReader que irá ler o arquivo informado
+            Dim sr As StreamReader = New StreamReader(fullPath)
+            Dim line As String
+
+            Do
+                line = sr.ReadLine()
+                alTextFile.Add(line)
+            Loop Until line Is Nothing
+            sr.Close()
+        Catch E As Exception
+            MsgBox("O arquivo não pode ser lido.")
+            Debug.WriteLine(E.Message)
+        End Try
+
+        Return alTextFile
+
+    End Function
+
+
+    ''' <summary>
     ''' Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
     ''' </summary>
     ''' <param name="extensao">tipo de extensão do arquivo a ser encontrado  EX= ".txt"</param>
@@ -167,8 +237,9 @@ Public Class clsServices
     Public Function getArquivosDiretorio(ByVal extensao As String, ByVal strArquivo As String) As ArrayList
 
         Dim alArquivos As New ArrayList
+
         ''Recupera todos os arquivos do diretório
-        For Each entry As String In IO.Directory.GetFiles(Path.GetDirectoryName(Me.FullPath))
+        For Each entry As String In IO.Directory.GetFiles(Path.GetDirectoryName(PathMobile()))
             'Verifica a extensão do arquivo
             If (Path.GetExtension(entry) = extensao) Then
                 'Faz a verificação com base na variável strArquivo
@@ -193,45 +264,13 @@ Public Class clsServices
 
         Dim alDiretorio As New ArrayList
 
-        For Each entry As String In IO.Directory.GetDirectories(Path.GetDirectoryName(Me.FullPath))
+        For Each entry As String In IO.Directory.GetDirectories(Path.GetDirectoryName(getFullPath()))
             alDiretorio.Add(New IO.FileInfo(entry).ToString)
         Next
 
         Return alDiretorio
 
     End Function
-
-    ''' <summary>
-    ''' Detalha os dados de um datagrid
-    ''' </summary>
-    ''' <param name="datagrid"> DataGrid</param>
-    ''' <param name="e">Evento</param>
-    ''' <param name="lbValor"></param>
-    ''' <param name="lbRow"></param>
-    ''' <param name="lbColuna"></param>
-    ''' <param name="lbTipo"></param>
-    ''' <remarks></remarks>
-    Public Sub datagridDetail(ByVal datagrid As DataGrid, ByVal e As System.Windows.Forms.MouseEventArgs, _
-                              ByVal lbValor As Label, ByVal lbRow As Label, ByVal lbColuna As Label, _
-                              ByVal lbTipo As Label)
-
-        Dim hitInfo As System.Windows.Forms.DataGrid.HitTestInfo
-        hitInfo = datagrid.HitTest(e.X, e.Y)
-
-        lbValor.Text = String.Empty
-        lbRow.Text = String.Format("Row: {0}", hitInfo.Row)
-        lbColuna.Text = String.Format("Column: {0}", hitInfo.Column)
-        lbTipo.Text = String.Format("Type: {0}", hitInfo.Type.ToString())
-
-        If hitInfo.Type = System.Windows.Forms.DataGrid.HitTestType.Cell Then
-            Dim selCell As Object
-            selCell = datagrid.Item(hitInfo.Row, hitInfo.Column)
-            If Not selCell Is Nothing Then
-                lbValor.Text = selCell.ToString()
-            End If
-        End If
-
-    End Sub
 
     ''' <summary>
     ''' Utilizado para montar um arquivo de texto
@@ -251,7 +290,7 @@ Public Class clsServices
 
         Dim fs As FileStream
 
-        Dim fullPath As String = Path.GetFullPath(ArquivoPedido())
+        Dim fullPath As String = Path.GetFullPath(PathMobile())
 
         If File.Exists(fullPath) Then
             File.Delete(fullPath)

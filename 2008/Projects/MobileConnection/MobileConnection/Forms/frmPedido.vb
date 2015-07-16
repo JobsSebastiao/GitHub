@@ -9,7 +9,7 @@ Public Class frmPedido
 
     Private Sub frmPedido_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         ''Mosta uma string de comando
         strSql01.Append("SELECT codigoPEDIDOCOMPRA as Código ")

@@ -92,15 +92,15 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Cls_Produto\clsProduto.vb" />
-    <Compile Include="Cls_Tarefas\clsServico.vb" />
-    <Compile Include="Cls_Sql\clsSqlCeConnl.vb" />
+    <Compile Include="Cls_Tarefas\clsFile.vb" />
+    <Compile Include="Cls_Sql\clsSqlCeConn.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Cls_Sql\clsSqlServerConn.vb" />
+    <Compile Include="Cls_Sql\clsSqlConn.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\frmPedido.resx">

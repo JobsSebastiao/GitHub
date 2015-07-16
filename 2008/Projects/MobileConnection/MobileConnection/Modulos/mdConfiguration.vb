@@ -3,6 +3,7 @@ Imports System.Net
 Imports System.Net.Sockets
 Imports System.Data
 Imports System.Reflection
+Imports System.IO
 
 Module mdUtilitarios
 
@@ -41,7 +42,7 @@ Module mdUtilitarios
     Public Sub preencheDataGrid(ByVal dt As DataTable, ByVal dg As DataGrid, ByVal sql01 As String)
 
         ''preenche um DataTable
-        clsSqlServerConn.fillDataTable(dt, sql01)
+        clsSqlConn.fillDataTable(dt, sql01)
 
         With dg
             .DataSource = Nothing
@@ -79,7 +80,7 @@ Module mdUtilitarios
     Public Sub preencheComboBox(ByVal cb As ComboBox, ByVal sql01 As String, ByVal dt As DataTable, ByVal columnName As String)
 
         ''preenche um DataTable
-        clsSqlServerConn.fillDataTable(dt, sql01)
+        clsSqlConn.fillDataTable(dt, sql01)
 
         Dim dr As DataRow
 
@@ -109,7 +110,7 @@ Module mdUtilitarios
         Dim dr As DataRow
 
         ''preenche um DataTable
-        clsSqlServerConn.fillDataTable(dt, sql01)
+        clsSqlConn.fillDataTable(dt, sql01)
 
         For Each dr In dt.Rows()
             Dim objUsuario As New clsUsuario(CInt(dr.Item("Codigo")), CInt(dr.Item("Pasta")), dr.Item("Nome"), dr.Item("Senha"), dr.Item("NomeCompleto"))
@@ -183,6 +184,42 @@ Module mdUtilitarios
 
     End Sub
 
+    ''' <summary>
+    ''' Detalha os dados de um datagrid
+    ''' </summary>
+    ''' <param name="datagrid"> DataGrid</param>
+    ''' <param name="e">Evento</param>
+    ''' <param name="lbValor"></param>
+    ''' <param name="lbRow"></param>
+    ''' <param name="lbColuna"></param>
+    ''' <param name="lbTipo"></param>
+    ''' <remarks></remarks>
+    Public Sub datagridDetail(ByVal datagrid As DataGrid, ByVal e As System.Windows.Forms.MouseEventArgs, _
+                              ByVal lbValor As Label, ByVal lbRow As Label, ByVal lbColuna As Label, _
+                              ByVal lbTipo As Label)
+
+        Dim hitInfo As System.Windows.Forms.DataGrid.HitTestInfo
+        hitInfo = datagrid.HitTest(e.X, e.Y)
+
+        lbValor.Text = String.Empty
+        lbRow.Text = String.Format("Row: {0}", hitInfo.Row)
+        lbColuna.Text = String.Format("Column: {0}", hitInfo.Column)
+        lbTipo.Text = String.Format("Type: {0}", hitInfo.Type.ToString())
+
+        If hitInfo.Type = System.Windows.Forms.DataGrid.HitTestType.Cell Then
+            Dim selCell As Object
+            selCell = datagrid.Item(hitInfo.Row, hitInfo.Column)
+            If Not selCell Is Nothing Then
+                lbValor.Text = selCell.ToString()
+            End If
+        End If
+
+    End Sub
+
+    Public Function searchPathApplication() As String
+        Dim strConnection = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
+        Return strConnection
+    End Function
     'SELECT top 100 codigoPEDIDOCOMPRA AS Codigo,sistemaPEDIDOCOMPRA AS Sistema,statusPEDIDOCOMPRA AS Status,dataPEDIDOCOMPRA AS Data,
     'fornecedorPEDIDOCOMPRA AS Fornecedor,transportadoraPEDIDOCOMPRA AS Transportadora,quantidadeprodutosPEDIDOCOMPRA AS Quantidade
     'FROM tb1402_Pedidos 

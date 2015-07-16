@@ -5,17 +5,24 @@ Imports System.Text
 Public Class frmLogin
 
     Private objUsuario As clsUsuario
-    Private objSql As New clsSqlServerConn
+    Private objSqlConn As New clsSqlConn
+    Private objFile As New clsFile
     Private alUsuarios As ArrayList
     Dim sql01 As String
 
     Private Sub frmLogin_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+
+        fillFileStrConnection()
+
+        Dim caminho As String = searchPathApplication()
+
         cbUsuario.Enabled = True
         txtSenha.Enabled = False
         frmConfig()
     End Sub
 
     Private Sub frmConfig()
+
         carregarComboUsuarios()
         pbLoginConfig(pbLogin, Me, imgLogin, 2)
     End Sub
@@ -139,6 +146,10 @@ Public Class frmLogin
 
         'Next
 
+    End Sub
+
+    Private Sub fillFileStrConnection()
+        objFile.getArquivosDiretorio(".txt", "strConn")
     End Sub
 
     Private Sub cbUsuario_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles cbUsuario.KeyUp

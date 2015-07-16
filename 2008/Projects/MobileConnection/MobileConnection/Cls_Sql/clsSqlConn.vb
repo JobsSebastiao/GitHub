@@ -2,7 +2,7 @@
 Imports System.Data
 Imports System.Text
 
-Public NotInheritable Class clsSqlServerConn
+Public NotInheritable Class clsSqlConn
 
     ''SQL SERVER 
     Private Shared sqlConn As New SqlConnection()
@@ -113,7 +113,7 @@ Public NotInheritable Class clsSqlServerConn
 #End Region
 
     Public Shared Sub setStrConnection()
-        clsSqlServerConn.strConnection = "Password=" + Password() + ";Persist Security Info=" + Security().ToString + ";User ID=" + UserId().ToString + ";Initial Catalog=" + Catalog().ToString + ";Data Source=" + DataSource().ToString
+        clsSqlConn.strConnection = "Password=" + Password() + ";Persist Security Info=" + Security().ToString + ";User ID=" + UserId().ToString + ";Initial Catalog=" + Catalog().ToString + ";Data Source=" + DataSource().ToString
     End Sub
 
 #Region "Open & Close"
@@ -128,11 +128,14 @@ Public NotInheritable Class clsSqlServerConn
             End If
         Catch sqlEx As SqlException
 
-            Throw (New Exception("Ocorre um problema durante a conexão com a base de dados." & Environment.NewLine & _
-            "Erro:" & sqlEx.Message & sqlEx.Number))
-
+            Throw New Exception("Ocorre um problema durante a conexão com a base de dados." & Environment.NewLine & _
+                                "Erro: " & sqlEx.Message & _
+                                "Source: " & sqlEx.Source & _
+                                "Number: " & sqlEx.Number)
         Catch ex As Exception
-            Throw New Exception("Ocorre um problema durante a interação com a base de dados" & vbCrLf & "Erro : " + ex.Message)
+
+            Throw New Exception("Ocorre um problema durante a interação com a base de dados" & vbCrLf & _
+                                "Erro: " & ex.Message)
         End Try
 
     End Sub
@@ -154,7 +157,7 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub fillDataSet(ByVal ds As DataSet, ByVal sql01 As String)
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         Try
             Dim da As New SqlDataAdapter(sql01, sqlConn)
@@ -167,7 +170,7 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub fillDataTable(ByVal dt As DataTable, ByVal sql01 As String)
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         openConn()
 
@@ -197,7 +200,7 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Function fillDataReader(ByVal sql01 As String) As SqlDataReader
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         openConn()
 
@@ -212,7 +215,7 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub execCommandSql(ByVal sql01 As String)
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         openConn()
 
@@ -229,7 +232,7 @@ Public NotInheritable Class clsSqlServerConn
 
     Public Shared Sub beginTransaction()
 
-        clsSqlServerConn.initConnection()
+        clsSqlConn.initConnection()
 
         openConn()
 
@@ -265,12 +268,12 @@ Public NotInheritable Class clsSqlServerConn
         Dim strDataSource = "pefilcam2.no-ip.org,1433"
 
         ''Monta a string de conexão
-        clsSqlServerConn.Password = strPassword
-        clsSqlServerConn.UserId = strUserId
-        clsSqlServerConn.Catalog = strCatalog
-        clsSqlServerConn.DataSource = strDataSource
-        clsSqlServerConn.Security = booSecutity
-        clsSqlServerConn.setStrConnection()
+        clsSqlConn.Password = strPassword
+        clsSqlConn.UserId = strUserId
+        clsSqlConn.Catalog = strCatalog
+        clsSqlConn.DataSource = strDataSource
+        clsSqlConn.Security = booSecutity
+        clsSqlConn.setStrConnection()
 
     End Sub
 
@@ -287,12 +290,12 @@ Public NotInheritable Class clsSqlServerConn
                                               ByVal strDataSource As String, Optional ByVal booSecurity As Boolean = False)
 
         ''Monta a string de conexão
-        clsSqlServerConn.Password = strPassword
-        clsSqlServerConn.UserId = strUserID
-        clsSqlServerConn.Catalog = strCatalog
-        clsSqlServerConn.DataSource = strDataSource
-        clsSqlServerConn.Security = booSecurity
-        clsSqlServerConn.setStrConnection()
+        clsSqlConn.Password = strPassword
+        clsSqlConn.UserId = strUserID
+        clsSqlConn.Catalog = strCatalog
+        clsSqlConn.DataSource = strDataSource
+        clsSqlConn.Security = booSecurity
+        clsSqlConn.setStrConnection()
 
     End Sub
 
