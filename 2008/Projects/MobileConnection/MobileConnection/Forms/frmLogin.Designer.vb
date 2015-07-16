@@ -13,7 +13,7 @@ Partial Public Class frmLogin
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
-    Private mainMenu1 As System.Windows.Forms.MainMenu
+    Private mnuFrmLogin As System.Windows.Forms.MainMenu
 
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
@@ -21,7 +21,7 @@ Partial Public Class frmLogin
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmLogin))
-        Me.mainMenu1 = New System.Windows.Forms.MainMenu
+        Me.mnuFrmLogin = New System.Windows.Forms.MainMenu
         Me.mnuLogin = New System.Windows.Forms.MenuItem
         Me.mnuSair = New System.Windows.Forms.MenuItem
         Me.pbLogin = New System.Windows.Forms.PictureBox
@@ -32,10 +32,10 @@ Partial Public Class frmLogin
         Me.lbUsuario = New System.Windows.Forms.Label
         Me.SuspendLayout()
         '
-        'mainMenu1
+        'mnuFrmLogin
         '
-        Me.mainMenu1.MenuItems.Add(Me.mnuLogin)
-        Me.mainMenu1.MenuItems.Add(Me.mnuSair)
+        Me.mnuFrmLogin.MenuItems.Add(Me.mnuLogin)
+        Me.mnuFrmLogin.MenuItems.Add(Me.mnuSair)
         '
         'mnuLogin
         '
@@ -75,6 +75,7 @@ Partial Public Class frmLogin
         '
         'lbSenha
         '
+        Me.lbSenha.BackColor = System.Drawing.Color.Transparent
         Me.lbSenha.Location = New System.Drawing.Point(25, 203)
         Me.lbSenha.Name = "lbSenha"
         Me.lbSenha.Size = New System.Drawing.Size(53, 20)
@@ -83,6 +84,7 @@ Partial Public Class frmLogin
         '
         'lbUsuario
         '
+        Me.lbUsuario.BackColor = System.Drawing.Color.Transparent
         Me.lbUsuario.Location = New System.Drawing.Point(19, 169)
         Me.lbUsuario.Name = "lbUsuario"
         Me.lbUsuario.Size = New System.Drawing.Size(55, 20)
@@ -101,7 +103,7 @@ Partial Public Class frmLogin
         Me.Controls.Add(Me.lbSenha)
         Me.Controls.Add(Me.lbUsuario)
         Me.Controls.Add(Me.pbLogin)
-        Me.Menu = Me.mainMenu1
+        Me.Menu = Me.mnuFrmLogin
         Me.Name = "frmLogin"
         Me.Text = "Login"
         Me.ResumeLayout(False)

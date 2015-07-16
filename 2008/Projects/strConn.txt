@@ -1,1 +1,1 @@
-Provider=SQLOLEDB.1;Password=tec9TIT167*45e;Persist Security Info=False;User ID=sa;Initial Catalog=TECWARE;Data Source=tecwarebr.dyndns.org
+Provider=SQLOLEDB.1;Password=tec9TIT16;Persist Security Info=False;User ID=sa;Initial Catalog=teste2;Data Source=pefilcam2.no-ip.org,1433

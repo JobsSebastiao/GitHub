@@ -1,30 +1,30 @@
 ﻿Imports System.Reflection
 Imports System.Data
 Imports System.Text
+Imports System.IO
 
 Public Class frmLogin
 
     Private objUsuario As clsUsuario
-    Private objSqlConn As New clsSqlConn
-    Private objFile As New clsFile
+    'Private objSqlConn As New clsSqlConn
+    Private objFile As New clsFile()   'ao ser instanciada configura um caminho padrão e um arquivo padrão onde será buscado o arquivo .txt contendo a string de conexão
     Private alUsuarios As ArrayList
     Dim sql01 As String
 
-    Private Sub frmLogin_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-
-        fillFileStrConnection()
-
-        Dim caminho As String = searchPathApplication()
-
-        cbUsuario.Enabled = True
-        txtSenha.Enabled = False
+    Public Sub frmLogin_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         frmConfig()
     End Sub
 
     Private Sub frmConfig()
-
-        carregarComboUsuarios()
+        strConnectionConfig()
         pbLoginConfig(pbLogin, Me, imgLogin, 2)
+        carregarComboUsuarios()
+
+        'Campos
+        lbSenha.Visible = False
+        lbUsuario.Visible = False
+        cbUsuario.Enabled = True
+        txtSenha.Enabled = False
     End Sub
 
     Private Sub mnuLogin_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuLogin.Click
@@ -52,6 +52,13 @@ Public Class frmLogin
 
     End Sub
 
+
+    ''' <summary>
+    ''' Válida o acesso ao sistema
+    ''' </summary>
+    ''' <param name="usuario">Usuário contido na base de dados</param>
+    ''' <param name="senha">Senha contida na base de dados</param>
+    ''' <remarks></remarks>
     Private Sub validaAcesso(ByVal usuario As String, ByVal senha As String)
 
         Dim arrUsuarios As Object = alUsuarios.ToArray
@@ -61,8 +68,11 @@ Public Class frmLogin
                 If (senha = CType(element, clsUsuario).Senha) Then
                     strUsuarioLogado = CType(element, clsUsuario).Nome()
                     intUsuarioLogado = CType(element, clsUsuario).Codigo()
+                    cbUsuario.Text = Nothing
+                    txtSenha.Text = Nothing
+                    Dim frmAcoes = New frmAcoes()
+                    frmAcoes.Show()
                     Me.Hide()
-                    frmPedido.Show()
                     Return
                 Else
                     MsgBox("A senha digítada é inválida!!", MsgBoxStyle.Information + MsgBoxStyle.OkOnly, "Login Inválido")
@@ -114,11 +124,6 @@ Public Class frmLogin
         'Loop em cada objeto contido no array
         For Each element In obj
 
-            'Dim _type As Type = element.GetType()
-            'Dim properties() As PropertyInfo = _type.GetProperties()
-
-            'For Each _property As PropertyInfo In properties
-            ''Verifica o valor que irá preencher o ComboBox
             Select Case propriedade
 
                 Case 1
@@ -144,12 +149,45 @@ Public Class frmLogin
         cb.DisplayMember = columnName
         cb.ValueMember = columnName
 
-        'Next
-
     End Sub
 
-    Private Sub fillFileStrConnection()
-        objFile.getArquivosDiretorio(".txt", "strConn")
+    ''' <summary>
+    ''' Configura os parametros da string de conexão.
+    ''' </summary>
+    ''' <remarks>
+    ''' Verifica se o arquivo que contém o string de conexão existe:
+    ''' Lê o arquivo e o coloca em uma string que é devolvida em um ArrayList
+    ''' Gera um array, realizando um split na string contida na variável
+    ''' utiliza a classe statica clsSqlConn para definir os parâmetros da string de conexão
+    ''' configura a string de conexão na classe static clsSqlConn
+    ''' </remarks>
+    Private Sub strConnectionConfig()
+
+        Try
+
+            If (File.Exists(Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase) & "\strConn.txt")) Then
+
+                Dim str As ArrayList = objFile.readTextFile() ''Retorn o texto do arquivo
+                'gera um array com  o texto da string
+                Dim arrayStringConn As String() = objFile.arrayOfTextFile(str(0).ToString, clsFile.splitType.PONTO_VIRGULA)
+                'configura a string de conexão
+                clsSqlConn.configStringConnection(arrayStringConn)
+            Else
+                MsgBox("O arquivo de configuração strConn.txt não foi encontrado." & vbCrLf & _
+                       "Local de busca do arquivo:" & Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), _
+                       MsgBoxStyle.Information + MsgBoxStyle.OkOnly, "TecwareColector")
+                Application.Exit()
+            End If
+
+        Catch ex As Exception
+
+            Throw New Exception("Problemas durante a configuração da string de conexão." & vbCrLf & _
+                                "Favor contate o administrador do sistema." & vbCrLf & _
+                                "Erro :" & ex.Message)
+            Application.Exit()
+
+        End Try
+
     End Sub
 
     Private Sub cbUsuario_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles cbUsuario.KeyUp
@@ -166,6 +204,5 @@ Public Class frmLogin
             mnuLogin_Click(txtSenha, Nothing)
         End If
     End Sub
-
 
 End Class

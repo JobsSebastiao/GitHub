@@ -13,14 +13,14 @@ Partial Public Class frmPedido
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
-    Private mainMenu1 As System.Windows.Forms.MainMenu
+    Private mnuFrmPedidos As System.Windows.Forms.MainMenu
 
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.mainMenu1 = New System.Windows.Forms.MainMenu
+        Me.mnuFrmPedidos = New System.Windows.Forms.MainMenu
         Me.lbFornecedor = New System.Windows.Forms.Label
         Me.txtFornecedor = New System.Windows.Forms.TextBox
         Me.txtTransportadora = New System.Windows.Forms.TextBox
@@ -83,7 +83,7 @@ Partial Public Class frmPedido
         Me.Controls.Add(Me.lbTranportadora)
         Me.Controls.Add(Me.txtFornecedor)
         Me.Controls.Add(Me.lbFornecedor)
-        Me.Menu = Me.mainMenu1
+        Me.Menu = Me.mnuFrmPedidos
         Me.Name = "frmPedido"
         Me.Text = "Pedidos"
         Me.ResumeLayout(False)

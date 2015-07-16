@@ -11,3 +11,4 @@ C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileCon
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\MobileConnection.xml
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlClient.dll
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\bin\Debug\System.Data.SqlServerCe.dll
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\MobileConnection\MobileConnection\obj\Debug\MobileConnection.frmAcoes.resources
