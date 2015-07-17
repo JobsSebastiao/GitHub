@@ -51,7 +51,7 @@ Partial Public Class frmLogin
                     Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pbLogin.Location = New System.Drawing.Point(0, 0)
         Me.pbLogin.Name = "pbLogin"
-        Me.pbLogin.Size = New System.Drawing.Size(240, 268)
+        Me.pbLogin.Size = New System.Drawing.Size(200, 268)
         Me.imgLogin.Images.Clear()
         Me.imgLogin.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Image))
         Me.imgLogin.Images.Add(CType(resources.GetObject("resource1"), System.Drawing.Image))
@@ -96,8 +96,7 @@ Partial Public Class frmLogin
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoScroll = True
-        Me.ClientSize = New System.Drawing.Size(240, 268)
-        Me.ControlBox = False
+        Me.ClientSize = New System.Drawing.Size(230, 266)
         Me.Controls.Add(Me.txtSenha)
         Me.Controls.Add(Me.cbUsuario)
         Me.Controls.Add(Me.lbSenha)

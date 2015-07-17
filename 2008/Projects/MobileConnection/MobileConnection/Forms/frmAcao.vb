@@ -16,4 +16,8 @@
     Private Sub MenuItem1_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles mnuAcoes_Sair.Click
         Application.Exit()
     End Sub
+
+    Private Sub btSaida_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btSaida.Click
+
+    End Sub
 End Class

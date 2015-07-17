@@ -10,6 +10,9 @@ Module mdUtilitarios
     Public strUsuarioLogado As String
     Public intUsuarioLogado As Integer
     Public strSql01 As New StringBuilder()
+    Public strIpDispositivo As String
+    Public strHostName As String
+    Public dr As Data.SqlClient.SqlDataReader
 
     Public Sub GetIpAddressList(ByVal hostString As [String])
 
@@ -220,6 +223,28 @@ Module mdUtilitarios
         Dim strConnection = Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase)
         Return strConnection
     End Function
+
+    Public Function GetIP() As String
+
+        Dim ipEntry As IPHostEntry = System.Net.Dns.GetHostEntry(getHostName())
+
+        Dim addr() As IPAddress = ipEntry.AddressList
+
+        Return addr((addr.Length - 1)).ToString
+
+    End Function
+
+    Public Function getHostName() As String
+
+        Dim strHostName As String = ""
+
+        strHostName = System.Net.Dns.GetHostName
+
+        Return strHostName
+
+    End Function
+
+
     'SELECT top 100 codigoPEDIDOCOMPRA AS Codigo,sistemaPEDIDOCOMPRA AS Sistema,statusPEDIDOCOMPRA AS Status,dataPEDIDOCOMPRA AS Data,
     'fornecedorPEDIDOCOMPRA AS Fornecedor,transportadoraPEDIDOCOMPRA AS Transportadora,quantidadeprodutosPEDIDOCOMPRA AS Quantidade
     'FROM tb1402_Pedidos 

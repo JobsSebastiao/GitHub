@@ -113,7 +113,6 @@ Public NotInheritable Class clsSqlConn
 
 #End Region
 
-
     Private Shared Sub setStrConnection()
         clsSqlConn.strConnection = "Password=" + Password() + ";Persist Security Info=" + Security().ToString + ";User ID=" + UserId().ToString + ";Initial Catalog=" + Catalog().ToString + ";Data Source=" + DataSource().ToString
     End Sub
@@ -181,6 +180,7 @@ Public NotInheritable Class clsSqlConn
             da.Fill(dt)
 
         Catch sqlEx As SqlException
+
             If (sqlEx.Number = 11) Then
                 Throw New Exception("Não foi possível se comunicar com a base de dados devido problemas com a rede." & vbCrLf & _
                                     "Erro : " & sqlEx.Message & vbCrLf & _
@@ -193,6 +193,7 @@ Public NotInheritable Class clsSqlConn
 
         Catch ex As Exception
             Throw New Exception("Ocorre um problema na conexão com a base de dados." & vbCrLf & "Erro : " + ex.Message)
+
         Finally
             closeConn()
         End Try
@@ -201,22 +202,20 @@ Public NotInheritable Class clsSqlConn
 
     Public Shared Function fillDataReader(ByVal sql01 As String) As SqlDataReader
 
-        clsSqlConn.configStringConnection()
-
         openConn()
-
         Dim cmd As New SqlCommand(sql01, sqlConn)
         Dim dr As SqlDataReader = cmd.ExecuteReader()
+        If dr.FieldCount > 0 Then
 
-        closeConn()
+        End If
 
         Return dr
+
+        'closeConn()
 
     End Function
 
     Public Shared Sub execCommandSql(ByVal sql01 As String)
-
-        clsSqlConn.configStringConnection()
 
         openConn()
 
@@ -232,8 +231,6 @@ Public NotInheritable Class clsSqlConn
     End Sub
 
     Public Shared Sub beginTransaction()
-
-        clsSqlConn.configStringConnection()
 
         openConn()
 
@@ -312,7 +309,6 @@ Public NotInheritable Class clsSqlConn
     ''' <remarks></remarks>
     Public Overloads Shared Sub configStringConnection(ByVal strPassword As String, ByVal strUserID As String, ByVal strInitialCatalog As String, _
                                               ByVal strDataSource As String, Optional ByVal booSecurity As Boolean = False)
-
         ''Monta a string de conexão
         clsSqlConn.Password() = strPassword
         clsSqlConn.UserId() = strUserID

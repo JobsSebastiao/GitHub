@@ -23,10 +23,9 @@ Partial Public Class frmPedido
         Me.mnuFrmPedidos = New System.Windows.Forms.MainMenu
         Me.lbFornecedor = New System.Windows.Forms.Label
         Me.txtFornecedor = New System.Windows.Forms.TextBox
-        Me.txtTransportadora = New System.Windows.Forms.TextBox
-        Me.lbTranportadora = New System.Windows.Forms.Label
         Me.lbPedido = New System.Windows.Forms.Label
         Me.cbCodigoPedido = New System.Windows.Forms.ComboBox
+        Me.DataGrid1 = New System.Windows.Forms.DataGrid
         Me.SuspendLayout()
         '
         'lbFornecedor
@@ -43,20 +42,6 @@ Partial Public Class frmPedido
         Me.txtFornecedor.Size = New System.Drawing.Size(233, 21)
         Me.txtFornecedor.TabIndex = 1
         '
-        'txtTransportadora
-        '
-        Me.txtTransportadora.Location = New System.Drawing.Point(4, 88)
-        Me.txtTransportadora.Name = "txtTransportadora"
-        Me.txtTransportadora.Size = New System.Drawing.Size(233, 21)
-        Me.txtTransportadora.TabIndex = 3
-        '
-        'lbTranportadora
-        '
-        Me.lbTranportadora.Location = New System.Drawing.Point(7, 73)
-        Me.lbTranportadora.Name = "lbTranportadora"
-        Me.lbTranportadora.Size = New System.Drawing.Size(100, 20)
-        Me.lbTranportadora.Text = "Transportadora"
-        '
         'lbPedido
         '
         Me.lbPedido.Location = New System.Drawing.Point(7, 1)
@@ -71,16 +56,23 @@ Partial Public Class frmPedido
         Me.cbCodigoPedido.Size = New System.Drawing.Size(100, 22)
         Me.cbCodigoPedido.TabIndex = 8
         '
+        'DataGrid1
+        '
+        Me.DataGrid1.BackgroundColor = System.Drawing.Color.WhiteSmoke
+        Me.DataGrid1.Location = New System.Drawing.Point(3, 80)
+        Me.DataGrid1.Name = "DataGrid1"
+        Me.DataGrid1.Size = New System.Drawing.Size(234, 185)
+        Me.DataGrid1.TabIndex = 12
+        '
         'frmPedido
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi
         Me.AutoScroll = True
         Me.ClientSize = New System.Drawing.Size(240, 268)
+        Me.Controls.Add(Me.DataGrid1)
         Me.Controls.Add(Me.cbCodigoPedido)
         Me.Controls.Add(Me.lbPedido)
-        Me.Controls.Add(Me.txtTransportadora)
-        Me.Controls.Add(Me.lbTranportadora)
         Me.Controls.Add(Me.txtFornecedor)
         Me.Controls.Add(Me.lbFornecedor)
         Me.Menu = Me.mnuFrmPedidos
@@ -91,8 +83,7 @@ Partial Public Class frmPedido
     End Sub
     Friend WithEvents lbFornecedor As System.Windows.Forms.Label
     Friend WithEvents txtFornecedor As System.Windows.Forms.TextBox
-    Friend WithEvents txtTransportadora As System.Windows.Forms.TextBox
-    Friend WithEvents lbTranportadora As System.Windows.Forms.Label
     Friend WithEvents lbPedido As System.Windows.Forms.Label
     Friend WithEvents cbCodigoPedido As System.Windows.Forms.ComboBox
+    Friend WithEvents DataGrid1 As System.Windows.Forms.DataGrid
 End Class

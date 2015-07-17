@@ -2,6 +2,7 @@
 Imports System.Data
 Imports System.Text
 Imports System.IO
+Imports System.Net
 
 Public Class frmLogin
 
@@ -75,6 +76,7 @@ Public Class frmLogin
                     intUsuarioLogado = CType(element, clsUsuario).Codigo()
                     cbUsuario.Text = Nothing
                     txtSenha.Text = Nothing
+                    CodigoAcesso(intUsuarioLogado)
                     Dim frmAcoes = New frmAcoes()
                     frmAcoes.Show()
                     Me.Hide()
@@ -213,5 +215,29 @@ Public Class frmLogin
             mnuLogin_Click(txtSenha, Nothing)
         End If
     End Sub
+
+    Public Function CodigoAcesso(ByVal intUsuario As Integer) As Long
+
+        strHostName = getHostName()
+
+        'Insere o acesso e inicia a transação
+        sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)"
+        sql01 = sql01 & " VALUES (" & intUsuario & ",'" & strHostName & "')"
+        clsSqlConn.execCommandSql(sql01)
+
+        'Recupera o código do acesso
+        sql01 = "SELECT MAX(codigoACESSO) AS novoACESSO"
+        sql01 = sql01 & " FROM tb0207_Acessos"
+        dr = clsSqlConn.fillDataReader(sql01)
+        If (dr.FieldCount > 0) Then
+            While (dr.Read)
+                CodigoAcesso = dr.Item("novoACESSO")
+            End While
+        End If
+
+        'Fecha a transação
+        'Call ConnExecCommitTrans()
+
+    End Function
 
 End Class

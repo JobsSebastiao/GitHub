@@ -22,12 +22,12 @@ Partial Public Class frmAcoes
     Private Sub InitializeComponent()
         Me.mnuFrmAcoes = New System.Windows.Forms.MainMenu
         Me.mnuAcoes_Menu = New System.Windows.Forms.MenuItem
+        Me.mnuAcoes_Sair = New System.Windows.Forms.MenuItem
         Me.mnuAcoes_Logout = New System.Windows.Forms.MenuItem
         Me.mnuAcoes_Ok = New System.Windows.Forms.MenuItem
         Me.lbProcedimento = New System.Windows.Forms.Label
         Me.btEntrada = New System.Windows.Forms.Button
         Me.btSaida = New System.Windows.Forms.Button
-        Me.mnuAcoes_Sair = New System.Windows.Forms.MenuItem
         Me.SuspendLayout()
         '
         'mnuFrmAcoes
@@ -40,6 +40,10 @@ Partial Public Class frmAcoes
         Me.mnuAcoes_Menu.MenuItems.Add(Me.mnuAcoes_Sair)
         Me.mnuAcoes_Menu.MenuItems.Add(Me.mnuAcoes_Logout)
         Me.mnuAcoes_Menu.Text = "Menu"
+        '
+        'mnuAcoes_Sair
+        '
+        Me.mnuAcoes_Sair.Text = "Sair"
         '
         'mnuAcoes_Logout
         '
@@ -74,10 +78,6 @@ Partial Public Class frmAcoes
         Me.btSaida.Size = New System.Drawing.Size(204, 56)
         Me.btSaida.TabIndex = 2
         Me.btSaida.Text = "Saída"
-        '
-        'mnuAcoes_Sair
-        '
-        Me.mnuAcoes_Sair.Text = "Sair"
         '
         'frmAcoes
         '
