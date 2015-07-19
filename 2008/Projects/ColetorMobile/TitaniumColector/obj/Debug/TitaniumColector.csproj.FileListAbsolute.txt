@@ -1,0 +1,10 @@
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\TitaniumColector.exe
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\TitaniumColector.pdb
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\ResolveAssemblyReference.cache
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Properties.Resources.resources
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.exe
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.pdb
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Form1.resources
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlClient.dll
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll

@@ -240,4 +240,7 @@ Public Class frmLogin
 
     End Function
 
+    Private Sub lbSenha_ParentChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles lbSenha.ParentChanged
+
+    End Sub
 End Class

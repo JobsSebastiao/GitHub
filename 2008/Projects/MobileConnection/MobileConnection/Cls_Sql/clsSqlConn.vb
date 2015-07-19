@@ -17,6 +17,8 @@ Public NotInheritable Class clsSqlConn
     Private Shared strDataSource As String
     Private Shared strConnection As String
 
+
+
 #Region "SqlServer"
 
 #Region "Region Contrutores"
