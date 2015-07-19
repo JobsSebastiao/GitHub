@@ -255,77 +255,6 @@ public class FileUtility
 
     }
 
-
-
-    /// <summary>
-    /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
-    /// </summary>
-    /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
-    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
-    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
-    /// <remarks></remarks>
-    //public string getFileOnDirectory(string extensao, string strArquivo)
-    //{
-
-    //    string alArquivos = null;
-    //    string caminho = PathMobile;
-
-    //    if ((caminho.Substring(caminho.Length - 1) != "\\")) {
-    //        caminho = caminho + "\\";
-    //    }
-
-    //    //'Recupera todos os arquivos do diretório
-    //    foreach (string entry in System.IO.Directory.GetFiles(Path.GetDirectoryName(caminho))) {
-    //        //Verifica a extensão do arquivo
-    //        if ((Path.GetExtension(entry) == extensao)) {
-    //            //Faz a verificação com base na variável strArquivo
-    //            string str = Strings.Mid(Path.GetFileNameWithoutExtension(entry).ToString, 1, strArquivo.Length);
-    //            if ((str == strArquivo)) {
-    //                //adiciona o arquivo ao ArrayList
-    //                alArquivos = ((Path.GetFileNameWithoutExtension(entry)).ToString);
-    //            }
-    //        }
-    //    }
-
-    //    return alArquivos;
-
-    //}
-
-
-    /// <summary>
-    /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
-    /// </summary>
-    /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
-    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
-    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
-    /// <remarks></remarks>
-    //public ArrayList getArquivosDiretorio(string extensao, string strArquivo)
-    //{
-
-    //    ArrayList alArquivos = new ArrayList();
-    //    string caminho = PathMobile;
-
-    //    if ((caminho.Substring(caminho.Length - 1) != "\\")) {
-    //        caminho = caminho + "\\";
-    //    }
-
-    //    'Recupera todos os arquivos do diretório
-    //    foreach (string entry in IO.Directory.GetFiles(Path.GetDirectoryName(caminho))) {
-    //        Verifica a extensão do arquivo
-    //        if ((Path.GetExtension(entry) == extensao)) {
-    //            Faz a verificação com base na variável strArquivo
-    //            string str = Strings.Mid(Path.GetFileNameWithoutExtension(entry).ToString, 1, strArquivo.Length);
-    //            if ((str == strArquivo)) {
-    //                adiciona o arquivo ao ArrayList
-    //                alArquivos.Add((Path.GetFileNameWithoutExtension(entry)).ToString);
-    //            }
-    //        }
-    //    }
-
-    //    return alArquivos;
-
-    //}
-
     /// <summary>
     /// Retorna os diretórios existentes no caminho informado
     /// </summary>
@@ -346,13 +275,15 @@ public class FileUtility
 
 
     /// <summary>
-    /// Gera um array a partir de uma string sendo nescessário indicar apenas o tipo de caracter que irá servir como split
+    /// Gera um array a partir de uma string sendo nescessário indicar apenas o 
+    /// tipo de caracter que irá servir como split e a string a ser trabalhada no array.
     /// </summary>
     /// <param name="strFile">String da qual será gerado a Array de string</param>
     /// <param name="splitCaracter">Tipo de caracter a ser usado como separador no split</param>
     /// <returns>Array preenchido com valores do tipo string de acordo com a quantidade de separadores encontrados na string </returns>
     /// <remarks></remarks>
-    /// <exemplo> 
+    /// <exemplo>
+    /// 
     /// string = "text1/text2/text3/text4/text5" onde o separador e o caracter "/"
     /// 
     /// o retorno será um array com 5 posições
@@ -364,13 +295,17 @@ public class FileUtility
     /// </exemplo>
     public static String[] arrayOfTextFile(string strFile, splitType splitCaracter)
     {
-
-        string[] arrayFile = null;
-        char  splitCarac = (char)defineSplitType(splitCaracter);
-        arrayFile = strFile.Split(splitCarac);
-
-
-        return arrayFile;
+        try
+        {
+            string[] arrayFile = null;
+            char  splitCarac = (char)defineSplitType(splitCaracter);
+            arrayFile = strFile.Split(splitCarac);
+            return arrayFile;
+        }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
 
     }
 
@@ -452,6 +387,7 @@ public class FileUtility
     }
 
 
+
     #region "sem uso"
 
     public System.IO.FileStream PreencheFileStream()
@@ -476,8 +412,86 @@ public class FileUtility
         return fs;
     }
 
+
+    /// <summary>
+    /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
+    /// </summary>
+    /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
+    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
+    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
+    /// <remarks></remarks>
+    //public string getFileOnDirectory(string extensao, string strArquivo)
+    //{
+
+    //    string alArquivos = null;
+    //    string caminho = PathMobile;
+
+    //    if ((caminho.Substring(caminho.Length - 1) != "\\")) {
+    //        caminho = caminho + "\\";
+    //    }
+
+    //    //'Recupera todos os arquivos do diretório
+    //    foreach (string entry in System.IO.Directory.GetFiles(Path.GetDirectoryName(caminho))) {
+    //        //Verifica a extensão do arquivo
+    //        if ((Path.GetExtension(entry) == extensao)) {
+    //            //Faz a verificação com base na variável strArquivo
+    //            string str = Strings.Mid(Path.GetFileNameWithoutExtension(entry).ToString, 1, strArquivo.Length);
+    //            if ((str == strArquivo)) {
+    //                //adiciona o arquivo ao ArrayList
+    //                alArquivos = ((Path.GetFileNameWithoutExtension(entry)).ToString);
+    //            }
+    //        }
+    //    }
+
+    //    return alArquivos;
+
+    //}
+
+
+    /// <summary>
+    /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
+    /// </summary>
+    /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
+    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
+    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
+    /// <remarks></remarks>
+    //public ArrayList getArquivosDiretorio(string extensao, string strArquivo)
+    //{
+
+    //    ArrayList alArquivos = new ArrayList();
+    //    string caminho = PathMobile;
+
+    //    if ((caminho.Substring(caminho.Length - 1) != "\\")) {
+    //        caminho = caminho + "\\";
+    //    }
+
+    //    'Recupera todos os arquivos do diretório
+    //    foreach (string entry in IO.Directory.GetFiles(Path.GetDirectoryName(caminho))) {
+    //        Verifica a extensão do arquivo
+    //        if ((Path.GetExtension(entry) == extensao)) {
+    //            Faz a verificação com base na variável strArquivo
+    //            string str = Strings.Mid(Path.GetFileNameWithoutExtension(entry).ToString, 1, strArquivo.Length);
+    //            if ((str == strArquivo)) {
+    //                adiciona o arquivo ao ArrayList
+    //                alArquivos.Add((Path.GetFileNameWithoutExtension(entry)).ToString);
+    //            }
+    //        }
+    //    }
+
+    //    return alArquivos;
+
+    //}
+
+
+
     #endregion
 
-}
+
+
+
+
+
+
     }
+}
 

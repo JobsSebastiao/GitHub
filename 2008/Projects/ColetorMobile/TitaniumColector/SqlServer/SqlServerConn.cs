@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Collections;
 using TitaniumColector.Utility;
 using System.IO;
+using Microsoft.VisualBasic;
 
 
 namespace TitaniumColector.SqlServer
@@ -103,6 +104,9 @@ namespace TitaniumColector.SqlServer
         #endregion //Get & Set
 
 
+        /// <summary>
+        /// Recupera todos aos parâmetros informados e configura a string de conexão.
+        /// </summary>
         private static void makeStrConnection()
         {
             SqlServerConn.strConnection = "Password=" + Password + ";Persist Security Info=" + Security + ";User ID=" + UserId + ";Initial Catalog=" + Catalog + ";Data Source=" + DataSource;
@@ -234,9 +238,7 @@ namespace TitaniumColector.SqlServer
 
         public static SqlDataReader fillDataReader(string sql01)
         {
-
-            openConn();
-            SqlCommand cmd = new SqlCommand(sql01, conn);
+            SqlCommand cmd = new SqlCommand(sql01, openConn());
             SqlDataReader dr = cmd.ExecuteReader();
 
             if (dr.FieldCount > 0)
@@ -244,18 +246,13 @@ namespace TitaniumColector.SqlServer
             }
 
             return dr;
-
-            closeConn();
-
         }
 
         public static void execCommandSql(string sql01)
         {
-            openConn();
-
             try
             {
-                SqlCommand cmd = new SqlCommand(sql01, conn);
+                SqlCommand cmd = new SqlCommand(sql01, openConn());
                 cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
@@ -306,37 +303,70 @@ namespace TitaniumColector.SqlServer
 
         }
 
-
-        public static string readFileStrConnection() 
+        /// <summary>
+        /// Lê um arquivo de texto que esteja na pasta padrão da aplicação, e que tenha o nome especificado no parâmetro fileName
+        /// </summary>
+        /// <param name="fileName">nome do arquivo a ser lido</param>
+        /// <returns>Uma string contendo o texto existente no arquivo.</returns>
+        /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
+        /// </remarks>
+        public static string readFileStrConnection(string fileName) 
         {
             string pathAplicativo = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
 
-            if (File.Exists(pathAplicativo+ "\\strConn.txt"))
+            if (File.Exists(pathAplicativo + fileName))
             {
-                FileUtility fU = new FileUtility(pathAplicativo, "\\strConn.txt");
+                FileUtility fU = new FileUtility(pathAplicativo, fileName);
                 List<string> fileStrConn = new List<string>(fU.readTextFile());
                 string strConnection= fileStrConn[0];
-                //setParametersStringConnection( fu.arrayOfTextFile(strStrConnection, FileUtility.splitType.PONTO_VIRGULA));
                 return strConnection;
             }
             return null;
         }
 
-
-        public static  string readFileStrConnection(string mobilePath,string fileName)
+        /// <summary>
+        ///  Lê um arquivo de texto que esteja no path informado no parâmetro mobilePath, e que tenha o nome especificado no parâmetro fileName
+        /// </summary>
+        /// <param name="mobilePath">Diretório do dispositivo onde será buscado o arquivo</param>
+        /// <param name="fileName">Nome do arquivo a ser buscado</param>
+        /// <exception cref="System.FileNotFoundException">Lançada quando o arquivo não for encontrado</exception>
+        /// <returns> Uma string contendo o texto existente no arquivo.</returns>
+        /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
+        /// </remarks>
+        public static string readFileStrConnection(string mobilePath,string fileName)
         {
-
-            if (File.Exists(mobilePath +"\\strConn.txt"))
+            try
             {
-                FileUtility fU = new FileUtility(mobilePath, "\\strConn.txt");
-                List<string> fileStrConn = new List<string>(fU.readTextFile());
-                string strConnection = fileStrConn[0];
-                //setParametersStringConnection( fu.arrayOfTextFile(strStrConnection, FileUtility.splitType.PONTO_VIRGULA));
-                return strConnection;
+                FileUtility fU = new FileUtility(mobilePath, fileName);
+                
+                if (File.Exists(fU.getFullPath()))
+                {
+                    List<string> fileStrConn = new List<string>(fU.readTextFile());
+                    string strConnection = fileStrConn[0];
+                    return strConnection;
+                }
+                else
+                {
+                    throw new FileNotFoundException();
+                }
             }
-            return null;
+            catch (FileNotFoundException Fileex) 
+            {
+                throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Constants.vbCrLf + "Favor contate o administrador do sistema." + Constants.vbCrLf + "Erro :" + Fileex.Message);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Problemas durante a configuração da string de conexão." + Constants.vbCrLf + "Favor contate o administrador do sistema." + Constants.vbCrLf + "Erro :" + ex.Message);
+            }
+
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mobilePath"></param>
+        /// <param name="fileName"></param>
         public static void configuraStrConnection(string mobilePath,string fileName) 
         {
             string strConnection = readFileStrConnection(mobilePath,fileName);
@@ -344,12 +374,15 @@ namespace TitaniumColector.SqlServer
             setParametersStringConnection(arrayStrConnection);
         }
 
+
+
         /// <summary>
         /// Monta a string de conexão a partir de um array contendo os dados nescessários.
         /// </summary>
-        /// <param name="array"> Array preenchido com o padrão sql de string de conexão</param>
-        /// <exemplo>
         /// 
+        /// <param name="array"> Array preenchido com o padrão sql de string de conexão</param>
+        /// 
+        /// <exemplo>
         ///  Itens padrão a ser usada : 
         ///  Provider=SQLOLEDB.1
         ///  Password=senha
@@ -357,9 +390,7 @@ namespace TitaniumColector.SqlServer
         ///  User ID=usuario
         ///  Initial Catalog=basededados
         ///  Data Source=ip
-        /// 
         /// </exemplo>
-
         public static void setParametersStringConnection(string[] array)
         {
             foreach (string item in array)
@@ -397,11 +428,11 @@ namespace TitaniumColector.SqlServer
         /// <summary>
         /// Redefine os atributos da string de conexão
         /// </summary>
-        /// <param name="strPassword"></param>
-        /// <param name="strUserID"></param>
-        /// <param name="strInitialCatalog"></param>
-        /// <param name="strDataSource"></param>
-        /// <param name="booSecurity">Optional ---True or False</param>
+        /// <param name="strPassword">Senha</param>
+        /// <param name="strUserID">Usuário</param>
+        /// <param name="strInitialCatalog">Base de dados</param>
+        /// <param name="strDataSource">IP/HostName</param>
+        /// <param name="booSecurity">True ou False</param>
         /// <remarks></remarks>
         public static void setParametersStringConnection(string strPassword, string strUserID, string strInitialCatalog, string strDataSource, string booSecurity)
         {

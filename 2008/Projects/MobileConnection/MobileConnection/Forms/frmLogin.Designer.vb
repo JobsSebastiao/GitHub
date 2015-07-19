@@ -51,7 +51,7 @@ Partial Public Class frmLogin
                     Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pbLogin.Location = New System.Drawing.Point(0, 0)
         Me.pbLogin.Name = "pbLogin"
-        Me.pbLogin.Size = New System.Drawing.Size(174, 268)
+        Me.pbLogin.Size = New System.Drawing.Size(161, 268)
         Me.imgLogin.Images.Clear()
         Me.imgLogin.Images.Add(CType(resources.GetObject("resource"), System.Drawing.Image))
         Me.imgLogin.Images.Add(CType(resources.GetObject("resource1"), System.Drawing.Image))
