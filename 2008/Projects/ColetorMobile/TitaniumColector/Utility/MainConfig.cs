@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using TitaniumColector.SqlServer;
+using System.Reflection;
 
 namespace TitaniumColector
 {
@@ -89,7 +91,7 @@ namespace TitaniumColector
         private static void capturaIp()
         {
             IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(HostName);
-            IPAddress addr = ipEntry.AddressList[2];
+            IPAddress addr = ipEntry.AddressList[ipEntry.AddressList.Length-1];
             DeviceIp = addr.ToString() ;
         }
 

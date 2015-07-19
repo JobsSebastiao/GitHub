@@ -6,6 +6,10 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Reflection;
+using System.Collections;
+using TitaniumColector.Utility;
+using System.IO;
 
 
 namespace TitaniumColector.SqlServer
@@ -21,8 +25,6 @@ namespace TitaniumColector.SqlServer
         private static string strCatalog;
         private static string strDataSource;
         private static string strConnection;
-
-
 
         #region "Get & Set"
 
@@ -101,7 +103,7 @@ namespace TitaniumColector.SqlServer
         #endregion //Get & Set
 
 
-        private static void setStrConnection()
+        private static void makeStrConnection()
         {
             SqlServerConn.strConnection = "Password=" + Password + ";Persist Security Info=" + Security + ";User ID=" + UserId + ";Initial Catalog=" + Catalog + ";Data Source=" + DataSource;
         }
@@ -304,12 +306,43 @@ namespace TitaniumColector.SqlServer
 
         }
 
-                
-        public static void configStringConnection()
+
+        public static string readFileStrConnection() 
         {
-	        setStrConnection();
+            string pathAplicativo = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
+
+            if (File.Exists(pathAplicativo+ "\\strConn.txt"))
+            {
+                FileUtility fU = new FileUtility(pathAplicativo, "\\strConn.txt");
+                List<string> fileStrConn = new List<string>(fU.readTextFile());
+                string strConnection= fileStrConn[0];
+                //setParametersStringConnection( fu.arrayOfTextFile(strStrConnection, FileUtility.splitType.PONTO_VIRGULA));
+                return strConnection;
+            }
+            return null;
         }
 
+
+        public static  string readFileStrConnection(string mobilePath,string fileName)
+        {
+
+            if (File.Exists(mobilePath +"\\strConn.txt"))
+            {
+                FileUtility fU = new FileUtility(mobilePath, "\\strConn.txt");
+                List<string> fileStrConn = new List<string>(fU.readTextFile());
+                string strConnection = fileStrConn[0];
+                //setParametersStringConnection( fu.arrayOfTextFile(strStrConnection, FileUtility.splitType.PONTO_VIRGULA));
+                return strConnection;
+            }
+            return null;
+        }
+
+        public static void configuraStrConnection(string mobilePath,string fileName) 
+        {
+            string strConnection = readFileStrConnection(mobilePath,fileName);
+            string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection,FileUtility.splitType.PONTO_VIRGULA);
+            setParametersStringConnection(arrayStrConnection);
+        }
 
         /// <summary>
         /// Monta a string de conexão a partir de um array contendo os dados nescessários.
@@ -327,30 +360,36 @@ namespace TitaniumColector.SqlServer
         /// 
         /// </exemplo>
 
-        public static void configStringConnection(string[] array)
+        public static void setParametersStringConnection(string[] array)
         {
-	        foreach (string item in array) {
-		        switch (item.Substring(0, item.IndexOf("=",0) - 1)) {
-			        case "Password":
-                        Password = item.Substring (item.IndexOf("=",0));
-				        break;
-			        case "Persist Security Info":
-                        Security = item.Substring(item.IndexOf("=", 0));
-				        break;
-			        case "User ID":
-                        UserId = item.Substring(item.IndexOf("=", 0));
-				        break;
-			        case "Initial Catalog":
-                        Catalog = item.Substring(item.IndexOf("=", 0));
-				        break;
-			        case "Data Source":
-                        DataSource = item.Substring(item.IndexOf("=", 0));
-				        break;
-		        }
-	        }
+            foreach (string item in array)
+            {
 
+                string strItem = item.Substring(0, item.IndexOf("=", 0));
+
+                if (strItem == "Password")
+                {
+                    Password = item.Substring(item.IndexOf("=", 0)+1);
+                }
+                else if (strItem == "Persist Security Info")
+                {
+                    Security = item.Substring(item.IndexOf("=", 0) + 1);
+                }
+                else if (strItem == "User ID")
+                {
+                    UserId = item.Substring(item.IndexOf("=", 0) + 1);
+                }
+                else if (strItem == "Initial Catalog")
+                {
+                    Catalog = item.Substring(item.IndexOf("=", 0) + 1);
+                }
+                else if (strItem == "Data Source")
+                {
+                    DataSource = item.Substring(item.IndexOf("=", 0) + 1);
+                }
+            }
 	        //'Monta a string de conexão
-	        setStrConnection();
+	        makeStrConnection();
 
         }
 
@@ -364,7 +403,7 @@ namespace TitaniumColector.SqlServer
         /// <param name="strDataSource"></param>
         /// <param name="booSecurity">Optional ---True or False</param>
         /// <remarks></remarks>
-        public static void configStringConnection(string strPassword, string strUserID, string strInitialCatalog, string strDataSource,string booSecurity)
+        public static void setParametersStringConnection(string strPassword, string strUserID, string strInitialCatalog, string strDataSource, string booSecurity)
         {
 	        //'Monta a string de conexão
 	        Password= strPassword;
@@ -372,7 +411,7 @@ namespace TitaniumColector.SqlServer
 	        Catalog = strCatalog;
 	        DataSource = strDataSource;
 	        Security = booSecurity;
-	        setStrConnection();
+	        makeStrConnection();
 
         }
 

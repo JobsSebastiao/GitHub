@@ -197,11 +197,11 @@ public class FileUtility
     /// </summary>
     /// <returns>Um array list contendo os dados do arquivo de texto</returns>
     /// <remarks></remarks>
-    public ArrayList readTextFile()
+    public List <string> readTextFile()
     {
 
         string fullPath = Path.GetFullPath(getFullPath());
-        ArrayList alTextFile = new ArrayList();
+        List<string> alTextFile = new List<string>();
 
         try {
             //instancia um streamReader que irá ler o arquivo informado
@@ -362,7 +362,7 @@ public class FileUtility
     /// string(3)= text4
     /// string(4)= text5
     /// </exemplo>
-    public Array arrayOfTextFile(string strFile, splitType splitCaracter)
+    public static String[] arrayOfTextFile(string strFile, splitType splitCaracter)
     {
 
         string[] arrayFile = null;
@@ -393,7 +393,7 @@ public class FileUtility
     /// <param name="splitType">Tipo de caracter a ser usado com separador (ENUM)</param>
     /// <returns>o caracter a ser usado como separador</returns>
     /// <remarks></remarks>
-    public char defineSplitType(splitType st)
+    public static char defineSplitType(splitType st)
     {
         char splitCaracter;
 
