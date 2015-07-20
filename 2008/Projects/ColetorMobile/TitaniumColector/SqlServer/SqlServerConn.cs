@@ -352,12 +352,16 @@ namespace TitaniumColector.SqlServer
             }
             catch (FileNotFoundException Fileex) 
             {
-                throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Constants.vbCrLf + "Favor contate o administrador do sistema." + Constants.vbCrLf + "Erro :" + Fileex.Message);
+                throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Environment.NewLine + 
+                                                 "Favor contate o administrador do sistema." + Environment.NewLine + 
+                                                 "Erro :" + Fileex.Message);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Problemas durante a configuração da string de conexão." + Constants.vbCrLf + "Favor contate o administrador do sistema." + Constants.vbCrLf + "Erro :" + ex.Message);
+                throw new Exception("Problemas durante a configuração da string de conexão." + Environment.NewLine + 
+                                    "Favor contate o administrador do sistema." + Environment.NewLine + 
+                                    "Erro :" + ex.Message);
             }
 
         }
