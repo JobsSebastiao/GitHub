@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 using System.Net;
-using TitaniumColector.SqlServer;
-using System.Reflection;
 
 namespace TitaniumColector
 {
@@ -12,11 +8,19 @@ namespace TitaniumColector
     {
         private static int intScreenHeigth;
         private static int intScreenWidth;
-        public const int intPositionX = 0;
-        public const int intPositionY = 0;
         private static string strVersaoSO;
         private static string HostName { get; set; }
-        public static string DeviceIp { get; set; }
+        private static string DeviceIp { get; set; }
+        private static string strUsuarioLogado;
+        private static int intUsuarioLogado;
+        private static Font fontPadraoRegular;
+        private static Font fontPadraoBold;
+        private static Font fontGrande;
+
+        //Contantes
+        public const int intPositionX = 0;
+        public const int intPositionY = 0;
+        public const Char PasswordChar = '*';
 
          public static int ScreenHeigth
         {
@@ -66,6 +70,81 @@ namespace TitaniumColector
             }
         }
 
+        public static string UsuarioLogado 
+        { 
+            get
+            {
+                return strUsuarioLogado;
+            }
+            set 
+            {
+                if (!(String.IsNullOrEmpty(value)))
+                {
+                    strUsuarioLogado = (string)value;
+                }
+            }
+        }
+
+        public static int codigoUsuarioLogado
+        {
+            get 
+            {
+                return intUsuarioLogado; 
+            }
+            set 
+            { 
+                MainConfig.intUsuarioLogado = value; 
+            }
+        }
+
+        public static Font FontPadraoRegular
+        {
+            get 
+            { 
+                return fontPadraoRegular; 
+            }
+            set 
+            { 
+                fontPadraoRegular = value; 
+            }
+        }
+
+        public static Font FontPadraoBold
+        {
+            get
+            {
+                return fontPadraoBold;
+            }
+            set
+            {
+                fontPadraoBold = value;
+            }
+        }
+
+        public static Font FontGrandeRegular
+        {
+            get
+            {
+                return fontGrande;
+            }
+            set
+            {
+                fontGrande = value;
+            }
+        }
+
+        public static void setMainConfigurations()
+        {
+            capturaScreenHeight();
+            capturaScreenWeight();
+            capturaVersãoSo();
+            capturaHostName();
+            capturaIp();
+            defineFontPadraoRegular();
+            defineFontPadraoBold();
+            defineFontGrandeRegular();
+        }
+
         private static void capturaScreenHeight()
         {
             ScreenHeigth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
@@ -95,13 +174,43 @@ namespace TitaniumColector
             DeviceIp = addr.ToString() ;
         }
 
-        public static void setMainConfigurations()
+        private static void defineFontPadraoRegular() 
         {
-            capturaScreenHeight();
-            capturaScreenWeight();
-            capturaVersãoSo();
-            capturaHostName();
-            capturaIp();
+            Single tamanho = new Single();
+            tamanho = 10F;
+            FontStyle style = new FontStyle();
+            style = FontStyle.Regular;
+            fontPadraoRegular = new System.Drawing.Font("Arial",tamanho, style);
+
+        }
+
+        private static void defineFontPadraoBold()
+        {
+            Single tamanho = new Single();
+            tamanho = 10F;
+            FontStyle style = new FontStyle();
+            style = FontStyle.Bold;
+            fontPadraoBold = new System.Drawing.Font("Arial", tamanho, style);
+
+        }
+
+        private static void defineFontGrandeRegular()
+        {
+            Single tamanho = new Single();
+            tamanho = 20F;
+            FontStyle style = new FontStyle();
+            style = FontStyle.Regular;
+            FontGrandeRegular = new System.Drawing.Font("Arial", tamanho, style);
+        }
+
+        public static SizeF sizeXYString(string text,Font font)
+        {
+            SizeF size = new SizeF();
+            using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(new Bitmap(1, 1)))
+            {
+               size = graphics.MeasureString(text ,font);
+            }
+            return size;
         }
 
     }

@@ -30,7 +30,7 @@ namespace TitaniumColector.SqlServer
         #region "Get & Set"
 
 
-        public static string Password
+        private static string Password
         {
             get { return strPassword; }
 
@@ -43,7 +43,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        public static string Security
+        private static string Security
         {
             get { return booSecurity; }
 
@@ -56,7 +56,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        public static string UserId
+        private static string UserId
         {
             get { return strUserId; }
 
@@ -69,7 +69,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        public static string Catalog
+        private static string Catalog
         {
             get { return strCatalog; }
 
@@ -82,7 +82,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        public static string DataSource
+        private static string DataSource
         {
             get { return strDataSource; }
 
@@ -95,7 +95,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        public static string StringConection
+        private static string StringConection
         {
             get { return strConnection; }
         }
@@ -123,17 +123,17 @@ namespace TitaniumColector.SqlServer
             }
             catch (SqlException sqlEx)
             {
-                conn = null;
-                StringBuilder bdMsg = new StringBuilder();
-                bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
-                bdMsg.AppendLine();
-                bdMsg.Append("Description :" + sqlEx.Message);
-                bdMsg.AppendLine();
-                bdMsg.Append("Source :" + sqlEx.Source);
-                string msg = bdMsg.ToString();
+                //conn = null;
+                //StringBuilder bdMsg = new StringBuilder();
+                //bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
+                //bdMsg.AppendLine();
+                //bdMsg.Append("Description :" + sqlEx.Message);
+                //bdMsg.AppendLine();
+                //bdMsg.Append("Source :" + sqlEx.Source);
+                //string msg = bdMsg.ToString();
 
-                MessageBox.Show(msg, "Conection Error.");
-                throw;
+                //MessageBox.Show(msg, "Conection Error.");
+                throw sqlEx;
             }
 
             return conn;
@@ -163,6 +163,50 @@ namespace TitaniumColector.SqlServer
 
         //}
 
+        public static bool testConnection() 
+        {
+            bool result = false;
+
+            try
+            {
+                if (openConn().State == ConnectionState.Open)
+                {
+                    result = true;
+                }
+                else {
+                    result = false;
+                }
+
+                closeConn();
+
+                if (conn.State == ConnectionState.Closed)
+                {
+                    result = true;
+                }
+                else 
+                {
+                    result = false;
+                }
+
+                return result;
+            }
+            catch(SqlException sqlEx) 
+            {
+                conn = null;
+                StringBuilder bdMsg = new StringBuilder();
+                bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
+                bdMsg.AppendLine();
+                bdMsg.Append("Description :" + sqlEx.Message);
+                bdMsg.AppendLine();
+                bdMsg.Append("Source :" + sqlEx.Source);
+                string msg = bdMsg.ToString();
+                MessageBox.Show(msg, "Conection Error.");
+                return result;
+
+                //throw;
+            }
+            
+        }
 
         public static void closeConn()
         {
@@ -342,8 +386,8 @@ namespace TitaniumColector.SqlServer
                 if (File.Exists(fU.getFullPath()))
                 {
                     List<string> fileStrConn = new List<string>(fU.readTextFile());
-                    string strConnection = fileStrConn[0];
-                    return strConnection;
+                    //string strConnection = fileStrConn[0];
+                    return fileStrConn[0];
                 }
                 else
                 {
