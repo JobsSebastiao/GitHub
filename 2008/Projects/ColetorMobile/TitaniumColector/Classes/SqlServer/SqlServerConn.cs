@@ -163,6 +163,11 @@ namespace TitaniumColector.SqlServer
 
         //}
 
+        /// <summary>
+        /// Testa a conexão com o banco de dados SQLSERVER.
+        /// </summary>
+        /// <returns>True caso a conexão esteja OK.</returns>
+        /// <exception cref="System.SqlException">Caso não seja possível se comunicar com o banco de dados.</exception>
         public static bool testConnection() 
         {
             bool result = false;
@@ -173,37 +178,24 @@ namespace TitaniumColector.SqlServer
                 {
                     result = true;
                 }
-                else {
-                    result = false;
-                }
 
-                closeConn();
+                if (result == true) 
+                {
+                    closeConn();
 
-                if (conn.State == ConnectionState.Closed)
-                {
-                    result = true;
-                }
-                else 
-                {
-                    result = false;
+                    if (conn.State == ConnectionState.Closed)
+                    {
+                        result = true;
+                    }
+
                 }
 
                 return result;
             }
-            catch(SqlException sqlEx) 
+            catch(SqlException) 
             {
                 conn = null;
-                StringBuilder bdMsg = new StringBuilder();
-                bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
-                bdMsg.AppendLine();
-                bdMsg.Append("Description :" + sqlEx.Message);
-                bdMsg.AppendLine();
-                bdMsg.Append("Source :" + sqlEx.Source);
-                string msg = bdMsg.ToString();
-                MessageBox.Show(msg, "Conection Error.");
-                return result;
-
-                //throw;
+                throw;
             }
             
         }
@@ -247,11 +239,9 @@ namespace TitaniumColector.SqlServer
 
         public static void fillDataTable(DataTable dt, string sql01)
         {
-            openConn();
-
             try
             {
-                SqlDataAdapter da = new SqlDataAdapter(sql01, conn);
+                SqlDataAdapter da = new SqlDataAdapter(sql01, openConn());
                 da.Fill(dt);
 
             }
@@ -411,17 +401,16 @@ namespace TitaniumColector.SqlServer
         }
 
         /// <summary>
-        /// 
+        /// Realiza o processo de configuração da string de conexão.
         /// </summary>
-        /// <param name="mobilePath"></param>
-        /// <param name="fileName"></param>
+        /// <param name="mobilePath">Path do dispositivo onde está armazenado o arquivo de texto contendo a string de conexão.</param>
+        /// <param name="fileName">Nome do arquivo de texto onde está armazenado a string de Conexão.</param>
         public static void configuraStrConnection(string mobilePath,string fileName) 
         {
             string strConnection = readFileStrConnection(mobilePath,fileName);
             string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection,FileUtility.splitType.PONTO_VIRGULA);
             setParametersStringConnection(arrayStrConnection);
         }
-
 
 
         /// <summary>

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Net;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace TitaniumColector
 {
@@ -211,6 +213,23 @@ namespace TitaniumColector
                size = graphics.MeasureString(text ,font);
             }
             return size;
+        }
+
+        /// <summary>
+        /// Carregar Combox a partir de um List carregado com um tipo de objeto.
+        /// </summary>
+        /// <param name="cb">ComboBox a ser preenchida</param>
+        /// <param name="objectList">List preenchida com um tipo de Objeto</param>
+        /// <param name="displayName">parâmetro do objeto a ser mostrado na ComboBox</param>
+        /// <param name="columnName">parâmetro que terá o seu valor utilizado na ComboBox. </param>
+        public static void carregarComboBox(System.Windows.Forms.ComboBox cb, List<object> objectList,string displayName,string columnName)
+        {
+            cb.Items.Clear();
+            cb.DataSource = objectList;
+            cb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDown;
+            cb.DisplayMember = displayName;
+            cb.ValueMember = columnName;
+            cb.SelectedItem = null;
         }
 
     }

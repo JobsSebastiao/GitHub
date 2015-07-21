@@ -6,33 +6,7 @@ MobileConnection
 </name>
 </assembly>
 <members>
-<member name="M:MobileConnection.clsSqlConn.configStringConnection(System.String[])">
-	<summary>
- Monta a string de conexão a partir de um array contendo os dados nescessários.
- </summary>
-	<param name="array"> Array preenchido com o padrão sql de string de conexão</param>
-	<exemplo>
- 
-  Itens padrão a ser usada : 
-  Provider=SQLOLEDB.1
-  Password=senha
-  Persist Security Info=False/True
-  User ID=usuario
-  Initial Catalog=basededados
-  Data Source=ip
- 
- </exemplo>
-</member><member name="M:MobileConnection.clsSqlConn.configStringConnection(System.String,System.String,System.String,System.String,System.Boolean)">
-	<summary>
- Redefine os atributos da string de conexão
- </summary>
-	<param name="strPassword"></param>
-	<param name="strUserID"></param>
-	<param name="strInitialCatalog"></param>
-	<param name="strDataSource"></param>
-	<param name="booSecurity">Optional ---True or False</param>
-	<remarks></remarks>
-</member><member name="P:MobileConnection.My.Resources.Resources.ResourceManager">
+<member name="P:MobileConnection.My.Resources.Resources.ResourceManager">
 	<summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>
@@ -45,41 +19,6 @@ MobileConnection
 	<summary>
   A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
-</member><member name="M:MobileConnection.frmLogin.validaAcesso(System.String,System.String)">
-	<summary>
- Válida o acesso ao sistema
- </summary>
-	<param name="usuario">Usuário contido na base de dados</param>
-	<param name="senha">Senha contida na base de dados</param>
-	<remarks></remarks>
-</member><member name="M:MobileConnection.frmLogin.pbLoginConfig(System.Windows.Forms.PictureBox,System.Windows.Forms.Form,System.Windows.Forms.ImageList@,System.Int32)">
-	<summary>
- Configura o Picture Box (pbLogin) com a imagens passada como parâmetro
- </summary>
-	<param name="pb"></param>
-	<param name="frm"></param>
-	<param name="imglist"></param>
-	<param name="imgIndex"></param>
-	<remarks></remarks>
-</member><member name="M:MobileConnection.frmLogin.preencheComboBoxUsuario(System.Windows.Forms.ComboBox,System.Collections.ArrayList,MobileConnection.clsUsuario.usuarioPropety)">
-	<summary>
- Carrega uma Combo com uma das propriedades(Codigo,Nome ou NomeCompleto) de um objeto cslUsuario
- </summary>
-	<param name="cb">ComboBox a ser prenchido</param>
-	<param name="list">Array List previamente carregada</param>
-	<param name="propriedade">Uma das propriedades do objeto usuário (Codigo,Nome ou NomeCompleto)</param>
-	<remarks></remarks>
-</member><member name="M:MobileConnection.frmLogin.strConnectionConfig">
-	<summary>
- Configura os parametros da string de conexão.
- </summary>
-	<remarks>
- Verifica se o arquivo que contém o string de conexão existe:
- Lê o arquivo e o coloca em uma string que é devolvida em um ArrayList
- Gera um array, realizando um split na string contida na variável
- utiliza a classe statica clsSqlConn para definir os parâmetros da string de conexão
- configura a string de conexão na classe static clsSqlConn
- </remarks>
 </member><member name="M:MobileConnection.clsFile.#ctor">
 	<summary>
  'Ao ser instanciada configura um caminho padrão e um arquivo padrão onde será buscado o arquivo .txt contendo a string de conexão
@@ -177,6 +116,67 @@ MobileConnection
  Tipos de caracteres que devem ser usados como separador
  </summary>
 	<remarks></remarks>
+</member><member name="M:MobileConnection.clsSqlConn.configStringConnection(System.String[])">
+	<summary>
+ Monta a string de conexão a partir de um array contendo os dados nescessários.
+ </summary>
+	<param name="array"> Array preenchido com o padrão sql de string de conexão</param>
+	<exemplo>
+ 
+  Itens padrão a ser usada : 
+  Provider=SQLOLEDB.1
+  Password=senha
+  Persist Security Info=False/True
+  User ID=usuario
+  Initial Catalog=basededados
+  Data Source=ip
+ 
+ </exemplo>
+</member><member name="M:MobileConnection.clsSqlConn.configStringConnection(System.String,System.String,System.String,System.String,System.Boolean)">
+	<summary>
+ Redefine os atributos da string de conexão
+ </summary>
+	<param name="strPassword"></param>
+	<param name="strUserID"></param>
+	<param name="strInitialCatalog"></param>
+	<param name="strDataSource"></param>
+	<param name="booSecurity">Optional ---True or False</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.validaAcesso(System.String,System.String)">
+	<summary>
+ Válida o acesso ao sistema
+ </summary>
+	<param name="usuario">Usuário contido na base de dados</param>
+	<param name="senha">Senha contida na base de dados</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.pbLoginConfig(System.Windows.Forms.PictureBox,System.Windows.Forms.Form,System.Windows.Forms.ImageList@,System.Int32)">
+	<summary>
+ Configura o Picture Box (pbLogin) com a imagens passada como parâmetro
+ </summary>
+	<param name="pb"></param>
+	<param name="frm"></param>
+	<param name="imglist"></param>
+	<param name="imgIndex"></param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.preencheComboBoxUsuario(System.Windows.Forms.ComboBox,System.Collections.ArrayList,MobileConnection.clsUsuario.usuarioPropety)">
+	<summary>
+ Carrega uma Combo com uma das propriedades(Codigo,Nome ou NomeCompleto) de um objeto cslUsuario
+ </summary>
+	<param name="cb">ComboBox a ser prenchido</param>
+	<param name="list">Array List previamente carregada</param>
+	<param name="propriedade">Uma das propriedades do objeto usuário (Codigo,Nome ou NomeCompleto)</param>
+	<remarks></remarks>
+</member><member name="M:MobileConnection.frmLogin.strConnectionConfig">
+	<summary>
+ Configura os parametros da string de conexão.
+ </summary>
+	<remarks>
+ Verifica se o arquivo que contém o string de conexão existe:
+ Lê o arquivo e o coloca em uma string que é devolvida em um ArrayList
+ Gera um array, realizando um split na string contida na variável
+ utiliza a classe statica clsSqlConn para definir os parâmetros da string de conexão
+ configura a string de conexão na classe static clsSqlConn
+ </remarks>
 </member><member name="M:MobileConnection.mdUtilitarios.preencheComboBox(System.Windows.Forms.ComboBox,System.String,System.Data.DataTable,System.String)">
 	<summary>
  Preenche uma combo Utilizando um dataTable preenchido com um select na base de dados

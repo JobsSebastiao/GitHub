@@ -6,7 +6,8 @@
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        private System.Windows.Forms.MainMenu mainmnuLogin;
+        //Retirei o menu do form Login 
+        //private System.Windows.Forms.MainMenu mainmnuLogin;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -30,7 +31,6 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmLogin));
-            //this.mainmnuLogin = new System.Windows.Forms.MainMenu();
             this.panelFrmLogin = new System.Windows.Forms.Panel();
             this.lbDescricao = new System.Windows.Forms.Label();
             this.txtSenha = new System.Windows.Forms.TextBox();
@@ -100,6 +100,7 @@
             this.btSair.Size = new System.Drawing.Size(72, 20);
             this.btSair.TabIndex = 2;
             this.btSair.Text = "Sair";
+            this.btSair.Click += new System.EventHandler(this.btSair_Click);
             // 
             // btLogin
             // 
@@ -108,6 +109,7 @@
             this.btLogin.Size = new System.Drawing.Size(72, 20);
             this.btLogin.TabIndex = 1;
             this.btLogin.Text = "Login";
+            this.btLogin.Click += new System.EventHandler(this.btLogin_Click);
             // 
             // pboxFrmLogin
             // 
@@ -126,10 +128,8 @@
             this.ClientSize = new System.Drawing.Size(346, 455);
             this.ControlBox = false;
             this.Controls.Add(this.panelFrmLogin);
-            this.Menu = this.mainmnuLogin;
             this.Name = "frmLogin";
             this.Text = "Login";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.panelFrmLogin.ResumeLayout(false);
             this.ResumeLayout(false);
 
