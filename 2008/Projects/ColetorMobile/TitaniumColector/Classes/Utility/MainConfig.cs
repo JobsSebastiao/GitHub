@@ -11,8 +11,8 @@ namespace TitaniumColector
         private static int intScreenHeigth;
         private static int intScreenWidth;
         private static string strVersaoSO;
-        private static string HostName { get; set; }
-        private static string DeviceIp { get; set; }
+        public static string HostName { get; set; }
+        public static string DeviceIp { get; set; }
         private static string strUsuarioLogado;
         private static int intUsuarioLogado;
         private static Font fontPadraoRegular;

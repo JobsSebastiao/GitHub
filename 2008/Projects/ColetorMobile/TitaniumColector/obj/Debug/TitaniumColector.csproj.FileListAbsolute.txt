@@ -5,7 +5,6 @@ D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.exe
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.pdb
-D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Form1.resources
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlClient.dll
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\ResolveAssemblyReference.cache
@@ -18,3 +17,4 @@ C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMo
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.pdb
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.frmLogin.resources
+D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.frmLogin.resources

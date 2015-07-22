@@ -139,29 +139,6 @@ namespace TitaniumColector.SqlServer
             return conn;
         }
 
-        //public static void openConn()
-        //{
-        //    try
-        //    {
-        //        if ((conn.State == Data.ConnectionState.Closed))
-        //        {
-        //            string strConn = StringConection();
-        //            conn = new connection(strConn);
-        //            conn.Open();
-        //        }
-
-        //    }
-        //    catch (SqlException sqlEx)
-        //    {
-        //        throw new Exception("Ocorre um problema durante a conexão com a base de dados. " + Environment.NewLine + " Erro: " + sqlEx.Message + " Source: " + sqlEx.Source + " Number: " + sqlEx.Number);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Ocorre um problema durante a interação com a base de dados" + Environment.NewLine + "Erro: " + ex.Message);
-        //    }
-
-        //}
 
         /// <summary>
         /// Testa a conexão com o banco de dados SQLSERVER.
@@ -274,11 +251,6 @@ namespace TitaniumColector.SqlServer
         {
             SqlCommand cmd = new SqlCommand(sql01, openConn());
             SqlDataReader dr = cmd.ExecuteReader();
-
-            if (dr.FieldCount > 0)
-            {
-            }
-
             return dr;
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using TitaniumColector.SqlServer;
 
 namespace TitaniumColector.Classes
 {
@@ -13,6 +14,22 @@ namespace TitaniumColector.Classes
         private string strNome;
         private string strSenha;
         private string strNomeCompleto;
+        private atividade situacaoUsuario;
+
+        public enum usuarioProperty
+        {
+	        CODIGO = 1,
+	        PASTA = 2,
+	        NOME = 3,
+	        SENHA = 4,
+	        NOMECOMPLETO = 5
+        }
+
+        public enum atividade
+        {
+            ATIVO = 0,
+            DESATIVO = 1
+        }
 
         public Usuario()
         {
@@ -104,6 +121,18 @@ namespace TitaniumColector.Classes
 			        strNomeCompleto = value.Trim();
 		        }
 	        }
+        }
+
+        internal atividade SituacaoUsuario
+        {
+            get 
+            { 
+                return situacaoUsuario; 
+            }
+            set 
+            { 
+                situacaoUsuario = value; 
+            }
         }
 
 
@@ -203,13 +232,37 @@ namespace TitaniumColector.Classes
             return base.GetHashCode();
         }
 
-        public enum usuarioProperty
+        public long registrarAcesso(Usuario user,Usuario.atividade tipodeAcao)
         {
-	        Codigo = 1,
-	        Pasta = 2,
-	        Nome = 3,
-	        Senha = 4,
-	        NomeCompleto = 5
+            
+            long retorno = 0;
+
+            SituacaoUsuario = tipodeAcao;
+            string sql01 = null;
+            //Insere o acesso e inicia a transação
+            sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)";
+            sql01 = sql01 + " VALUES (" + user.Codigo + ",'" + MainConfig.HostName + "')";
+            SqlServerConn.execCommandSql(sql01);
+
+            //Recupera o código do acesso
+            sql01 = "SELECT MAX(codigoACESSO) AS novoACESSO";
+            sql01 = sql01 + " FROM tb0207_Acessos";
+            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+            if ((dr.FieldCount > 0))
+            {
+                while ((dr.Read()))
+                {
+                    retorno = (long)dr["novoACESSO"];
+                }
+            }
+
+            SqlServerConn.closeConn();
+
+            return retorno;
+
+            //Fecha a transação
+            //Call ConnExecCommitTrans()
+
         }
 
     }

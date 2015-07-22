@@ -237,7 +237,7 @@ namespace TitaniumColector
             this.sql01 = sbSql01.ToString();
 
             listUsuario = new List<object>(this.fillArrayListUsuarios(dt, this.sql01));
-            this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.Nome, true);
+            this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.NOME, true);
 
             objUsuario = new Usuario();
             objUsuario = (Usuario)listUsuario[0];
@@ -281,15 +281,15 @@ namespace TitaniumColector
                 switch (prop)
                 {
 
-                    case Usuario.usuarioProperty.Codigo:
+                    case Usuario.usuarioProperty.CODIGO:
                         columnName = "Codigo";
                         displayName = "Codigo";
                         break;
-                    case Usuario.usuarioProperty.Nome:
+                    case Usuario.usuarioProperty.NOME:
                         columnName = "Nome";
                         displayName = "Nome";
                         break;
-                    case Usuario.usuarioProperty.NomeCompleto:
+                    case Usuario.usuarioProperty.NOMECOMPLETO:
                         columnName = "NomeCompleto";
                         displayName = "NomeCompleto";
                         break;
@@ -320,15 +320,15 @@ namespace TitaniumColector
                     switch (prop)
                     {
 
-                        case Usuario.usuarioProperty.Codigo:
+                        case Usuario.usuarioProperty.CODIGO:
                             columnName = "Codigo";
                             cb.Items.Add(objUsuarioLoop.Codigo);
                             continue;
-                        case Usuario.usuarioProperty.Nome:
+                        case Usuario.usuarioProperty.NOME:
                             columnName = "Nome";
                             cb.Items.Add(objUsuarioLoop.Nome);
                             continue;
-                        case Usuario.usuarioProperty.NomeCompleto:
+                        case Usuario.usuarioProperty.NOMECOMPLETO:
                             columnName = "NomeCompleto";
                             cb.Items.Add(objUsuarioLoop.NomeCompleto);
                             continue;
@@ -356,14 +356,14 @@ namespace TitaniumColector
         {
             if (cbUsuario.SelectedItem != null && txtSenha.Text != null)
             {
-                BindingSource bSource = new BindingSource();
-                bSource.DataSource 
+                BindingSource bSource = new BindingSource(); 
                 if (cbUsuario.Items.Contains(cbUsuario.Text))
                 {
                     objUsuario = new Usuario();
                     objUsuario = (Usuario)cbUsuario.SelectedItem;
                     if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
                     {
+                        objUsuario.registrarAcesso(objUsuario,Usuario.atividade.ATIVO);
                         MessageBox.Show("Nasceu");
                     }
                     else
@@ -380,5 +380,35 @@ namespace TitaniumColector
                 cbUsuario.Focus();
             }
         }
+
+
+        private void cbUsuario_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.validarComboUsuario(e);
+        }
+
+
+        private void cbUsuario_Validate(KeyPressEventArgs e) 
+        {
+            this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+        }
+
+        private void validarComboUsuario(KeyEventArgs e)
+        {
+            if ((e.KeyValue == (char)Keys.Enter))
+            {
+                if (cbUsuario.SelectedItem != null)
+                {
+                    txtSenha.Text = "";
+                    txtSenha.Focus();
+                }
+            }
+            else if ((e.KeyValue == (char)Keys.Space))
+            {
+                cbUsuario.Text = cbUsuario.Text.Trim();
+                cbUsuario.SelectionStart = cbUsuario.Text.Length + 1;
+            }
+        }
+
     }
 }

@@ -78,6 +78,7 @@
             this.cbUsuario.Name = "cbUsuario";
             this.cbUsuario.Size = new System.Drawing.Size(100, 23);
             this.cbUsuario.TabIndex = 6;
+            this.cbUsuario.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cbUsuario_KeyUp);
             // 
             // lbSenha
             // 
