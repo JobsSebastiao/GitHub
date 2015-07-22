@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.SqlServer;
 using TitaniumColector.Classes;
+using TitaniumColector.Forms;
 using System.Reflection;
 using System.Collections;
 
@@ -43,6 +44,7 @@ namespace TitaniumColector
 
                 this.configFrmLogin();
                 this.carregarComboUsuario();
+
             }
             catch (System.Data.SqlClient.SqlException sqlEx) 
             {
@@ -78,7 +80,8 @@ namespace TitaniumColector
         {
             this.SuspendLayout();
             this.Size = new System.Drawing.Size(MainConfig.ScreenWidth, MainConfig.ScreenHeigth);
-            this.configControls(); 
+            this.configControls();
+            this.cbUsuario.Focus();
             this.ResumeLayout();
         }
 
@@ -113,7 +116,7 @@ namespace TitaniumColector
             this.lbDescricao.Size = new System.Drawing.Size(90, 35);
             this.lbDescricao.Text = "Login :";
             this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeXYString(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
+            sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
             this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - sizeString.Width / 2) ,
                                                                   this.panelFrmLogin.Location.Y+pboxFrmLogin.Size.Height+10);
 
@@ -124,7 +127,7 @@ namespace TitaniumColector
             this.lbUsuario.Size = new System.Drawing.Size(90, 35);
             this.lbUsuario.Text = "Usuário :";
             this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeXYString(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
+            sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
             this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
                                                                   this.lbDescricao.Location.Y + 80);
 
@@ -134,7 +137,7 @@ namespace TitaniumColector
             this.lbSenha.Font = MainConfig.FontPadraoBold;
             this.lbSenha.Text = "Senha :";
             this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeXYString(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
             this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
             this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
                                                                    this.lbUsuario.Location.Y + 25);
@@ -147,7 +150,7 @@ namespace TitaniumColector
             //ComboBox Usuário
             //
             this.cbUsuario.Font = MainConfig.FontPadraoRegular;
-            sizeString = MainConfig.sizeXYString(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
             this.cbUsuario.Visible = true;
             this.cbUsuario.Size = new System.Drawing.Size(120, 27);
             this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
@@ -169,6 +172,7 @@ namespace TitaniumColector
             this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
             this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
                                                                     this.lbSenha.Location.Y - 3);
+            this.txtSenha.Enabled = false;
         }
 
         private void configButton() 
@@ -201,28 +205,6 @@ namespace TitaniumColector
             this.configTextBox();
             this.configButton();
         }
-        private void configMenuItens()
-        {
-            ////menuItem Opções
-            //this.menuItemOpcao = new System.Windows.Forms.MenuItem();
-            //this.menuItemOpcao.Text = "Opções";
-            //this.menuItemOpcao.Enabled = true;
-
-            ////menuItem Exit
-            //this.menuItemExit = new System.Windows.Forms.MenuItem();
-            //this.menuItemExit.Text = "Exit";
-            //this.menuItemExit.Enabled = true;
-
-            ////MenuItem Logi
-            //this.menuItemLogin = new System.Windows.Forms.MenuItem();
-            //this.menuItemLogin.Text = "Logar";
-            //this.menuItemLogin.Enabled = true;
-
-            //adiciona os menus ao menuprincipal.
-            //this.mainmnuLogin.MenuItems.Add(this.menuItemOpcao);
-            //this.menuItemOpcao.MenuItems.Add(this.menuItemLogin);
-            //this.menuItemOpcao.MenuItems.Add(this.menuItemExit);
-        }
 
         #endregion
 
@@ -230,32 +212,40 @@ namespace TitaniumColector
         {
             dt = new DataTable("Usuario");
             StringBuilder sbSql01 = new StringBuilder();
-            sbSql01.Append("SELECT codigoUSUARIO as Codigo,pastaUSUARIO as Pasta,nomeUSUARIO as Nome,");
-            sbSql01.Append("senhaUSUARIO as Senha,nomecompletoUSUARIO as NomeCompleto ");
-            sbSql01.Append("FROM tb0201_usuarios ");
-            sbSql01.Append("ORDER BY nomeUSUARIO ");
+            sbSql01.Append(" SELECT codigoUSUARIO as Codigo,pastaUSUARIO as Pasta,nomeUSUARIO as Nome,");
+            sbSql01.Append(" senhaUSUARIO as Senha,nomecompletoUSUARIO as NomeCompleto,ativoUSUARIO as StatusUsuario");
+            sbSql01.Append(" FROM tb0201_usuarios ");
+            sbSql01.Append(" ORDER BY nomeUSUARIO ");
             this.sql01 = sbSql01.ToString();
 
             listUsuario = new List<object>(this.fillArrayListUsuarios(dt, this.sql01));
-            this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.NOME, true);
+            this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.NOME, false);
 
-            objUsuario = new Usuario();
-            objUsuario = (Usuario)listUsuario[0];
+            //objUsuario = new Usuario();
+            //objUsuario = (Usuario)listUsuario[0];
         }
 
         private List<object> fillArrayListUsuarios(DataTable dt, string sql01)
         {
+            Usuario.statusUsuario status;
 
             List<object> listUsuario = new List<object>();
             DataRow dr = null;
-
+            
             //'preenche um DataTable
            SqlServerConn.fillDataTable(dt, sql01);
 
             foreach (DataRow dr_loopVariable in dt.Rows)
             {
                 dr = dr_loopVariable;
-                objUsuario = new Usuario(Convert.ToInt32(dr["Codigo"]), Convert.ToInt32(dr["Pasta"]), (string)dr["Nome"], (string)dr["Senha"], (string)dr["NomeCompleto"]);
+                if (Convert.ToInt32(dr["StatusUsuario"]) == 0) 
+                {
+                 status = Usuario.statusUsuario.DESATIVADO;  
+                }else
+                {
+                    status = Usuario.statusUsuario.ATIVO;
+                }
+                objUsuario = new Usuario(Convert.ToInt32(dr["Codigo"]), Convert.ToInt32(dr["Pasta"]),(string)dr["Nome"], (string)dr["Senha"],(string)dr["NomeCompleto"],status);
                 listUsuario.Add(objUsuario);
             }
 
@@ -308,7 +298,7 @@ namespace TitaniumColector
             }
             else 
             {
-                string columnName = null;
+                
                 cb.Items.Clear();
 
                 //Loop em cada objeto contido no array
@@ -317,70 +307,42 @@ namespace TitaniumColector
                 {
 
                     objUsuarioLoop = user;
-                    switch (prop)
-                    {
 
-                        case Usuario.usuarioProperty.CODIGO:
-                            columnName = "Codigo";
-                            cb.Items.Add(objUsuarioLoop.Codigo);
-                            continue;
-                        case Usuario.usuarioProperty.NOME:
-                            columnName = "Nome";
-                            cb.Items.Add(objUsuarioLoop.Nome);
-                            continue;
-                        case Usuario.usuarioProperty.NOMECOMPLETO:
-                            columnName = "NomeCompleto";
-                            cb.Items.Add(objUsuarioLoop.NomeCompleto);
-                            continue;
-                        default:
-                            columnName = "Nome";
-                            cb.Items.Add(objUsuarioLoop.NomeCompleto);
-                            break;
+                    if (user.StatusUsuario == Usuario.statusUsuario.ATIVO) 
+                    {
+                        switch (prop)
+                        {
+
+                            case Usuario.usuarioProperty.CODIGO:
+                                cb.DisplayMember = "Codigo";
+                                cb.ValueMember = "Codigo";
+                                cb.Items.Add(objUsuarioLoop.Codigo);
+                                continue;
+                            case Usuario.usuarioProperty.NOME:
+                                cb.DisplayMember = "Nome";
+                                cb.ValueMember = "Nome";
+                                cb.Items.Add(objUsuarioLoop);
+                                continue;
+                            case Usuario.usuarioProperty.NOMECOMPLETO:
+                                cb.DisplayMember = "NomeCompleto";
+                                cb.ValueMember = "NomeCompleto";
+                                cb.Items.Add(objUsuarioLoop.NomeCompleto);
+                                continue;
+                            default:
+                                cb.DisplayMember = "Nome";
+                                cb.ValueMember = "Nome";
+                                cb.Items.Add(objUsuarioLoop.NomeCompleto);
+                                break;
+                        }
+
                     }
-                    objUsuarioLoop = null;
+
                 }
 
-                cb.DropDownStyle = ComboBoxStyle.DropDown;
-                cb.DisplayMember = columnName;
-                cb.ValueMember = columnName;
+                objUsuarioLoop = null;
             }
 
         }
-
-        private void btSair_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void btLogin_Click(object sender, EventArgs e)
-        {
-            if (cbUsuario.SelectedItem != null && txtSenha.Text != null)
-            {
-                BindingSource bSource = new BindingSource(); 
-                if (cbUsuario.Items.Contains(cbUsuario.Text))
-                {
-                    objUsuario = new Usuario();
-                    objUsuario = (Usuario)cbUsuario.SelectedItem;
-                    if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
-                    {
-                        objUsuario.registrarAcesso(objUsuario,Usuario.atividade.ATIVO);
-                        MessageBox.Show("Nasceu");
-                    }
-                    else
-                    {
-                        MessageBox.Show(" A senha digitada \n é inválida!!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                        txtSenha.Text = "";
-                        txtSenha.Focus();
-                    }
-                }
-            }
-            else 
-            {
-                cbUsuario.Text = "";
-                cbUsuario.Focus();
-            }
-        }
-
 
         private void cbUsuario_KeyUp(object sender, KeyEventArgs e)
         {
@@ -388,17 +350,69 @@ namespace TitaniumColector
         }
 
 
-        private void cbUsuario_Validate(KeyPressEventArgs e) 
+        private void cbUsuario_Validate(KeyPressEventArgs e)
         {
             this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
         }
 
+        private void btSair_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void cbUsuario_LostFocus(object sender, EventArgs e)
+        {
+            if (cbUsuario.Text != null && cbUsuario.SelectedItem != null)
+            {
+                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+            }
+            else if (cbUsuario.SelectedItem == null)
+            {
+                cbUsuario.Focus();
+            }
+        }
+
+        private void txtSenha_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                MainConfig.GetFocusedControl(this);
+                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+            }
+        }
+
+        private void frmLogin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && MainConfig.GetFocusedControl(this) != cbUsuario)
+            {
+                this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
+            }
+        }
+
+        private void cbUsuario_GotFocus(object sender, EventArgs e)
+        {
+            cbUsuario.Text = "";
+            txtSenha.Text = "";
+        }
+
+
+        private void btLogin_Click(object sender, EventArgs e)
+        {
+            this.Logar();
+        }
+
         private void validarComboUsuario(KeyEventArgs e)
         {
+
             if ((e.KeyValue == (char)Keys.Enter))
             {
-                if (cbUsuario.SelectedItem != null)
+                if (cbUsuario.SelectedItem != null && txtSenha.Text != "")
                 {
+                    btLogin.Focus();
+                }
+                else if (cbUsuario.SelectedItem != null)
+                {
+                    txtSenha.Enabled = true;
                     txtSenha.Text = "";
                     txtSenha.Focus();
                 }
@@ -410,5 +424,45 @@ namespace TitaniumColector
             }
         }
 
+        private void Logar() 
+        {
+            if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() != "")
+            {
+
+                if (cbUsuario.SelectedItem != null)
+                {
+                    objUsuario = new Usuario();
+                    objUsuario = (Usuario)cbUsuario.SelectedItem;
+                    if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
+                    {
+                        MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(objUsuario, Usuario.statusLogin.LOGADO);
+                        this.cbUsuario.Text = "";
+                        this.txtSenha.Text = "";
+                        FrmAcao frmAcao = new FrmAcao();
+                        this.Hide();
+                        frmAcao.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show(" A senha digitada \n é inválida!!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                        txtSenha.Text = "";
+                        txtSenha.Focus();
+                    }
+                }
+            }
+            else
+            {
+                if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() == "")
+                {
+                    txtSenha.Text = "";
+                    txtSenha.Focus();
+                }
+                else
+                {
+                    cbUsuario.Text = "";
+                    cbUsuario.Focus();
+                }
+            }
+        }
     }
 }

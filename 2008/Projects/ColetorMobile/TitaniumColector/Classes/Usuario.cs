@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Text;
 using TitaniumColector.SqlServer;
 
 namespace TitaniumColector.Classes
@@ -14,34 +11,44 @@ namespace TitaniumColector.Classes
         private string strNome;
         private string strSenha;
         private string strNomeCompleto;
-        private atividade situacaoUsuario;
+        private statusUsuario enumStatusUsuario;
+        private statusLogin enumStatusLogin;
 
         public enum usuarioProperty
         {
-	        CODIGO = 1,
-	        PASTA = 2,
-	        NOME = 3,
-	        SENHA = 4,
-	        NOMECOMPLETO = 5
+            CODIGO = 1,
+            PASTA = 2,
+            NOME = 3,
+            SENHA = 4,
+            NOMECOMPLETO = 5,
+            STATUSUSUARIO = 6
         }
 
-        public enum atividade
+        public enum statusLogin
         {
-            ATIVO = 0,
-            DESATIVO = 1
+            LOGADO = 0,
+            NAOLOGADO = 1
+        }
+
+        public enum statusUsuario 
+        {   
+            DESATIVADO =0,
+            ATIVO =1
         }
 
         public Usuario()
         {
         }
 
-        public Usuario(int codigoUsuario, int pastaUsuario, string nomeUsuario, string senhaUsuario, string nomeCompletoUsuario)
+        public Usuario(int codigoUsuario, int pastaUsuario, string nomeUsuario, string senhaUsuario, string nomeCompletoUsuario,statusUsuario statusUsuario)
         {
 	        Codigo = codigoUsuario;
 	        Pasta = pastaUsuario;
 	        Nome = nomeUsuario;
 	        Senha = senhaUsuario;
 	        NomeCompleto = nomeCompletoUsuario;
+            StatusUsuario = statusUsuario;
+            StatusLogin = statusLogin.NAOLOGADO;
         }
 
         public int Codigo {
@@ -123,22 +130,34 @@ namespace TitaniumColector.Classes
 	        }
         }
 
-        internal atividade SituacaoUsuario
+        internal statusLogin StatusLogin
         {
-            get 
+            get         
             { 
-                return situacaoUsuario; 
+                return enumStatusLogin; 
             }
             set 
             { 
-                situacaoUsuario = value; 
+                enumStatusLogin = value; 
             }
         }
 
 
+        internal statusUsuario StatusUsuario
+        {
+            get 
+            { 
+                return enumStatusUsuario; 
+            }
+            set 
+            { 
+                enumStatusUsuario = value; 
+            }
+        }
+
         public bool validaSenha(object obj,string strSenha) 
         {
-            //System.Type type = obj.GetType();
+            
             bool retorno = false;
 
             if (obj == null || (obj.GetType() != typeof(Usuario)))
@@ -155,11 +174,9 @@ namespace TitaniumColector.Classes
             return retorno;
         }
 
-
-
         public bool validaNome(object obj,string strNome)
         {
-            //System.Type type = obj.GetType();
+            
             bool retorno = false;
 
             if (obj == null || (obj.GetType() != typeof(Usuario)))
@@ -212,7 +229,8 @@ namespace TitaniumColector.Classes
                    " Pasta : " + Pasta + Environment.NewLine + 
                    " Senha : " + Senha + Environment.NewLine +
                    " Nome : " + Nome + Environment.NewLine +
-                   " Nome Completo :" + NomeCompleto;
+                   " Nome Completo :" + NomeCompleto + Environment.NewLine +
+                   " Status Usuario :" + StatusUsuario;
         }
 
         public override bool Equals(object obj)
@@ -232,12 +250,12 @@ namespace TitaniumColector.Classes
             return base.GetHashCode();
         }
 
-        public long registrarAcesso(Usuario user,Usuario.atividade tipodeAcao)
+        public long registrarAcesso(Usuario user,Usuario.statusLogin tipodeAcao)
         {
             
-            long retorno = 0;
+            Int64 retorno = 0;
 
-            SituacaoUsuario = tipodeAcao;
+            StatusLogin = tipodeAcao;
             string sql01 = null;
             //Insere o acesso e inicia a transação
             sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)";
@@ -252,7 +270,7 @@ namespace TitaniumColector.Classes
             {
                 while ((dr.Read()))
                 {
-                    retorno = (long)dr["novoACESSO"];
+                    retorno = (Int32)dr["novoACESSO"];
                 }
             }
 

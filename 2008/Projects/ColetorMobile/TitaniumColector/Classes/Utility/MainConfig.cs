@@ -15,6 +15,7 @@ namespace TitaniumColector
         public static string DeviceIp { get; set; }
         private static string strUsuarioLogado;
         private static int intUsuarioLogado;
+        private static Int64 intCodigoAcesso;
         private static Font fontPadraoRegular;
         private static Font fontPadraoBold;
         private static Font fontGrande;
@@ -87,7 +88,7 @@ namespace TitaniumColector
             }
         }
 
-        public static int codigoUsuarioLogado
+        public static int CodigoUsuarioLogado
         {
             get 
             {
@@ -132,6 +133,18 @@ namespace TitaniumColector
             set
             {
                 fontGrande = value;
+            }
+        }
+
+        public static Int64 CodigoAcesso
+        {
+            get 
+            { 
+                return intCodigoAcesso; 
+            }
+            set 
+            { 
+                intCodigoAcesso = value; 
             }
         }
 
@@ -205,7 +218,7 @@ namespace TitaniumColector
             FontGrandeRegular = new System.Drawing.Font("Arial", tamanho, style);
         }
 
-        public static SizeF sizeXYString(string text,Font font)
+        public static SizeF sizeStringEmPixel(string text,Font font)
         {
             SizeF size = new SizeF();
             using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage(new Bitmap(1, 1)))
@@ -222,7 +235,7 @@ namespace TitaniumColector
         /// <param name="objectList">List preenchida com um tipo de Objeto</param>
         /// <param name="displayName">parâmetro do objeto a ser mostrado na ComboBox</param>
         /// <param name="columnName">parâmetro que terá o seu valor utilizado na ComboBox. </param>
-        public static void carregarComboBox(System.Windows.Forms.ComboBox cb, List<object> objectList,string displayName,string columnName)
+        public static void carregarComboBox(System.Windows.Forms.ComboBox cb, List<object> objectList, string displayName, string columnName)
         {
             cb.Items.Clear();
             cb.DataSource = objectList;
@@ -231,6 +244,25 @@ namespace TitaniumColector
             cb.ValueMember = columnName;
             cb.SelectedItem = null;
         }
+
+        public static Control GetFocusedControl(Control parent)
+        {
+            if (parent.Focused)
+            {
+                return parent;
+            }
+            foreach (Control ctrl in parent.Controls)
+            {
+                Control temp = GetFocusedControl(ctrl);
+                if (temp != null)
+                {
+                    return temp;
+                }
+            }
+            return null;
+
+        }
+
 
     }
 }

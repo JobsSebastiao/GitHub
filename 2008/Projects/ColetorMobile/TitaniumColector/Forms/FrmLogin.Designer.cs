@@ -1,4 +1,5 @@
-﻿namespace TitaniumColector
+﻿using System.Windows.Forms;
+namespace TitaniumColector
 {
     partial class frmLogin
     {
@@ -21,6 +22,40 @@
             }
             base.Dispose(disposing);
         }
+
+        public virtual Control ActiveControl
+        {
+            get
+            {
+                return GetFocusedControl(this);
+            }
+            set
+            {
+                if (!value.Focused)
+                {
+                    value.Focus();
+                }
+            }
+
+        }
+
+        private Control GetFocusedControl(Control parent)
+        {
+            if (parent.Focused)
+            {
+                return parent;
+            }
+            foreach (Control ctrl in parent.Controls)
+            {
+                Control temp = GetFocusedControl(ctrl);
+                if (temp != null)
+                {
+                    return temp;
+                }
+            }
+            return null;
+
+        } 
 
         #region Windows Form Designer generated code
 
@@ -71,6 +106,7 @@
             this.txtSenha.Name = "txtSenha";
             this.txtSenha.Size = new System.Drawing.Size(100, 23);
             this.txtSenha.TabIndex = 7;
+            this.txtSenha.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtSenha_KeyPress);
             // 
             // cbUsuario
             // 
@@ -78,7 +114,9 @@
             this.cbUsuario.Name = "cbUsuario";
             this.cbUsuario.Size = new System.Drawing.Size(100, 23);
             this.cbUsuario.TabIndex = 6;
+            this.cbUsuario.LostFocus += new System.EventHandler(this.cbUsuario_LostFocus);
             this.cbUsuario.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cbUsuario_KeyUp);
+            this.cbUsuario.GotFocus += new System.EventHandler(this.cbUsuario_GotFocus);
             // 
             // lbSenha
             // 
@@ -129,8 +167,10 @@
             this.ClientSize = new System.Drawing.Size(346, 455);
             this.ControlBox = false;
             this.Controls.Add(this.panelFrmLogin);
+            this.KeyPreview = true;
             this.Name = "frmLogin";
             this.Text = "Login";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmLogin_KeyDown);
             this.panelFrmLogin.ResumeLayout(false);
             this.ResumeLayout(false);
 
