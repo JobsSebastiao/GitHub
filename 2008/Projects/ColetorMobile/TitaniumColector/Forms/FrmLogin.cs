@@ -18,10 +18,6 @@ namespace TitaniumColector
     public partial class frmLogin : Form
     {   
         
-        //não uso o menu no form Login
-        //private System.Windows.Forms.MenuItem menuItemOpcao;
-        //private System.Windows.Forms.MenuItem menuItemExit;
-        //private System.Windows.Forms.MenuItem menuItemLogin;
         private Usuario objUsuario;
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
@@ -41,7 +37,6 @@ namespace TitaniumColector
                 {
                     Application.Exit();
                 }
-
                 this.configFrmLogin();
                 this.carregarComboUsuario();
 
@@ -76,6 +71,13 @@ namespace TitaniumColector
 
         }
 
+        //PRINCIPAIS MÉTODOS DO FORMULÁRIO.
+        #region "Métodos Principais"  
+
+
+        /// <summary>
+        /// Configurações do fomulário.
+        /// </summary>
         private void configFrmLogin() 
         {
             this.SuspendLayout();
@@ -85,129 +87,9 @@ namespace TitaniumColector
             this.ResumeLayout();
         }
 
-
-        //Configuração dos controle exibidos na tela de login
-        #region "Configurações de Controls"
-
-        private void configPictureBox() 
-        {
-            this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
-            this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
-            //Tamanho da Imagem a ser mostrada no Picture Box
-            this.ImgLogin.ImageSize  = new Size((int)(this.Size.Width),77);
-            this.pboxFrmLogin.BackColor = Color.Black;
-            this.pboxFrmLogin.Image = ImgLogin.Images[0];
-        
-        }
-
-        private void configPainel() 
-        {
-            this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
-            this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
-        }
-
-
-        private void configLabel()
-        {
-            // 
-            // Label Descrição
-            // 
-            this.lbDescricao.Font = MainConfig.FontGrandeRegular;
-            this.lbDescricao.Size = new System.Drawing.Size(90, 35);
-            this.lbDescricao.Text = "Login :";
-            this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
-            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - sizeString.Width / 2) ,
-                                                                  this.panelFrmLogin.Location.Y+pboxFrmLogin.Size.Height+10);
-
-            //
-            //Label Usuário
-            //
-            this.lbUsuario.Font = MainConfig.FontPadraoBold;
-            this.lbUsuario.Size = new System.Drawing.Size(90, 35);
-            this.lbUsuario.Text = "Usuário :";
-            this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
-            this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
-                                                                  this.lbDescricao.Location.Y + 80);
-
-            //
-            //Label Senha
-            //
-            this.lbSenha.Font = MainConfig.FontPadraoBold;
-            this.lbSenha.Text = "Senha :";
-            this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-            this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
-            this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
-                                                                   this.lbUsuario.Location.Y + 25);
-
-        }
-
-        private void configComboBox() 
-        {
-            //
-            //ComboBox Usuário
-            //
-            this.cbUsuario.Font = MainConfig.FontPadraoRegular;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-            this.cbUsuario.Visible = true;
-            this.cbUsuario.Size = new System.Drawing.Size(120, 27);
-            this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
-                                                                   this.lbUsuario.Location.Y-3);
-            this.cbUsuario.DropDownStyle = ComboBoxStyle.DropDownList;
-
-        }
-
-        private void configTextBox()
-        {
-            //
-            // TextBox Senha
-            //
-            this.txtSenha.Font = MainConfig.FontPadraoRegular;
-            this.txtSenha.Text = "";
-            this.txtSenha.MaxLength = 12;
-            this.txtSenha.PasswordChar = MainConfig.PasswordChar;
-            this.txtSenha.Visible = true;
-            this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
-            this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
-                                                                    this.lbSenha.Location.Y - 3);
-            this.txtSenha.Enabled = false;
-        }
-
-        private void configButton() 
-        {
-            //
-            //Button Login 
-            //
-            this.btLogin.Font = MainConfig.FontPadraoRegular;
-            this.btLogin.Visible = true;
-            this.btLogin.Size = new System.Drawing.Size(72, 20);
-            this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - btLogin.Size.Width - 3),
-                                                                    this.lbSenha.Location.Y + 40);
-
-            //
-            //Button Sair
-            //
-            this.btSair.Font = MainConfig.FontPadraoRegular;
-            this.btSair.Visible = true;
-            this.btSair.Size = new System.Drawing.Size(72, 20);
-            this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 + 3),
-                                                                    this.lbSenha.Location.Y + 40);
-
-        }
-        private void configControls() 
-        {
-            this.configPictureBox();
-            this.configPainel();
-            this.configLabel();
-            this.configComboBox();
-            this.configTextBox();
-            this.configButton();
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Carrega a combo de usuários
+        /// </summary>
         private void carregarComboUsuario()
         {
             dt = new DataTable("Usuario");
@@ -221,10 +103,15 @@ namespace TitaniumColector
             listUsuario = new List<object>(this.fillArrayListUsuarios(dt, this.sql01));
             this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.NOME, false);
 
-            //objUsuario = new Usuario();
-            //objUsuario = (Usuario)listUsuario[0];
         }
 
+
+        /// <summary>
+        /// Preenche um List com objetos da classe Usuario
+        /// </summary>
+        /// <param name="dt">Data table utilizado para armazenar os dados vindos da base de dados.</param>
+        /// <param name="sql01">Comando Sql que retorna dados para cada usuário.</param>
+        /// <returns></returns>
         private List<object> fillArrayListUsuarios(DataTable dt, string sql01)
         {
             Usuario.statusUsuario status;
@@ -258,15 +145,18 @@ namespace TitaniumColector
         /// </summary>
         /// <param name="cb">ComboBox a ser Preenchida</param>
         /// <param name="listUsuario">List carregada com objeto do tipo Usuario</param>
-        /// <param name="prop"></param>
-        /// <param name="dataSource"></param>
-        private void preencheComboBoxUsuario(ComboBox cb, List<object> listUsuario, Usuario.usuarioProperty prop,bool dataSource)
+        /// <param name="prop">O atributo que será utilizado para carregar a ComboBox</param>
+        /// <param name="dataSource">(TRUE)Define que a combo irá utilizar os dados da List como seu DataSource.
+        ///                          (FALSE)Será feito um Loop nos objetos contidos na List não incluíndo na ComboBox os 
+        ///                                 usuários com o statusUSUARIO = 0 (DESATIVADOS.)
+        /// </param>
+        private void preencheComboBoxUsuario(ComboBox cb, List<object> listUsuario, Usuario.usuarioProperty prop,bool useDataSource)
         {
+            string columnName = null;
+            string displayName = null;
 
-            if (dataSource == true)
+            if (useDataSource == true)
             {
-                string columnName = null;
-                string displayName = null;
 
                 switch (prop)
                 {
@@ -324,6 +214,7 @@ namespace TitaniumColector
                                 cb.Items.Add(objUsuarioLoop);
                                 continue;
                             case Usuario.usuarioProperty.NOMECOMPLETO:
+
                                 cb.DisplayMember = "NomeCompleto";
                                 cb.ValueMember = "NomeCompleto";
                                 cb.Items.Add(objUsuarioLoop.NomeCompleto);
@@ -338,69 +229,16 @@ namespace TitaniumColector
                     }
 
                 }
-
                 objUsuarioLoop = null;
             }
 
         }
 
-        private void cbUsuario_KeyUp(object sender, KeyEventArgs e)
-        {
-            this.validarComboUsuario(e);
-        }
-
-
-        private void cbUsuario_Validate(KeyPressEventArgs e)
-        {
-            this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
-        }
-
-        private void btSair_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void cbUsuario_LostFocus(object sender, EventArgs e)
-        {
-            if (cbUsuario.Text != null && cbUsuario.SelectedItem != null)
-            {
-                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
-            }
-            else if (cbUsuario.SelectedItem == null)
-            {
-                cbUsuario.Focus();
-            }
-        }
-
-        private void txtSenha_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                MainConfig.GetFocusedControl(this);
-                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
-            }
-        }
-
-        private void frmLogin_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter && MainConfig.GetFocusedControl(this) != cbUsuario)
-            {
-                this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
-            }
-        }
-
-        private void cbUsuario_GotFocus(object sender, EventArgs e)
-        {
-            cbUsuario.Text = "";
-            txtSenha.Text = "";
-        }
-
-
-        private void btLogin_Click(object sender, EventArgs e)
-        {
-            this.Logar();
-        }
-
+        /// <summary>
+        /// Válida a combo de usuário antes que o foco seja mudado para a TextBox Senha.
+        /// </summary>
+        /// <param name="e">Tecla digitada</param>
+        /// <remarks>Para que a validação seja realizada a tecla enviada deve ser o Enter  char(13)</remarks>
         private void validarComboUsuario(KeyEventArgs e)
         {
 
@@ -424,7 +262,7 @@ namespace TitaniumColector
             }
         }
 
-        private void Logar() 
+        private void Logar()
         {
             if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() != "")
             {
@@ -439,8 +277,8 @@ namespace TitaniumColector
                         this.cbUsuario.Text = "";
                         this.txtSenha.Text = "";
                         FrmAcao frmAcao = new FrmAcao();
-                        this.Hide();
                         frmAcao.Show();
+                        this.Hide();
                     }
                     else
                     {
@@ -464,5 +302,222 @@ namespace TitaniumColector
                 }
             }
         }
+
+
+        #endregion  
+
+
+        //MÉTODOS COMUNS AO FORMULÁRIO
+        #region 
+
+        //               //
+        // CB_USUARIO    //
+        //               //
+
+        private void cbUsuario_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Back)
+            {
+                cbUsuario.Text = "";
+            }
+        }
+
+        private void cbUsuario_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.validarComboUsuario(e);
+        }
+
+
+        private void cbUsuario_Validate(KeyPressEventArgs e)
+        {
+            this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+        }
+
+
+        private void cbUsuario_GotFocus(object sender, EventArgs e)
+        {
+            cbUsuario.Text = "";
+            txtSenha.Text = "";
+        }
+
+        private void cbUsuario_LostFocus(object sender, EventArgs e)
+        {
+            if (cbUsuario.Text != null && cbUsuario.SelectedItem != null)
+            {
+                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+            }
+            else if (cbUsuario.SelectedItem == null)
+            {
+                cbUsuario.Focus();
+            }
+        }
+
+
+        //               //
+        //   TXT_SENHA   //
+        //               //
+        private void txtSenha_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                MainConfig.GetFocusedControl(this);
+                this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
+            }
+        }
+
+
+        //               //
+        //  FRM_LOGIN    //
+        //               //
+        private void frmLogin_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && MainConfig.GetFocusedControl(this) != cbUsuario)
+            {
+                this.SelectNextControl(this.ActiveControl, !e.Shift, true, true, true);
+            }
+        }
+
+
+        //               //
+        //    BUTTONS    //
+        //               //
+        private void btLogin_Click(object sender, EventArgs e)
+        {
+            this.Logar();
+        }
+
+
+        private void btSair_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+
+        #endregion 
+       
+
+        //CONFIGURAÇÂO DOS CONTROLES DURANTE A CARGA DO FORMULARIO
+        #region "Configurações de Controls"
+
+        private void configPictureBox()
+        {
+            this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
+            this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
+            //Tamanho da Imagem a ser mostrada no Picture Box
+            this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 77);
+            this.pboxFrmLogin.BackColor = Color.Black;
+            this.pboxFrmLogin.Image = ImgLogin.Images[0];
+
+        }
+
+        private void configPainel()
+        {
+            this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
+            this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
+        }
+
+
+        private void configLabel()
+        {
+            // 
+            // Label Descrição
+            // 
+            this.lbDescricao.Font = MainConfig.FontGrandeRegular;
+            this.lbDescricao.Size = new System.Drawing.Size(90, 35);
+            this.lbDescricao.Text = "Login :";
+            this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
+            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - sizeString.Width / 2),
+                                                                  this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
+
+            //
+            //Label Usuário
+            //
+            this.lbUsuario.Font = MainConfig.FontPadraoBold;
+            this.lbUsuario.Size = new System.Drawing.Size(90, 35);
+            this.lbUsuario.Text = "Usuário :";
+            this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
+            this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
+                                                                  this.lbDescricao.Location.Y + 80);
+
+            //
+            //Label Senha
+            //
+            this.lbSenha.Font = MainConfig.FontPadraoBold;
+            this.lbSenha.Text = "Senha :";
+            this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+            this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
+            this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
+                                                                   this.lbUsuario.Location.Y + 25);
+
+        }
+
+        private void configComboBox()
+        {
+            //
+            //ComboBox Usuário
+            //
+            this.cbUsuario.Font = MainConfig.FontPadraoRegular;
+            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+            this.cbUsuario.Visible = true;
+            this.cbUsuario.Size = new System.Drawing.Size(120, 27);
+            this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
+                                                                   this.lbUsuario.Location.Y - 3);
+            this.cbUsuario.DropDownStyle = ComboBoxStyle.DropDown;
+
+        }
+
+        private void configTextBox()
+        {
+            //
+            // TextBox Senha
+            //
+            this.txtSenha.Font = MainConfig.FontPadraoRegular;
+            this.txtSenha.Text = "";
+            this.txtSenha.MaxLength = 12;
+            this.txtSenha.PasswordChar = MainConfig.PasswordChar;
+            this.txtSenha.Visible = true;
+            this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
+            this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
+                                                                    this.lbSenha.Location.Y - 3);
+            this.txtSenha.Enabled = false;
+        }
+
+        private void configButton()
+        {
+            //
+            //Button Login 
+            //
+            this.btLogin.Font = MainConfig.FontPadraoRegular;
+            this.btLogin.Visible = true;
+            this.btLogin.Size = new System.Drawing.Size(72, 20);
+            this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - btLogin.Size.Width - 3),
+                                                                    this.lbSenha.Location.Y + 40);
+
+            //
+            //Button Sair
+            //
+            this.btSair.Font = MainConfig.FontPadraoRegular;
+            this.btSair.Visible = true;
+            this.btSair.Size = new System.Drawing.Size(72, 20);
+            this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 + 3),
+                                                                    this.lbSenha.Location.Y + 40);
+
+        }
+        private void configControls()
+        {
+            this.configPictureBox();
+            this.configPainel();
+            this.configLabel();
+            this.configComboBox();
+            this.configTextBox();
+            this.configButton();
+        }
+
+        #endregion
+
+
     }
 }

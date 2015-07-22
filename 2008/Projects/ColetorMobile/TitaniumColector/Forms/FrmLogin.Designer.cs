@@ -7,8 +7,6 @@ namespace TitaniumColector
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
-        //Retirei o menu do form Login 
-        //private System.Windows.Forms.MainMenu mainmnuLogin;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -115,6 +113,7 @@ namespace TitaniumColector
             this.cbUsuario.Size = new System.Drawing.Size(100, 23);
             this.cbUsuario.TabIndex = 6;
             this.cbUsuario.LostFocus += new System.EventHandler(this.cbUsuario_LostFocus);
+            this.cbUsuario.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbUsuario_KeyPress);
             this.cbUsuario.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cbUsuario_KeyUp);
             this.cbUsuario.GotFocus += new System.EventHandler(this.cbUsuario_GotFocus);
             // 

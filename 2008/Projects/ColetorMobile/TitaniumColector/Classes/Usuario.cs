@@ -250,12 +250,20 @@ namespace TitaniumColector.Classes
             return base.GetHashCode();
         }
 
+
+        /// <summary>
+        /// Registra o acesso do usuário na Tabela tb0207_Acessos.
+        /// E define o status de Login do usuário como Usuario.StatusLogin.LOGADO OU NAOLOGADO
+        /// </summary>
+        /// <param name="user">Código do usuário.</param>
+        /// <param name="tipodeAcao"> ENUM Usuario.StatusLogin da classe usuário</param>
+        /// <returns>Retorna o código do acesso atual do usuário.</returns>
         public long registrarAcesso(Usuario user,Usuario.statusLogin tipodeAcao)
         {
             
             Int64 retorno = 0;
 
-            StatusLogin = tipodeAcao;
+            this.StatusLogin = tipodeAcao;
             string sql01 = null;
             //Insere o acesso e inicia a transação
             sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)";
@@ -277,9 +285,6 @@ namespace TitaniumColector.Classes
             SqlServerConn.closeConn();
 
             return retorno;
-
-            //Fecha a transação
-            //Call ConnExecCommitTrans()
 
         }
 

@@ -19,6 +19,7 @@ namespace TitaniumColector
         private static Font fontPadraoRegular;
         private static Font fontPadraoBold;
         private static Font fontGrande;
+        private static Microsoft.WindowsCE.Forms.InputPanel mainInputPanel;
 
         //Contantes
         public const int intPositionX = 0;
@@ -145,6 +146,18 @@ namespace TitaniumColector
             set 
             { 
                 intCodigoAcesso = value; 
+            }
+        }
+
+        public static Microsoft.WindowsCE.Forms.InputPanel MainInputPanel
+        {
+            get 
+            { 
+                return mainInputPanel; 
+            }
+            set 
+            { 
+                mainInputPanel = value; 
             }
         }
 

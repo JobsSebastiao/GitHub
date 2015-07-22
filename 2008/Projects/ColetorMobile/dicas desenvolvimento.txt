@@ -1,0 +1,24 @@
+Passos Piking Mobile : 
+
+Carregar dados da proposta: TOP 1
+
+CodigoRegistro;
+ClientePROPOSTA;
+
+Produto:
+
+PARTNUMBER: 
+DESCRICAO:
+LOTE:
+QUANTIDADE:
+KPATH:
+
+SELECT codigoPROPOSTA,numeroPROPOSTA, CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,13) as dataLIBERACAOPROPOSTA, razaoEMPRESA ,
+COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA,observacaoPROPOSTA 
+FROM tb1601_Propostas (NOLOCK) 
+INNER JOIN tb1611_Liberacoes_Proposta P (NOLOCK) ON P.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
+INNER JOIN tb1611_Liberacoes_Proposta C (NOLOCK) ON C.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
+INNER JOIN tb0301_Empresas (NOLOCK) ON clientePROPOSTA = codigoEMPRESA 
+WHERE statusPROPOSTA = 1 AND P.liberacaoLIBERACAOPROPOSTA = 1 AND C.liberacaoLIBERACAOPROPOSTA = 2 
+                         AND P.liberadoLIBERACAOPROPOSTA = 1  AND C.liberadoLIBERACAOPROPOSTA = 0
+						 

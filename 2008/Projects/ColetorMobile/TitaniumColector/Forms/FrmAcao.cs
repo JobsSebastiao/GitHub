@@ -6,51 +6,84 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using TitaniumColector.Utility;
 
 namespace TitaniumColector.Forms
 {
     public partial class FrmAcao : Form
     {
 
-        private System.Windows.Forms.MenuItem menuItemOpcao;
-        private System.Windows.Forms.MenuItem menuItemExit;
-        private System.Windows.Forms.MenuItem menuItemLogin;
-
         public FrmAcao()
         {
             InitializeComponent();
-            this.configMenu();
+            this.configForm();
+            
         }
 
         private void configMenu() 
         {
 
             ////menuItem Opções
-            this.menuItemOpcao = new System.Windows.Forms.MenuItem();
-            this.menuItemOpcao.Text = "Opção";
-            this.menuItemOpcao.Enabled = true;
-
+            this.mnuAcao_Opcoes = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Opcoes.Text = "Opção";
+            this.mnuAcao_Opcoes.Enabled = true;
 
             ////menuItem Exit
-            this.menuItemExit = new System.Windows.Forms.MenuItem();
-            this.menuItemExit.Text = "Exit";
-            this.menuItemExit.Enabled = true;
+            this.mnuAcao_Exit = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Exit.Text = "Exit";
+            this.mnuAcao_Exit.Enabled = true;
+            this.mnuAcao_Exit.Click += new EventHandler(mnuAcao_Exit_Click);
 
-            ////MenuItem Logi
-            this.menuItemLogin = new System.Windows.Forms.MenuItem();
-            this.menuItemLogin.Text = "Logar";
-            this.menuItemLogin.Enabled = true;
+            ////MenuItem Logout
+            this.mnuAcao_Logout = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Logout.Text = "Logout";
+            this.mnuAcao_Logout.Enabled = true;
+            this.mnuAcao_Logout.Click += new EventHandler(mnuAcao_Logout_Click);
 
-            //adiciona os menus ao menuprincipal.
-            this.menuFrmAcao.MenuItems.Add(this.menuItemOpcao);
-            this.menuItemOpcao.MenuItems.Add(this.menuItemLogin);
-            this.menuItemOpcao.MenuItems.Add(this.menuItemExit);
+            ////Adiciona os menus ao MenuPrincipal.
+            this.menuFrmAcao = new System.Windows.Forms.MainMenu();
+            this.menuFrmAcao.MenuItems.Add(mnuAcao_Opcoes);
+            this.mnuAcao_Opcoes.MenuItems.Add(this.mnuAcao_Exit);
+            this.mnuAcao_Opcoes.MenuItems.Add(this.mnuAcao_Logout);
+            this.Menu = this.menuFrmAcao;
+        }
+
+        private void configForm()
+        {
+            this.Size = new System.Drawing.Size(MainConfig.ScreenWidth, MainConfig.ScreenHeigth);
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.configMenu();
+            this.configButton();
+        }
+
+        private void configButton()
+        {
+            this.btnEntrada.Location = new System.Drawing.Point(MainConfig.intPositionX + 20 ,MainConfig.intPositionY + 30);
+            this.btnEntrada.Size = new System.Drawing.Size(MainConfig.ScreenWidth - 40 ,MainConfig.ScreenHeigth / 3);
+            this.btnEntrada.Text = "Entrada";
+            this.btnEntrada.Font = MainConfig.FontPadraoBold;
+
+            this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnEntrada.Location.Y+ btnEntrada.Size.Height + 10);
+            this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenWidth - 40, MainConfig.ScreenHeigth / 3);
+            this.btnSaida.Text = "Saída";
+            this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
+            this.btnSaida.Font = MainConfig.FontPadraoBold;
 
         }
 
-        private void menuItem2_Click(object sender, EventArgs e)
+        void mnuAcao_Logout_Click(object sender, EventArgs e)
+        {
+            frmLogin login = new frmLogin();
+            login.Show();
+            this.Close();
+          
+        }
+
+        void mnuAcao_Exit_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
+
+
     }
 }
