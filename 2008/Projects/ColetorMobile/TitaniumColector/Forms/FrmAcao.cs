@@ -84,6 +84,12 @@ namespace TitaniumColector.Forms
             Application.Exit();
         }
 
+        private void btnEntrada_Click(object sender, EventArgs e)
+        {
+            FrmProposta proposta = new FrmProposta();
+            proposta.Show();
+        }
+
 
     }
 }

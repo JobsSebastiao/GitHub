@@ -2,8 +2,13 @@ Passos Piking Mobile :
 
 Carregar dados da proposta: TOP 1
 
-CodigoRegistro;
+codigoPROPOSTA;
 ClientePROPOSTA;
+numeroPROPOSTA, 
+dataLIBERACAOPROPOSTA
+razaoEMPRESA
+ordemseparacaoimpressaPROPOSTA
+//observacaoPROPOSTA
 
 Produto:
 

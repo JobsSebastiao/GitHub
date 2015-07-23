@@ -12,6 +12,9 @@ namespace TitaniumColector.Classes
         private Int64 numero;
         private string dataLiberacao;
         private statusOrdemSeparacao ordemSeparacao;
+        private string razaoCliente;
+        private string codigoCliente;
+
 
         enum statusOrdemSeparacao 
         {
@@ -21,50 +24,38 @@ namespace TitaniumColector.Classes
 
         public Int64 Codigo
         {
-            get 
-            {
-                return codigo; 
-            }
-            set 
-            { 
-                codigo = value; 
-            }
+            get { return codigo; }
+            set { codigo = value; }
         }
 
         public Int64 Numero
         {
-            get 
-            { 
-                return numero; 
-            }
-            set 
-            { 
-                numero = value; 
-            }
+            get { return numero; }
+            set { numero = value; }
         }
 
         public string DataLiberacao
         {
-            get 
-            { 
-                return dataLiberacao; 
-            }
-            set 
-            { 
-                dataLiberacao = value; 
-            }
+            get { return dataLiberacao; }
+            set { dataLiberacao = value; }
         }
 
         private statusOrdemSeparacao StatusOrdemSeparacao
         {
-            get 
-            { 
-                return ordemSeparacao; 
-            }
-            set 
-            { 
-                ordemSeparacao = value;
-            }
+            get{ return ordemSeparacao; }
+            set { ordemSeparacao = value; }
+        }
+
+        public string CodigoCliente
+        {
+            get { return codigoCliente; }
+            set { codigoCliente = value; }
+        }
+
+        public string RazaoCliente
+        {
+            get { return razaoCliente; }
+            set { razaoCliente = value; }
         }
     }
 }

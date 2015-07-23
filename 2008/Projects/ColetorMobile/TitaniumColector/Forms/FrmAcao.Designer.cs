@@ -41,7 +41,8 @@
             this.btnEntrada.Name = "btnEntrada";
             this.btnEntrada.Size = new System.Drawing.Size(256, 129);
             this.btnEntrada.TabIndex = 0;
-            this.btnEntrada.Text = "button1";
+            this.btnEntrada.Text = "Entrada";
+            this.btnEntrada.Click += new System.EventHandler(this.btnEntrada_Click);
             // 
             // btnSaida
             // 
@@ -49,7 +50,7 @@
             this.btnSaida.Name = "btnSaida";
             this.btnSaida.Size = new System.Drawing.Size(256, 129);
             this.btnSaida.TabIndex = 1;
-            this.btnSaida.Text = "button2";
+            this.btnSaida.Text = "Saída";
             // 
             // painelFrmAcao
             // 

@@ -342,7 +342,11 @@ namespace TitaniumColector
 
         private void cbUsuario_LostFocus(object sender, EventArgs e)
         {
-            if (cbUsuario.Text != null && cbUsuario.SelectedItem != null)
+            if(cbUsuario.Text.Trim() == "")
+            {
+                return;
+            }
+            else if (cbUsuario.Text != null && cbUsuario.SelectedItem != null)
             {
                 this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
             }
@@ -398,6 +402,18 @@ namespace TitaniumColector
 
         //CONFIGURAÇÂO DOS CONTROLES DURANTE A CARGA DO FORMULARIO
         #region "Configurações de Controls"
+
+
+        private void configControls()
+        {
+            this.configPictureBox();
+            this.configPainel();
+            this.configLabel();
+            this.configComboBox();
+            this.configTextBox();
+            this.configButton();
+        }
+
 
         private void configPictureBox()
         {
@@ -506,17 +522,30 @@ namespace TitaniumColector
                                                                     this.lbSenha.Location.Y + 40);
 
         }
-        private void configControls()
-        {
-            this.configPictureBox();
-            this.configPainel();
-            this.configLabel();
-            this.configComboBox();
-            this.configTextBox();
-            this.configButton();
-        }
+
+
 
         #endregion
+
+        private void frmLogin_MouseDown(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void cbUsuario_KeyDown(object sender, KeyEventArgs e)
+        {
+
+        }
+
+        private void cbUsuario_Validated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cbUsuario_Validating(object sender, CancelEventArgs e)
+        {
+
+        }
 
 
     }
