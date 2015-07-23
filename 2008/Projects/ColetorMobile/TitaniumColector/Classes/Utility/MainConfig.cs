@@ -8,62 +8,29 @@ namespace TitaniumColector
 {
     public static class MainConfig
     {
-        private static int intScreenHeigth;
-        private static int intScreenWidth;
+
         private static string strVersaoSO;
         public static string HostName { get; set; }
         public static string DeviceIp { get; set; }
         private static string strUsuarioLogado;
         private static int intUsuarioLogado;
+        private static Size screenSize;
+        private static Size clienteSize;
         private static Int64 intCodigoAcesso;
         private static Font fontPadraoRegular;
         private static Font fontPadraoBold;
         private static Font fontGrande;
-        private static Microsoft.WindowsCE.Forms.InputPanel mainInputPanel;
 
         //Contantes
         public const int intPositionX = 0;
         public const int intPositionY = 0;
         public const Char PasswordChar = '*';
 
-         public static int ScreenHeigth
-        {
-            get 
-            {
-                return intScreenHeigth;
-            }
-            set 
-            {
-                if ((value > 0))
-                {
-                    intScreenHeigth = value;
-                }
-            }
-
-        }
-
-         public static int ScreenWidth
-        {
-            get
-            {
-                return intScreenWidth;
-            }
-            set
-            {
-                if ((value > 0))
-                {
-                    intScreenWidth = value;
-                }
-            }
-
-        }
+        
 
         public static string VersaoSO
         {
-            get
-            {
-                return strVersaoSO != null ? strVersaoSO : "ND";
-            }
+            get {  return strVersaoSO != null ? strVersaoSO : "ND"; }
 
             set
             {
@@ -76,10 +43,7 @@ namespace TitaniumColector
 
         public static string UsuarioLogado 
         { 
-            get
-            {
-                return strUsuarioLogado;
-            }
+            get {  return strUsuarioLogado; }
             set 
             {
                 if (!(String.IsNullOrEmpty(value)))
@@ -91,80 +55,50 @@ namespace TitaniumColector
 
         public static int CodigoUsuarioLogado
         {
-            get 
-            {
-                return intUsuarioLogado; 
-            }
-            set 
-            { 
-                MainConfig.intUsuarioLogado = value; 
-            }
+            get { return intUsuarioLogado;}
+            set { MainConfig.intUsuarioLogado = value;}
         }
 
         public static Font FontPadraoRegular
         {
-            get 
-            { 
-                return fontPadraoRegular; 
-            }
-            set 
-            { 
-                fontPadraoRegular = value; 
-            }
+            get  {  return fontPadraoRegular; }
+            set  { fontPadraoRegular = value; }
         }
 
         public static Font FontPadraoBold
         {
-            get
-            {
-                return fontPadraoBold;
-            }
-            set
-            {
-                fontPadraoBold = value;
-            }
+            get {  return fontPadraoBold; }
+            set { fontPadraoBold = value; }
         }
 
         public static Font FontGrandeRegular
         {
-            get
-            {
-                return fontGrande;
-            }
-            set
-            {
-                fontGrande = value;
-            }
+            get { return fontGrande; }
+            set { fontGrande = value; }
         }
 
         public static Int64 CodigoAcesso
         {
-            get 
-            { 
-                return intCodigoAcesso; 
-            }
-            set 
-            { 
-                intCodigoAcesso = value; 
-            }
+            get  {  return intCodigoAcesso; }
+            set  {  intCodigoAcesso = value; }
         }
 
-        public static Microsoft.WindowsCE.Forms.InputPanel MainInputPanel
+        public static Size ScreenSize
         {
-            get 
-            { 
-                return mainInputPanel; 
-            }
-            set 
-            { 
-                mainInputPanel = value; 
-            }
+            get { return MainConfig.screenSize; }
+            set { MainConfig.screenSize = value; }
         }
+
+        public static Size ClienteSize
+        {
+            get { return MainConfig.clienteSize; }
+            set { MainConfig.clienteSize = value; }
+        }
+
 
         public static void setMainConfigurations()
         {
-            capturaScreenHeight();
-            capturaScreenWeight();
+            defineScreenSize();
             capturaVersãoSo();
             capturaHostName();
             capturaIp();
@@ -173,14 +107,15 @@ namespace TitaniumColector
             defineFontGrandeRegular();
         }
 
-        private static void capturaScreenHeight()
+        private static void defineScreenSize() 
         {
-            ScreenHeigth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+            Size size = new Size(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width,System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
+            ScreenSize = (size);
         }
 
-        private static void capturaScreenWeight()
+        public static void defineClienteSize(Size size)
         {
-            ScreenWidth = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+            ClienteSize = (size);
         }
 
         private static void capturaVersãoSo()

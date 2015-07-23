@@ -18,12 +18,16 @@ LOTE:
 QUANTIDADE:
 KPATH:
 
-SELECT codigoPROPOSTA,numeroPROPOSTA, CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,13) as dataLIBERACAOPROPOSTA, razaoEMPRESA ,
-COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA,observacaoPROPOSTA 
+CREATE VIEW vwMobile_tb1601_Proposta
+
+AS
+
+SELECT  TOP 1 codigoPROPOSTA,numeroPROPOSTA, CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,103)  +' '+ CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,108) as dataLIBERACAOPROPOSTA,clientePROPOSTA AS clientePROPOSTA, razaoEMPRESA ,
+COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA
 FROM tb1601_Propostas (NOLOCK) 
 INNER JOIN tb1611_Liberacoes_Proposta P (NOLOCK) ON P.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
 INNER JOIN tb1611_Liberacoes_Proposta C (NOLOCK) ON C.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
 INNER JOIN tb0301_Empresas (NOLOCK) ON clientePROPOSTA = codigoEMPRESA 
 WHERE statusPROPOSTA = 1 AND P.liberacaoLIBERACAOPROPOSTA = 1 AND C.liberacaoLIBERACAOPROPOSTA = 2 
                          AND P.liberadoLIBERACAOPROPOSTA = 1  AND C.liberadoLIBERACAOPROPOSTA = 0
-						 
+						 ORDER BY  P.dataLIBERACAOPROPOSTA ASC

@@ -34,7 +34,7 @@
             this.lbNumero = new System.Windows.Forms.Label();
             this.lbLiberacao = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
-            this.dataGrid1 = new System.Windows.Forms.DataGrid();
+            this.dgProposta = new System.Windows.Forms.DataGrid();
             this.lbItemProposta = new System.Windows.Forms.Label();
             this.txtNumero = new System.Windows.Forms.TextBox();
             this.txtCliente = new System.Windows.Forms.TextBox();
@@ -50,39 +50,40 @@
             // menuItem1
             // 
             this.menuItem1.Text = "Opções";
+            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // lbNumero
             // 
-            this.lbNumero.Location = new System.Drawing.Point(6, 26);
+            this.lbNumero.Location = new System.Drawing.Point(88, 31);
             this.lbNumero.Name = "lbNumero";
             this.lbNumero.Size = new System.Drawing.Size(70, 23);
-            this.lbNumero.Text = "Prop. N° :";
+            this.lbNumero.Text = "Prop. N°:";
             // 
             // lbLiberacao
             // 
-            this.lbLiberacao.Location = new System.Drawing.Point(6, 58);
+            this.lbLiberacao.Location = new System.Drawing.Point(94, 63);
             this.lbLiberacao.Name = "lbLiberacao";
             this.lbLiberacao.Size = new System.Drawing.Size(70, 23);
             this.lbLiberacao.Text = "Liberação:";
             // 
             // lbCliente
             // 
-            this.lbCliente.Location = new System.Drawing.Point(6, 84);
+            this.lbCliente.Location = new System.Drawing.Point(94, 89);
             this.lbCliente.Name = "lbCliente";
             this.lbCliente.Size = new System.Drawing.Size(70, 23);
             this.lbCliente.Text = "Cliente :";
             // 
-            // dataGrid1
+            // dgProposta
             // 
-            this.dataGrid1.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.dataGrid1.Location = new System.Drawing.Point(3, 187);
-            this.dataGrid1.Name = "dataGrid1";
-            this.dataGrid1.Size = new System.Drawing.Size(319, 244);
-            this.dataGrid1.TabIndex = 6;
+            this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.dgProposta.Location = new System.Drawing.Point(3, 187);
+            this.dgProposta.Name = "dgProposta";
+            this.dgProposta.Size = new System.Drawing.Size(319, 244);
+            this.dgProposta.TabIndex = 6;
             // 
             // lbItemProposta
             // 
-            this.lbItemProposta.Location = new System.Drawing.Point(0, 136);
+            this.lbItemProposta.Location = new System.Drawing.Point(88, 140);
             this.lbItemProposta.Name = "lbItemProposta";
             this.lbItemProposta.Size = new System.Drawing.Size(150, 20);
             this.lbItemProposta.Text = "Itens Proposta";
@@ -92,7 +93,7 @@
             // 
             this.txtNumero.BackColor = System.Drawing.SystemColors.HighlightText;
             this.txtNumero.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.txtNumero.Location = new System.Drawing.Point(72, 26);
+            this.txtNumero.Location = new System.Drawing.Point(160, 31);
             this.txtNumero.MaxLength = 12;
             this.txtNumero.Name = "txtNumero";
             this.txtNumero.Size = new System.Drawing.Size(78, 23);
@@ -102,7 +103,7 @@
             // 
             this.txtCliente.BackColor = System.Drawing.SystemColors.HighlightText;
             this.txtCliente.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.txtCliente.Location = new System.Drawing.Point(72, 81);
+            this.txtCliente.Location = new System.Drawing.Point(160, 86);
             this.txtCliente.MaxLength = 12;
             this.txtCliente.Name = "txtCliente";
             this.txtCliente.Size = new System.Drawing.Size(78, 23);
@@ -112,16 +113,15 @@
             // 
             this.txtDataLiberacao.BackColor = System.Drawing.SystemColors.HighlightText;
             this.txtDataLiberacao.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.txtDataLiberacao.Location = new System.Drawing.Point(72, 54);
+            this.txtDataLiberacao.Location = new System.Drawing.Point(160, 59);
             this.txtDataLiberacao.MaxLength = 12;
             this.txtDataLiberacao.Name = "txtDataLiberacao";
             this.txtDataLiberacao.Size = new System.Drawing.Size(78, 23);
             this.txtDataLiberacao.TabIndex = 13;
-            this.txtDataLiberacao.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // panelFrmProposta
             // 
-            this.panelFrmProposta.Controls.Add(this.dataGrid1);
+            this.panelFrmProposta.Controls.Add(this.dgProposta);
             this.panelFrmProposta.Controls.Add(this.txtDataLiberacao);
             this.panelFrmProposta.Controls.Add(this.lbItemProposta);
             this.panelFrmProposta.Controls.Add(this.txtCliente);
@@ -155,7 +155,7 @@
         private System.Windows.Forms.Label lbNumero;
         private System.Windows.Forms.Label lbLiberacao;
         private System.Windows.Forms.Label lbCliente;
-        private System.Windows.Forms.DataGrid dataGrid1;
+        private System.Windows.Forms.DataGrid dgProposta;
         private System.Windows.Forms.Label lbItemProposta;
         private System.Windows.Forms.TextBox txtNumero;
         private System.Windows.Forms.TextBox txtCliente;

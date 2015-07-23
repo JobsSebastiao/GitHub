@@ -50,7 +50,7 @@ namespace TitaniumColector.Forms
 
         private void configForm()
         {
-            this.Size = new System.Drawing.Size(MainConfig.ScreenWidth, MainConfig.ScreenHeigth);
+            this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.configMenu();
             this.configButton();
@@ -59,12 +59,12 @@ namespace TitaniumColector.Forms
         private void configButton()
         {
             this.btnEntrada.Location = new System.Drawing.Point(MainConfig.intPositionX + 20 ,MainConfig.intPositionY + 30);
-            this.btnEntrada.Size = new System.Drawing.Size(MainConfig.ScreenWidth - 40 ,MainConfig.ScreenHeigth / 3);
+            this.btnEntrada.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnEntrada.Text = "Entrada";
             this.btnEntrada.Font = MainConfig.FontPadraoBold;
 
             this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnEntrada.Location.Y+ btnEntrada.Size.Height + 10);
-            this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenWidth - 40, MainConfig.ScreenHeigth / 3);
+            this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnSaida.Text = "Saída";
             this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
             this.btnSaida.Font = MainConfig.FontPadraoBold;

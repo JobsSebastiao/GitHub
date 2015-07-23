@@ -9,14 +9,29 @@ namespace TitaniumColector.Classes
     class Proposta
     {
         private Int64 codigo;
-        private Int64 numero;
+        private string numero;
         private string dataLiberacao;
-        private statusOrdemSeparacao ordemSeparacao;
         private string razaoCliente;
-        private string codigoCliente;
+        private int codigoCliente;
+        private statusOrdemSeparacao ordemSeparacao;
 
 
-        enum statusOrdemSeparacao 
+        public Proposta() 
+        { }
+
+        public Proposta(Int64 codigoProposta,string numeroProposta,string dataLiberacaoProposta,int codigoCliente,
+                        string razaoCliente,statusOrdemSeparacao statusOrdemSeparacao)
+        {
+            Codigo = codigoProposta;
+            Numero = numeroProposta;
+            DataLiberacao  = dataLiberacaoProposta;
+            CodigoCliente = codigoCliente;
+            RazaoCliente = razaoCliente;
+            StatusOrdemSeparacao = statusOrdemSeparacao;
+            
+        } 
+
+        public enum statusOrdemSeparacao 
         {
             NAOIMPRESA = 0,
             IMPRESA = 1
@@ -28,7 +43,7 @@ namespace TitaniumColector.Classes
             set { codigo = value; }
         }
 
-        public Int64 Numero
+        public string Numero
         {
             get { return numero; }
             set { numero = value; }
@@ -46,7 +61,7 @@ namespace TitaniumColector.Classes
             set { ordemSeparacao = value; }
         }
 
-        public string CodigoCliente
+        public int CodigoCliente
         {
             get { return codigoCliente; }
             set { codigoCliente = value; }
@@ -56,6 +71,54 @@ namespace TitaniumColector.Classes
         {
             get { return razaoCliente; }
             set { razaoCliente = value; }
+        }
+
+
+        /// <summary>
+        /// Altera o status da Ordem de separação Entre Impressa e não Impressa.
+        /// </summary>
+        /// <param name="proposta"></param>
+        public void atualizaStatusOrdemSeparacao(Proposta proposta) 
+        {
+            if (proposta.GetType() == typeof(Proposta)) 
+            {
+                if (proposta.StatusOrdemSeparacao == statusOrdemSeparacao.NAOIMPRESA)
+                {
+                    proposta.StatusOrdemSeparacao = statusOrdemSeparacao.IMPRESA;
+                }
+                else 
+                {
+                    proposta.StatusOrdemSeparacao = statusOrdemSeparacao.NAOIMPRESA;
+                }
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            System.Type type = obj.GetType();
+            if (obj == null || (type != typeof(Proposta)))
+            {
+                return false;
+            }
+            else
+            {
+                return Codigo == ((Proposta)obj).Codigo;
+            }
+
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        public override string ToString()
+        {
+            return " Código : " + Codigo +
+                   "\n Número : " + Numero +
+                   "\n Data Liberação : " + DataLiberacao +
+                   "\n Código Cliente : " + CodigoCliente +
+                   "\n Razao Cliente : " + RazaoCliente +
+                   "\n StatusOrdemSeparação : " + StatusOrdemSeparacao;
         }
     }
 }

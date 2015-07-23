@@ -112,13 +112,13 @@ namespace TitaniumColector
             this.cbUsuario.Name = "cbUsuario";
             this.cbUsuario.Size = new System.Drawing.Size(100, 23);
             this.cbUsuario.TabIndex = 6;
-            this.cbUsuario.Validating += new System.ComponentModel.CancelEventHandler(this.cbUsuario_Validating);
+
             this.cbUsuario.LostFocus += new System.EventHandler(this.cbUsuario_LostFocus);
             this.cbUsuario.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.cbUsuario_KeyPress);
             this.cbUsuario.KeyUp += new System.Windows.Forms.KeyEventHandler(this.cbUsuario_KeyUp);
             this.cbUsuario.GotFocus += new System.EventHandler(this.cbUsuario_GotFocus);
-            this.cbUsuario.Validated += new System.EventHandler(this.cbUsuario_Validated);
-            this.cbUsuario.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cbUsuario_KeyDown);
+
+
             // 
             // lbSenha
             // 
@@ -172,7 +172,6 @@ namespace TitaniumColector
             this.KeyPreview = true;
             this.Name = "frmLogin";
             this.Text = "Login";
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.frmLogin_MouseDown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.frmLogin_KeyDown);
             this.panelFrmLogin.ResumeLayout(false);
             this.ResumeLayout(false);

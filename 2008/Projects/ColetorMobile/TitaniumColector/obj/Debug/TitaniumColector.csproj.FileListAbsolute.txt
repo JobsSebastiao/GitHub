@@ -21,3 +21,4 @@ D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug
 C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAcao.resources
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAcao.resources
 D:\ProjetosTecware\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmProposta.resources
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmProposta.resources

@@ -81,7 +81,7 @@ namespace TitaniumColector
         private void configFrmLogin() 
         {
             this.SuspendLayout();
-            this.Size = new System.Drawing.Size(MainConfig.ScreenWidth, MainConfig.ScreenHeigth);
+            this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
             this.configControls();
             this.cbUsuario.Focus();
             this.ResumeLayout();
@@ -412,6 +412,8 @@ namespace TitaniumColector
             this.configComboBox();
             this.configTextBox();
             this.configButton();
+            Size size = new Size(this.ClientSize.Width, this.ClientSize.Height);
+            MainConfig.defineClienteSize(size);
         }
 
 
@@ -443,7 +445,7 @@ namespace TitaniumColector
             this.lbDescricao.Text = "Login :";
             this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
-            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - sizeString.Width / 2),
+            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - sizeString.Width / 2),
                                                                   this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
 
             //
@@ -509,7 +511,7 @@ namespace TitaniumColector
             this.btLogin.Font = MainConfig.FontPadraoRegular;
             this.btLogin.Visible = true;
             this.btLogin.Size = new System.Drawing.Size(72, 20);
-            this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 - btLogin.Size.Width - 3),
+            this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - btLogin.Size.Width - 3),
                                                                     this.lbSenha.Location.Y + 40);
 
             //
@@ -518,7 +520,7 @@ namespace TitaniumColector
             this.btSair.Font = MainConfig.FontPadraoRegular;
             this.btSair.Visible = true;
             this.btSair.Size = new System.Drawing.Size(72, 20);
-            this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenWidth / 2 + 3),
+            this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 + 3),
                                                                     this.lbSenha.Location.Y + 40);
 
         }
@@ -526,27 +528,6 @@ namespace TitaniumColector
 
 
         #endregion
-
-        private void frmLogin_MouseDown(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void cbUsuario_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
-
-        private void cbUsuario_Validated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void cbUsuario_Validating(object sender, CancelEventArgs e)
-        {
-
-        }
-
 
     }
 }
