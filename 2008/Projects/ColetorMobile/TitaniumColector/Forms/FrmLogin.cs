@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.SqlServer;
 using TitaniumColector.Classes;
+using TitaniumColector.Classes.SqlServer;
 using TitaniumColector.Forms;
 using System.Reflection;
 using System.Collections;
@@ -33,6 +34,8 @@ namespace TitaniumColector
                 InitializeComponent();
                 MainConfig.setMainConfigurations();
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
+                System.IO.File.Exists("Storage Card\\EngineMobile.sdf");
+                CeSqlServerConn.createStringConectionCe("\\Storage Card\\EngineMobile\\EngineMobile.sdf", "tec9TIT167*45e");
                 if (SqlServerConn.testConnection() == false)
                 {
                     Application.Exit();

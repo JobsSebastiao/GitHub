@@ -19,7 +19,6 @@ namespace TitaniumColector.SqlServer
     {
         private static SqlConnection  conn = null;
         private static SqlTransaction transaction = null;
-
         private static string strPassword;
         private static string strUserId;
         private static string booSecurity;

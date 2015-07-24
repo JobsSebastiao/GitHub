@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{4F174C21-8C12-11D0-8340-0000F80270F8}") = "DBMobile", "DBMobile\DBMobile.dbp", "{4E5FB48B-2998-4076-A38B-C71B9302D8DB}"
+Project("{4F174C21-8C12-11D0-8340-0000F80270F8}") = "EngineMobile", "EngineMobile\EngineMobile.dbp", "{2C675310-879D-4164-B845-A6D74297C3E2}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution

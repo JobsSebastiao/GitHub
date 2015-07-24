@@ -280,7 +280,7 @@ public class FileUtility
     /// </summary>
     /// <param name="strFile">String da qual será gerado a Array de string</param>
     /// <param name="splitCaracter">Tipo de caracter a ser usado como separador no split</param>
-    /// <returns>Array preenchido com valores do tipo string de acordo com a quantidade de separadores encontrados na string </returns>
+    /// <returns>Array preenchido com valores do tipo string de acordo com a Quantidade de separadores encontrados na string </returns>
     /// <remarks></remarks>
     /// <exemplo>
     /// 

@@ -75,7 +75,7 @@
             // 
             // dgProposta
             // 
-            this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.dgProposta.Location = new System.Drawing.Point(3, 187);
             this.dgProposta.Name = "dgProposta";
             this.dgProposta.Size = new System.Drawing.Size(319, 244);
@@ -133,6 +133,7 @@
             this.panelFrmProposta.Location = new System.Drawing.Point(0, 0);
             this.panelFrmProposta.Name = "panelFrmProposta";
             this.panelFrmProposta.Size = new System.Drawing.Size(325, 455);
+            
             // 
             // FrmProposta
             // 

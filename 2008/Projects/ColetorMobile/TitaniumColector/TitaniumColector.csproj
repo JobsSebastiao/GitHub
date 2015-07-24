@@ -62,7 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\ItemProposta.cs" />
     <Compile Include="Classes\Proposta.cs" />
+    <Compile Include="Classes\SqlServer\CeSqlServerConn.cs" />
     <Compile Include="Classes\Usuario.cs" />
     <Compile Include="Forms\FrmAcao.cs">
       <SubType>Form</SubType>

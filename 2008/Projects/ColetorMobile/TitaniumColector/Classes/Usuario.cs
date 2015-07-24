@@ -264,6 +264,10 @@ namespace TitaniumColector.Classes
             Int64 retorno = 0;
 
             this.StatusLogin = tipodeAcao;
+
+            MainConfig.UsuarioLogado = user.Nome;
+            MainConfig.CodigoUsuarioLogado = user.Codigo;
+
             string sql01 = null;
             //Insere o acesso e inicia a transação
             sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)";

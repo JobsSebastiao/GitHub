@@ -111,6 +111,7 @@ namespace TitaniumColector.Classes
         {
             return base.GetHashCode();
         }
+
         public override string ToString()
         {
             return " Código : " + Codigo +
