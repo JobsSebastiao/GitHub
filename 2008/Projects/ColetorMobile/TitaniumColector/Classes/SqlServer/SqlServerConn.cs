@@ -122,16 +122,6 @@ namespace TitaniumColector.SqlServer
             }
             catch (SqlException sqlEx)
             {
-                //conn = null;
-                //StringBuilder bdMsg = new StringBuilder();
-                //bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
-                //bdMsg.AppendLine();
-                //bdMsg.Append("Description :" + sqlEx.Message);
-                //bdMsg.AppendLine();
-                //bdMsg.Append("Source :" + sqlEx.Source);
-                //string msg = bdMsg.ToString();
-
-                //MessageBox.Show(msg, "Conection Error.");
                 throw sqlEx;
             }
 
@@ -248,10 +238,20 @@ namespace TitaniumColector.SqlServer
 
         public static SqlDataReader fillDataReader(string sql01)
         {
-            SqlCommand cmd = new SqlCommand(sql01, openConn());
-            SqlDataReader dr = cmd.ExecuteReader();
-            return dr;
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql01, openConn());
+                SqlDataReader dr = cmd.ExecuteReader();
+                return dr;
+            }
+            catch (Exception ex )
+            {
+                MessageBox.Show("Error " + ex.Message + ex.StackTrace);
+                throw;
+            }
+
         }
+
 
         public static void execCommandSql(string sql01)
         {

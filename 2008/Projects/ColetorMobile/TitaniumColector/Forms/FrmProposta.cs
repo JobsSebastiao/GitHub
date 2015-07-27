@@ -18,133 +18,48 @@ namespace TitaniumColector.Forms
         private Proposta proposta;
         private ItemProposta itemProposta;
         private SizeF fStringSize;
-        private StringBuilder sbSql01;
         private string sql01;
 
 
+        //Contrutor.
         public FrmProposta()
         {
             InitializeComponent();
             configControls();
-            this.preencherForm();
-            
+            this.fillForm();   
         }
 
 
-        private void configControls()
+
+        private void fillForm()
         {
-            // 
-            // lbNumero
-            // 
-            this.lbNumero.Location = new System.Drawing.Point(MainConfig.intPositionX + 3, MainConfig.intPositionY + 3);
-            this.lbNumero.Font  = MainConfig.FontPadraoBold;
-            this.lbNumero.Text = "Prop.N° :";
-            fStringSize = MainConfig.sizeStringEmPixel(this.lbNumero.Text, MainConfig.FontPadraoBold);
-            this.lbNumero.Size = new System.Drawing.Size((int)fStringSize.Width + 2, (int)fStringSize.Height);
-            // 
-            // txtNumero
-            // 
-            this.txtNumero.Location = new System.Drawing.Point(lbNumero.Location.X + lbNumero.Size.Width + 5, lbNumero.Location.Y-3);
-            this.txtNumero.Enabled = false;
-            this.txtNumero.MaxLength = 12;
-            this.txtNumero.Size = new System.Drawing.Size(78, 23);
-            this.txtNumero.TabStop = false;
 
-            //
-            // lbLiberacao
-            // 
-            this.lbLiberacao.Location = new System.Drawing.Point(this.txtNumero.Location.X+ txtNumero.Size.Width + 5, this.txtNumero.Location.Y + 3);
-            this.lbLiberacao.Text = "Data_Lib.:";
-            this.lbLiberacao.Font = MainConfig.FontPadraoBold;
-            fStringSize = MainConfig.sizeStringEmPixel(this.lbLiberacao.Text, MainConfig.FontPadraoBold);
-            this.lbLiberacao.Size = new System.Drawing.Size((int)fStringSize.Width, (int)fStringSize.Height);
+            StringBuilder query = new StringBuilder();
+            query.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
+            query.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
+            query.Append(" FROM vwMobile_tb1601_Proposta ");
+            this.sql01 = query.ToString();
 
-            // 
-            // txtDataLiberacao
-            // 
-            this.txtDataLiberacao.Location = new System.Drawing.Point(this.lbLiberacao.Location.X + lbLiberacao.Size.Width + 5, 
-                                                                      this.lbLiberacao.Location.Y - 3 );
-            this.txtDataLiberacao.MaxLength = 12;
-            this.txtDataLiberacao.Enabled = false;
-            this.txtDataLiberacao.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - lbNumero.Size.Width - txtNumero.Size.Width - lbLiberacao.Size.Width -23, 23);
-            this.txtDataLiberacao.TabStop = false;
+            proposta = this.fillPropostaTop1();
 
-            //
-            // lbCliente
-            // 
-            this.lbCliente.Location = new System.Drawing.Point(this.lbNumero.Location.X, 
-                                                                this.lbNumero.Location.Y + lbNumero.Size.Height + 10);
-            this.lbCliente.Text = "Cliente:";
-            this.lbCliente.Font = MainConfig.FontPadraoBold;
-            fStringSize = MainConfig.sizeStringEmPixel(this.lbCliente.Text, MainConfig.FontPadraoBold);
-            this.lbCliente.Size = new System.Drawing.Size((int)fStringSize.Width, (int)fStringSize.Height);
-            // 
-            // txtCliente
-            // 
-            this.txtCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + this.lbCliente.Size.Width + 2,
-                                                                this.lbCliente.Location.Y -3);
-            this.txtCliente.MaxLength = 50;
-            this.txtCliente.Enabled = false;
-            this.txtCliente.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - lbCliente.Size.Width - 10, 23);
-            // 
-            // lbItemProposta
-            // 
-            this.lbItemProposta.Font = MainConfig.FontPadraoBold;
-            this.lbItemProposta.Text = "Itens_Proposta";
-            this.lbItemProposta.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            fStringSize = MainConfig.sizeStringEmPixel(this.lbItemProposta.Text, MainConfig.FontPadraoBold);
-            this.lbItemProposta.Size = new System.Drawing.Size((int)fStringSize.Width+2, (int)fStringSize.Height);
-            this.lbItemProposta.Location = new System.Drawing.Point(MainConfig.ScreenSize.Width / 2 - lbItemProposta.Size.Width / 2, txtCliente.Location.Y + txtCliente.Size.Height + 3);
-            // 
-            // dgProposta
-            // 
+            this.insertProposta(proposta.Codigo, proposta.Numero, proposta.DataLiberacao,proposta.CodigoCliente ,
+                                proposta.RazaoCliente,(int)proposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
 
-            string str = this.ClientRectangle.Bottom + "\n" + this.ClientSize.Height + "\n" + this.ClientSize.Width + "\n" + MainConfig.ScreenSize.Height + "\n" + MainConfig.ScreenSize.Width;
-            int sizeHeigth = txtCliente.Size.Height + txtDataLiberacao.Size.Height + lbItemProposta.Size.Height;
-            this.dgProposta.Location = new System.Drawing.Point(MainConfig.intPositionX + 5 , lbItemProposta.Location.Y+lbItemProposta.Size.Height+5);
-            this.dgProposta.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 12,100);
-            this.dgProposta.TabIndex = 0;
+            //carregaObjProposta(sql01);
+
+            dgProposta.DataSource = carregarItemProposta().ToList();
+
+            this.txtNumero.Text = proposta.Codigo.ToString();
+            this.txtDataLiberacao.Text = proposta.DataLiberacao.Substring(1, 10);
+            this.txtCliente.Text = proposta.RazaoCliente.ToString();
 
         }
 
-        public void carregaObjProposta()
+        public void carregaObjProposta(string sql01)
         {
-            //DataTable dt = new DataTable("Proposta");
-            StringBuilder sbSql01 = new StringBuilder();
-            sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
-            sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
-            this.sql01 = sbSql01.ToString();
-
+            ///Carrega o dataReader.
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
 
-            if ((dr.FieldCount > 0))
-            {
-                while ((dr.Read()))
-                {
-
-
-                    proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
-                }
-            }
-
-            SqlServerConn.closeConn();
-
-        }
-
-        public void carregaObjProposta(string text)
-        {
-            //DataTable dt = new DataTable("Proposta");
-            sbSql01 = new StringBuilder();
-            sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
-            sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
-            this.sql01 = sbSql01.ToString();
-
-            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
-
-            sbSql01.Length = 0;
             if ((dr.FieldCount > 0))
             {
                 while ((dr.Read()))
@@ -152,16 +67,10 @@ namespace TitaniumColector.Forms
                     //Limpa a tabela de propostas.
                     CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
 
-                    //Query de insert na Base Mobile 
-                    sbSql01.Append("Insert INTO tb0010_Propostas VALUES (");
-                    sbSql01.AppendFormat("{0},",Convert.ToInt64(dr["codigoPROPOSTA"]));
-                    sbSql01.AppendFormat("\'{0}\',", (string)dr["numeroPROPOSTA"]);
-                    sbSql01.AppendFormat("\'{0}\',", (string)dr["dataLIBERACAOPROPOSTA"]);
-                    sbSql01.AppendFormat("{0},", Convert.ToInt32(dr["clientePROPOSTA"]));
-                    sbSql01.AppendFormat("\'{0}\',", (string)dr["razaoEMPRESA"]);
-                    sbSql01.AppendFormat("{0},", Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]));
-                    sbSql01.AppendFormat("{0})", MainConfig.CodigoUsuarioLogado);
-                    CeSqlServerConn.execCommandSqlCe(sbSql01.ToString());
+
+                    this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                      Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
+                    
 
                     //Carrega o objeto Proposta.
                     proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
@@ -179,17 +88,17 @@ namespace TitaniumColector.Forms
  
             List<ItemProposta> listItensProposta = new List<ItemProposta>() ;
 
-            StringBuilder sbSql01 = new StringBuilder();
-            sbSql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,produtoRESERVA AS PRODUTO,  SUM(quantidadeRESERVA) AS QTD ");
-            sbSql01.Append("FROM tb1206_Reservas (NOLOCK) ");
-            sbSql01.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
-            sbSql01.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
-            sbSql01.Append("WHERE propostaITEMPROPOSTA = 78527");
-            sbSql01.Append("AND tipodocRESERVA = 1602 ");
-            sbSql01.Append("AND statusITEMPROPOSTA = 3 ");
-            sbSql01.Append("AND separadoITEMPROPOSTA = 0  ");
-            sbSql01.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO ");
-            this.sql01 = sbSql01.ToString();
+            StringBuilder query = new StringBuilder();
+            query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,produtoRESERVA AS PRODUTO,  SUM(quantidadeRESERVA) AS QTD ");
+            query.Append("FROM tb1206_Reservas (NOLOCK) ");
+            query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
+            query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
+            query.Append("WHERE propostaITEMPROPOSTA = 78527");
+            query.Append("AND tipodocRESERVA = 1602 ");
+            query.Append("AND statusITEMPROPOSTA = 3 ");
+            query.Append("AND separadoITEMPROPOSTA = 0  ");
+            query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO ");
+            this.sql01 = query.ToString();
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
 
@@ -198,26 +107,99 @@ namespace TitaniumColector.Forms
                 while ((dr.Read()))
                 {
 
+                    //Insert na tabela de Itens 
+                    insertItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),Convert.ToInt32(dr["propostaITEMPROPOSTA"]), (string)(dr["nomePRODUTO"]), (string)dr["partnumberPRODUTO"], (string)dr["ean13PRODUTO"], Convert.ToInt32(dr["PRODUTO"]),
+                                            Convert.ToDouble(dr["QTD"]),0);
+
 
                     itemProposta = new ItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), (string)(dr["nomePRODUTO"]), (string)dr["partnumberPRODUTO"], (string)dr["ean13PRODUTO"], Convert.ToInt32(dr["PRODUTO"]),
                                             Convert.ToDouble(dr["QTD"]), ItemProposta.statusSeparado.NAOSEPARADO);
+
+
                     listItensProposta.Add(itemProposta);
                 }
             }
              
             SqlServerConn.closeConn();
 
-          
             return listItensProposta;
         }
 
-        private void  preencherForm()
+        private void insertProposta(Int64 codigoProposta, string numeroProposta, string dataliberacaoProposta, Int32 clienteProposta,
+                                    string razaoEmpreza, int ordemseparacaoimpresaProposta, int usuarioLogado)
         {
-            carregaObjProposta("TEXT");
-            dgProposta.DataSource = carregarItemProposta().ToList();
-            this.txtNumero.Text = proposta.Codigo.ToString();
-            this.txtDataLiberacao.Text  = proposta.DataLiberacao.Substring(1,10);
-            this.txtCliente.Text = proposta.RazaoCliente.ToString();
+
+            //Query de insert na Base Mobile
+            StringBuilder query = new StringBuilder();
+            query.Append("Insert INTO tb0010_Propostas VALUES (");
+            query.AppendFormat("{0},", codigoProposta);
+            query.AppendFormat("\'{0}\',", numeroProposta);
+            query.AppendFormat("\'{0}\',", dataliberacaoProposta);
+            query.AppendFormat("{0},", clienteProposta);
+            query.AppendFormat("\'{0}\',", razaoEmpreza);
+            query.AppendFormat("{0},", ordemseparacaoimpresaProposta);
+            query.AppendFormat("{0})", usuarioLogado);
+            sql01 = query.ToString();
+
+            CeSqlServerConn.execCommandSqlCe(sql01);
+        }
+
+        private void insertItemProposta(Int64 codigoITEMPROPOSTA, Int32 propostaITEMPROPOSTA, string nomePRODUTO, string partnumberPRODUTO,
+                                        string ean13PRODUTO, int PRODUTO, double quantidade,int statusseparadoPROPODUTO)
+        {
+
+            //Limpa a tabela..
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0011_ItensProposta");
+
+             //Query de insert na Tabela de itens da prosposta
+            StringBuilder query = new StringBuilder();
+            query.Append("Insert INTO tb0011_ItensProposta VALUES (");
+            query.AppendFormat("{0},", codigoITEMPROPOSTA);
+            query.AppendFormat("\'{0}\',", propostaITEMPROPOSTA);
+            query.AppendFormat("\'{0}\',", partnumberPRODUTO);
+            query.AppendFormat("\'{0}\',", nomePRODUTO);
+            query.AppendFormat("{0},", PRODUTO);
+            query.AppendFormat("{0},", quantidade);
+            query.AppendFormat("\'{0}\',", ean13PRODUTO);
+            query.AppendFormat("{0})", statusseparadoPROPODUTO);
+            sql01 = query.ToString();
+
+            CeSqlServerConn.execCommandSqlCe(sql01);
+
+        }
+
+
+
+        /// <summary>
+        /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
+        /// </summary>
+        /// <returns>Objeto do tipo Proposta</returns>
+        private Proposta fillPropostaTop1()
+        {
+            Proposta objProposta = null;
+
+            StringBuilder sbSql01 = new StringBuilder();
+            sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
+            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
+            sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
+            this.sql01 = sbSql01.ToString();
+
+
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+
+            if ((dr.FieldCount > 0))
+            {
+                while ((dr.Read()))
+                {
+                   objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
+                
+                }
+            }
+
+            SqlServerConn.closeConn();
+
+            return objProposta;
 
         }
 

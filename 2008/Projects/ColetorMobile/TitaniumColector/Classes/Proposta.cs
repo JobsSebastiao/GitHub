@@ -55,7 +55,7 @@ namespace TitaniumColector.Classes
             set { dataLiberacao = value; }
         }
 
-        private statusOrdemSeparacao StatusOrdemSeparacao
+        public statusOrdemSeparacao StatusOrdemSeparacao
         {
             get{ return ordemSeparacao; }
             set { ordemSeparacao = value; }

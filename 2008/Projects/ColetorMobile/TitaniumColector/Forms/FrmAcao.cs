@@ -68,7 +68,6 @@ namespace TitaniumColector.Forms
             this.btnSaida.Text = "Saída";
             this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
             this.btnSaida.Font = MainConfig.FontPadraoBold;
-
         }
 
         void mnuAcao_Logout_Click(object sender, EventArgs e)

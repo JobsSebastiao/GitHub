@@ -88,7 +88,6 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    }
 
-
 	    public static void createBDCe(string dataBase)
 	    {
 		    if (string.IsNullOrEmpty(dataBase)) {
@@ -103,11 +102,7 @@ namespace TitaniumColector.Classes.SqlServer
 		    } catch (Exception ex) {
 			    MessageBox.Show("Erro durante a criação da base de dados!! Motivo:" + ex.Message,"CreateDataBase",MessageBoxButtons.OK,MessageBoxIcon.Exclamation,MessageBoxDefaultButton.Button1);
 		    }
-
-
 	    }
-
-
 
 	    public static void fillDataSetCe(DataSet ds, string sql01)
 	    {
@@ -141,7 +136,6 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    }
 
-
 	    public static void execCommandSqlCe(string sql01)
 	    {
 		    try {
@@ -153,7 +147,6 @@ namespace TitaniumColector.Classes.SqlServer
 		    }
 
 	    }
-
 
 	    public static void beginTransactionCe()
 	    {

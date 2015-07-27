@@ -287,7 +287,7 @@ namespace TitaniumColector.Classes
             }
 
             SqlServerConn.closeConn();
-
+            dr.Close();
             return retorno;
 
         }
