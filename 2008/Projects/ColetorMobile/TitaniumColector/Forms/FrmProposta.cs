@@ -19,6 +19,8 @@ namespace TitaniumColector.Forms
         private ItemProposta itemProposta;
         private SizeF fStringSize;
         private string sql01;
+        private List<ItemProposta> listaItensProposta;
+        private DataTable dt;
 
 
         //Contrutor.
@@ -26,64 +28,53 @@ namespace TitaniumColector.Forms
         {
             InitializeComponent();
             configControls();
-            this.fillForm();   
+            carregarFormulario();   
         }
 
-
-
-        private void fillForm()
+        public void carregarFormulario()
         {
-
+            //Recupera a proposta TOP 1 entre as propostas liberadas para o Picking
             StringBuilder query = new StringBuilder();
             query.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
             query.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
             query.Append(" FROM vwMobile_tb1601_Proposta ");
             this.sql01 = query.ToString();
 
+            //Carrega uma instÂncia de uma classe Proposta
             proposta = this.fillPropostaTop1();
 
-            this.insertProposta(proposta.Codigo, proposta.Numero, proposta.DataLiberacao,proposta.CodigoCliente ,
-                                proposta.RazaoCliente,(int)proposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
+            //Insert Proposta na Base Mobile
+            this.insertProposta(proposta.Codigo, proposta.Numero, proposta.DataLiberacao, proposta.CodigoCliente,
+                                proposta.RazaoCliente, (int)proposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
 
-            //carregaObjProposta(sql01);
+            //Recupera List com itens da proposta
+            this.listaItensProposta = recuperaItensProposta((int)proposta.Codigo).ToList<ItemProposta>();
 
-            dgProposta.DataSource = carregarItemProposta().ToList();
+            //Insert na Base Mobile
+            this.insertItensProposta(listaItensProposta.ToList<ItemProposta>());
+
+            this.atualizaDataGridItensProposta(listaItensProposta.ToList<ItemProposta>());
 
             this.txtNumero.Text = proposta.Codigo.ToString();
             this.txtDataLiberacao.Text = proposta.DataLiberacao.Substring(1, 10);
             this.txtCliente.Text = proposta.RazaoCliente.ToString();
-
         }
 
-        public void carregaObjProposta(string sql01)
+        /// <summary>
+        /// Atualiza o grid com os itens referentes  aproposta informado como parâmetro.
+        /// </summary>
+        public void atualizaDataGridItensProposta(int codigoProposta)
         {
-            ///Carrega o dataReader.
-            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
-
-            if ((dr.FieldCount > 0))
-            {
-                while ((dr.Read()))
-                {
-                    //Limpa a tabela de propostas.
-                    CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
-
-
-                    this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                      Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
-                    
-
-                    //Carrega o objeto Proposta.
-                    proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
-                }
-            }
-
-            SqlServerConn.closeConn();
-
+            dgProposta.Refresh();
+            dgProposta.DataSource = recuperaItensProposta(codigoProposta).ToList();
+            
         }
 
-
-        private IEnumerable<ItemProposta> carregarItemProposta() 
+        /// <summary>
+        /// Carrega uma List com objetos da classe ItemProposta preenchida com dados sobre os itens de uma determinada Proposta 
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<ItemProposta> recuperaItensProposta(int codigoProposta)
         {
  
             List<ItemProposta> listItensProposta = new List<ItemProposta>() ;
@@ -93,7 +84,7 @@ namespace TitaniumColector.Forms
             query.Append("FROM tb1206_Reservas (NOLOCK) ");
             query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
             query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
-            query.Append("WHERE propostaITEMPROPOSTA = 78527");
+            query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} " , codigoProposta);     //78527
             query.Append("AND tipodocRESERVA = 1602 ");
             query.Append("AND statusITEMPROPOSTA = 3 ");
             query.Append("AND separadoITEMPROPOSTA = 0  ");
@@ -106,28 +97,36 @@ namespace TitaniumColector.Forms
             {
                 while ((dr.Read()))
                 {
-
-                    //Insert na tabela de Itens 
-                    insertItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),Convert.ToInt32(dr["propostaITEMPROPOSTA"]), (string)(dr["nomePRODUTO"]), (string)dr["partnumberPRODUTO"], (string)dr["ean13PRODUTO"], Convert.ToInt32(dr["PRODUTO"]),
-                                            Convert.ToDouble(dr["QTD"]),0);
-
-
                     itemProposta = new ItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), (string)(dr["nomePRODUTO"]), (string)dr["partnumberPRODUTO"], (string)dr["ean13PRODUTO"], Convert.ToInt32(dr["PRODUTO"]),
                                             Convert.ToDouble(dr["QTD"]), ItemProposta.statusSeparado.NAOSEPARADO);
 
-
+                    //Carrega a lista de itens que será retornada ao fim do procedimento.
                     listItensProposta.Add(itemProposta);
                 }
             }
-             
+
+            dr.Close();
+
             SqlServerConn.closeConn();
 
             return listItensProposta;
         }
 
+        /// <summary>
+        /// Realiza o insert na tabela de Propostas
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da Proposta</param>
+        /// <param name="dataliberacaoProposta">data de liberação da Proposta</param>
+        /// <param name="clienteProposta">Código do cliente</param>
+        /// <param name="razaoEmpreza">Nome da empreza cliente</param>
+        /// <param name="ordemseparacaoimpresaProposta">Status 0 ou 1</param>
+        /// <param name="usuarioLogado">Usuário logado</param>
         private void insertProposta(Int64 codigoProposta, string numeroProposta, string dataliberacaoProposta, Int32 clienteProposta,
                                     string razaoEmpreza, int ordemseparacaoimpresaProposta, int usuarioLogado)
         {
+
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
 
             //Query de insert na Base Mobile
             StringBuilder query = new StringBuilder();
@@ -143,7 +142,46 @@ namespace TitaniumColector.Forms
 
             CeSqlServerConn.execCommandSqlCe(sql01);
         }
+        /// <summary>
+        /// Insert na base Mobile tabela de itens da proposta
+        /// </summary>
+        /// <param name="listProposta"></param>
+        private void insertItensProposta(List<ItemProposta> listProposta)
+        {
 
+            //Limpa a tabela..
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0011_ItensProposta");
+
+            foreach (var item in listProposta)
+            {
+                //Query de insert na Base Mobile
+                StringBuilder query = new StringBuilder();
+                query.Append("Insert INTO tb0011_ItensProposta VALUES (");
+                query.AppendFormat("{0},", item.Codigo);
+                query.AppendFormat("\'{0}\',", item.PropostaItemProposta);
+                query.AppendFormat("\'{0}\',", item.PartNumber);
+                query.AppendFormat("\'{0}\',", item.NomeProduto);
+                query.AppendFormat("{0},", item.ProdutoReserva );
+                query.AppendFormat("{0},", item.Quantidade);
+                query.AppendFormat("\'{0}\',", item.Ean13);
+                query.AppendFormat("{0})", (int)item.Separado);
+                sql01 = query.ToString();
+
+                CeSqlServerConn.execCommandSqlCe(sql01);
+            }
+        }
+
+        /// <summary>
+        /// Insert na base Mobile tabela d Itens da Proposta.
+        /// </summary>
+        /// <param name="codigoITEMPROPOSTA"> Código do item da proposta</param>
+        /// <param name="propostaITEMPROPOSTA">código da proposta ao qual o item está vínculado</param>
+        /// <param name="nomePRODUTO">Nome(Descrição ) do item.</param>
+        /// <param name="partnumberPRODUTO"> partnumber do item</param>
+        /// <param name="ean13PRODUTO">Ean 13 do item</param>
+        /// <param name="PRODUTO"> produto separado</param>
+        /// <param name="quantidade">quantidade do item  </param>
+        /// <param name="statusseparadoPROPODUTO"> Status indicando se o item está separado ou não.</param>
         private void insertItemProposta(Int64 codigoITEMPROPOSTA, Int32 propostaITEMPROPOSTA, string nomePRODUTO, string partnumberPRODUTO,
                                         string ean13PRODUTO, int PRODUTO, double quantidade,int statusseparadoPROPODUTO)
         {
@@ -167,8 +205,6 @@ namespace TitaniumColector.Forms
             CeSqlServerConn.execCommandSqlCe(sql01);
 
         }
-
-
 
         /// <summary>
         /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
@@ -203,6 +239,80 @@ namespace TitaniumColector.Forms
 
         }
 
+
+        /// <summary>
+        /// Atualiza o grid a partir de uma List que refência a classe ItemProposta.
+        /// </summary>
+        private void atualizaDataGridItensProposta(List<ItemProposta> listItemProposta)
+        {
+
+            buscaItensBaseMobile();
+
+
+            DataGridTableStyle tbStyle = new DataGridTableStyle();
+            tbStyle.MappingName = "ItemProposta";
+
+            DataGridTextBoxColumn codigoItem = new DataGridTextBoxColumn();
+            codigoItem.MappingName = "codigoITEMPROPOSTA";
+            codigoItem.HeaderText = "Código";
+            codigoItem.Width = 42;
+            tbStyle.GridColumnStyles.Add(codigoItem);
+
+            DataGridTextBoxColumn itemProposta = new DataGridTextBoxColumn();
+            itemProposta.MappingName = "propostaITEMPROPOSTA";
+            itemProposta.HeaderText = "Item";
+            itemProposta.Width = 42;
+            tbStyle.GridColumnStyles.Add(itemProposta);
+
+            DataGridTextBoxColumn nomeItemProposta = new DataGridTextBoxColumn();
+            nomeItemProposta.MappingName = "nomePRODUTO";
+            nomeItemProposta.HeaderText = "nome";
+            nomeItemProposta.Width = 42;
+            tbStyle.GridColumnStyles.Add(nomeItemProposta);
+
+            DataGridTextBoxColumn partnumberItem = new DataGridTextBoxColumn();
+            partnumberItem.MappingName = "partnumberPRODUTO";
+            partnumberItem.HeaderText = "partnumber";
+            partnumberItem.Width = 42;
+            tbStyle.GridColumnStyles.Add(partnumberItem);
+
+            DataGridTextBoxColumn ean13Item = new DataGridTextBoxColumn();
+            ean13Item.MappingName = "ean13PRODUTO";
+            ean13Item.HeaderText = "Ean13";
+            ean13Item.Width = 42;
+            tbStyle.GridColumnStyles.Add(ean13Item);
+
+            DataGridTextBoxColumn produtoseparadoItem = new DataGridTextBoxColumn();
+            produtoseparadoItem.MappingName = "PRODUTO";
+            produtoseparadoItem.HeaderText = "ProdutoSeparado";
+            produtoseparadoItem.Width = 42;
+            tbStyle.GridColumnStyles.Add(produtoseparadoItem);
+
+            DataGridTextBoxColumn quantidade = new DataGridTextBoxColumn();
+            quantidade.MappingName = "QTD";
+            quantidade.HeaderText = "Quantidade";
+            quantidade.Width = 42;
+            tbStyle.GridColumnStyles.Add(quantidade);
+
+            dgProposta.TableStyles.Clear();
+            dgProposta.TableStyles.Add(tbStyle);
+            dgProposta.DataSource = dt;
+
+        }
+
+        private void buscaItensBaseMobile() 
+        {
+            dt = new DataTable();
+
+            StringBuilder stb = new StringBuilder();
+            stb.Append("SELECT codigoITEMPROPOSTA, propostaITEMPROPOSTA, partnumberITEMPROPOSTA, nomeITEMPROPOSTA,");
+            stb.Append("produtopedidoITEMPROPOSTA, quantidadeITEMPROPOSTA, ean13ITEMPROPOSTA,statusseparadoITEMPROPOSTA ");
+            stb.Append(" FROM  tb0011_ItensProposta");
+            CeSqlServerConn.fillDataTableCe(dt,stb.ToString());
+                       
+        }
+
+
         private void menuItem1_Click(object sender, EventArgs e)
         {
             frmLogin frlLogin = new frmLogin();
@@ -210,6 +320,39 @@ namespace TitaniumColector.Forms
             this.Hide();
         }
 
-       
+#region   "NAO UTILIZADOS"
+
+        public void carregaObjProposta(string sql01)
+        {
+            ///Carrega o dataReader.
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+
+            if ((dr.FieldCount > 0))
+            {
+                while ((dr.Read()))
+                {
+                    //Limpa a tabela de propostas.
+                    CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
+
+
+                    this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                      Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
+
+
+                    //Carrega o objeto Proposta.
+                    proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
+                }
+            }
+
+            SqlServerConn.closeConn();
+
+        }
+
+
+#endregion
+
+
+
     }
 }

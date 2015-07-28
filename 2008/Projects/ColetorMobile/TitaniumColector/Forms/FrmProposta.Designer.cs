@@ -29,17 +29,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuPedido = new System.Windows.Forms.MainMenu();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.lbNumero = new System.Windows.Forms.Label();
             this.lbLiberacao = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
+            this.itemPropostaBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dgProposta = new System.Windows.Forms.DataGrid();
             this.lbItemProposta = new System.Windows.Forms.Label();
             this.txtNumero = new System.Windows.Forms.TextBox();
             this.txtCliente = new System.Windows.Forms.TextBox();
             this.txtDataLiberacao = new System.Windows.Forms.TextBox();
             this.panelFrmProposta = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).BeginInit();
             this.panelFrmProposta.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -73,9 +76,14 @@
             this.lbCliente.Size = new System.Drawing.Size(70, 23);
             this.lbCliente.Text = "Cliente :";
             // 
+            // itemPropostaBindingSource
+            // 
+            this.itemPropostaBindingSource.DataSource = typeof(TitaniumColector.Classes.ItemProposta);
+            // 
             // dgProposta
             // 
             this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dgProposta.DataSource = this.itemPropostaBindingSource;
             this.dgProposta.Location = new System.Drawing.Point(3, 187);
             this.dgProposta.Name = "dgProposta";
             this.dgProposta.Size = new System.Drawing.Size(319, 244);
@@ -133,7 +141,6 @@
             this.panelFrmProposta.Location = new System.Drawing.Point(0, 0);
             this.panelFrmProposta.Name = "panelFrmProposta";
             this.panelFrmProposta.Size = new System.Drawing.Size(325, 455);
-            
             // 
             // FrmProposta
             // 
@@ -145,6 +152,7 @@
             this.Menu = this.menuPedido;
             this.Name = "FrmProposta";
             this.Text = "Proposta";
+            ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.panelFrmProposta.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -238,5 +246,6 @@
         private System.Windows.Forms.TextBox txtCliente;
         private System.Windows.Forms.TextBox txtDataLiberacao;
         private System.Windows.Forms.Panel panelFrmProposta;
+        private System.Windows.Forms.BindingSource itemPropostaBindingSource;
     }
 }

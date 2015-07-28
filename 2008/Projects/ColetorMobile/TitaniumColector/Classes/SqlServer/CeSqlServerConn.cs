@@ -135,7 +135,7 @@ namespace TitaniumColector.Classes.SqlServer
 		    return dr;
 
 	    }
-
+        
 	    public static void execCommandSqlCe(string sql01)
 	    {
 		    try {
