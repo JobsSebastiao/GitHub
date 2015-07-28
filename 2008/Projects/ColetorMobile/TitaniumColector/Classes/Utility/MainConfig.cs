@@ -140,7 +140,7 @@ namespace TitaniumColector
         private static void defineFontPadraoRegular() 
         {
             Single tamanho = new Single();
-            tamanho = 10F;
+            tamanho = 8F;
             FontStyle style = new FontStyle();
             style = FontStyle.Regular;
             fontPadraoRegular = new System.Drawing.Font("Arial",tamanho, style);
@@ -150,7 +150,7 @@ namespace TitaniumColector
         private static void defineFontPadraoBold()
         {
             Single tamanho = new Single();
-            tamanho = 10F;
+            tamanho = 8F;
             FontStyle style = new FontStyle();
             style = FontStyle.Bold;
             fontPadraoBold = new System.Drawing.Font("Arial", tamanho, style);

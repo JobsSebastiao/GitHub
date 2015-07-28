@@ -17,7 +17,7 @@ namespace TitaniumColector.Forms
     {
         private Proposta proposta;
         private ItemProposta itemProposta;
-        private SizeF fStringSize;
+        private SizeF fontStringSize;
         private string sql01;
         private List<ItemProposta> listaItensProposta;
         private DataTable dt;
@@ -55,9 +55,8 @@ namespace TitaniumColector.Forms
 
             this.atualizaDataGridItensProposta(listaItensProposta.ToList<ItemProposta>());
 
-            this.txtNumero.Text = proposta.Codigo.ToString();
-            this.txtDataLiberacao.Text = proposta.DataLiberacao.Substring(1, 10);
-            this.txtCliente.Text = proposta.RazaoCliente.ToString();
+            this.lbNumeroPedido.Text = proposta.Codigo.ToString();
+            this.lbNomeCliente.Text = proposta.RazaoCliente.ToString();
         }
 
         /// <summary>
