@@ -6,7 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using TitaniumColector.Classes;
+using TitaniumColector.Classes ;
 using TitaniumColector.SqlServer;
 using System.Data.SqlClient;
 using TitaniumColector.Classes.SqlServer;
@@ -28,10 +28,10 @@ namespace TitaniumColector.Forms
         {
             InitializeComponent();
             configControls();
-            carregarFormulario();   
+            //carregarBaseMobile();   
         }
 
-        public void carregarFormulario()
+        public void carregarBaseMobile()
         {
             //Recupera a proposta TOP 1 entre as propostas liberadas para o Picking
             StringBuilder query = new StringBuilder();
@@ -40,12 +40,14 @@ namespace TitaniumColector.Forms
             query.Append(" FROM vwMobile_tb1601_Proposta ");
             this.sql01 = query.ToString();
 
-            //Carrega uma instÂncia de uma classe Proposta
-            proposta = this.fillPropostaTop1();
+            //Carrega um objeto da classe Proposta
+            proposta = this.buscaTop1Proposta();
 
             //Insert Proposta na Base Mobile
             this.insertProposta(proposta.Codigo, proposta.Numero, proposta.DataLiberacao, proposta.CodigoCliente,
                                 proposta.RazaoCliente, (int)proposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
+
+            recuperaItensProposta((int)proposta.Codigo);
 
             //Recupera List com itens da proposta
             this.listaItensProposta = recuperaItensProposta((int)proposta.Codigo).ToList<ItemProposta>();
@@ -125,11 +127,11 @@ namespace TitaniumColector.Forms
                                     string razaoEmpreza, int ordemseparacaoimpresaProposta, int usuarioLogado)
         {
 
-            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
 
             //Query de insert na Base Mobile
             StringBuilder query = new StringBuilder();
-            query.Append("Insert INTO tb0010_Propostas VALUES (");
+            query.Append("Insert INTO tb0001_Propostas VALUES (");
             query.AppendFormat("{0},", codigoProposta);
             query.AppendFormat("\'{0}\',", numeroProposta);
             query.AppendFormat("\'{0}\',", dataliberacaoProposta);
@@ -138,7 +140,7 @@ namespace TitaniumColector.Forms
             query.AppendFormat("{0},", ordemseparacaoimpresaProposta);
             query.AppendFormat("{0})", usuarioLogado);
             sql01 = query.ToString();
-
+           
             CeSqlServerConn.execCommandSqlCe(sql01);
         }
         /// <summary>
@@ -165,7 +167,7 @@ namespace TitaniumColector.Forms
                 query.AppendFormat("\'{0}\',", item.Ean13);
                 query.AppendFormat("{0})", (int)item.Separado);
                 sql01 = query.ToString();
-
+                
                 CeSqlServerConn.execCommandSqlCe(sql01);
             }
         }
@@ -205,11 +207,13 @@ namespace TitaniumColector.Forms
 
         }
 
+
+
         /// <summary>
         /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
-        private Proposta fillPropostaTop1()
+        private Proposta buscaTop1Proposta()
         {
             Proposta objProposta = null;
 
@@ -237,6 +241,58 @@ namespace TitaniumColector.Forms
             return objProposta;
 
         }
+
+        private void buscaItensBaseMobile() 
+        {
+            dt = new DataTable();
+
+            StringBuilder stb = new StringBuilder();
+            stb.Append("SELECT codigoITEMPROPOSTA, propostaITEMPROPOSTA, partnumberITEMPROPOSTA, nomeITEMPROPOSTA,");
+            stb.Append("produtopedidoITEMPROPOSTA, quantidadeITEMPROPOSTA, ean13ITEMPROPOSTA,statusseparadoITEMPROPOSTA ");
+            stb.Append(" FROM  tb0011_ItensProposta");
+            CeSqlServerConn.fillDataTableCe(dt,stb.ToString());
+                       
+        }
+
+
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            frmLogin frlLogin = new frmLogin();
+            frlLogin.Show();
+            this.Hide();
+        }
+
+#region   "NAO UTILIZADOS"
+
+        public void carregaObjProposta(string sql01)
+        {
+            ///Carrega o dataReader.
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+
+            if ((dr.FieldCount > 0))
+            {
+                while ((dr.Read()))
+                {
+                    //Limpa a tabela de propostas.
+                    CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
+
+
+                    this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                      Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
+
+
+                    //Carrega o objeto Proposta.
+                    proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
+                }
+            }
+
+            SqlServerConn.closeConn();
+
+        }
+
+
+#endregion
 
 
         /// <summary>
@@ -299,57 +355,52 @@ namespace TitaniumColector.Forms
 
         }
 
-        private void buscaItensBaseMobile() 
+
+        private void FrmProposta_GotFocus(object sender, EventArgs e)
         {
-            dt = new DataTable();
-
-            StringBuilder stb = new StringBuilder();
-            stb.Append("SELECT codigoITEMPROPOSTA, propostaITEMPROPOSTA, partnumberITEMPROPOSTA, nomeITEMPROPOSTA,");
-            stb.Append("produtopedidoITEMPROPOSTA, quantidadeITEMPROPOSTA, ean13ITEMPROPOSTA,statusseparadoITEMPROPOSTA ");
-            stb.Append(" FROM  tb0011_ItensProposta");
-            CeSqlServerConn.fillDataTableCe(dt,stb.ToString());
-                       
-        }
-
-
-        private void menuItem1_Click(object sender, EventArgs e)
-        {
-            frmLogin frlLogin = new frmLogin();
-            frlLogin.Show();
-            this.Hide();
-        }
-
-#region   "NAO UTILIZADOS"
-
-        public void carregaObjProposta(string sql01)
-        {
-            ///Carrega o dataReader.
-            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
-
-            if ((dr.FieldCount > 0))
-            {
-                while ((dr.Read()))
-                {
-                    //Limpa a tabela de propostas.
-                    CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
-
-
-                    this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                      Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
-
-
-                    //Carrega o objeto Proposta.
-                    proposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                            Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
-                }
-            }
-
-            SqlServerConn.closeConn();
 
         }
 
+        private void FrmProposta_KeyDown(object sender, KeyEventArgs e)
+        {
+            //string = "EAN=789123654587|LOTE=LT-01|SEQ=023654|QTD=5"
+        }
 
-#endregion
+        //private void recuperaItensProposta(int codigoProposta)
+        //{
+
+        //    StringBuilder query = new StringBuilder();
+        //    query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,produtoRESERVA AS PRODUTO,  SUM(quantidadeRESERVA) AS QTD ");
+        //    query.Append("FROM tb1206_Reservas (NOLOCK) ");
+        //    query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
+        //    query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
+        //    query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);     //78527
+        //    query.Append("AND tipodocRESERVA = 1602 ");
+        //    query.Append("AND statusITEMPROPOSTA = 3 ");
+        //    query.Append("AND separadoITEMPROPOSTA = 0  ");
+        //    query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,nomePRODUTO,partnumberPRODUTO ");
+        //    this.sql01 = query.ToString();
+
+        //    SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+
+        //    if ((dr.FieldCount > 0))
+        //    {
+        //        while ((dr.Read()))
+        //        {
+        //            itemProposta = new ItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), (string)(dr["nomePRODUTO"]), (string)dr["partnumberPRODUTO"], (string)dr["ean13PRODUTO"], Convert.ToInt32(dr["PRODUTO"]),
+        //                                    Convert.ToDouble(dr["QTD"]), ItemProposta.statusSeparado.NAOSEPARADO);
+
+        //            //Carrega a lista de itens que será retornada ao fim do procedimento.
+        //            listItensProposta.Add(itemProposta);
+        //        }
+        //    }
+
+        //    dr.Close();
+
+        //    SqlServerConn.closeConn();
+
+
+        //}
 
 
 

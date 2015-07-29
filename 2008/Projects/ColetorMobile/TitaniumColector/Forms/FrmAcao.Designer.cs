@@ -29,20 +29,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnEntrada = new System.Windows.Forms.Button();
+            this.btnVenda = new System.Windows.Forms.Button();
             this.btnSaida = new System.Windows.Forms.Button();
             this.painelFrmAcao = new System.Windows.Forms.Panel();
             this.painelFrmAcao.SuspendLayout();
             this.SuspendLayout();
             // 
-            // btnEntrada
+            // btnVenda
             // 
-            this.btnEntrada.Location = new System.Drawing.Point(44, 59);
-            this.btnEntrada.Name = "btnEntrada";
-            this.btnEntrada.Size = new System.Drawing.Size(256, 129);
-            this.btnEntrada.TabIndex = 0;
-            this.btnEntrada.Text = "Entrada";
-            this.btnEntrada.Click += new System.EventHandler(this.btnEntrada_Click);
+            this.btnVenda.Location = new System.Drawing.Point(44, 59);
+            this.btnVenda.Name = "btnVenda";
+            this.btnVenda.Size = new System.Drawing.Size(256, 129);
+            this.btnVenda.TabIndex = 0;
+            this.btnVenda.Text = "Próxima Venda";
+            this.btnVenda.Click += new System.EventHandler(this.btnVenda_Click);
             // 
             // btnSaida
             // 
@@ -54,7 +54,7 @@
             // 
             // painelFrmAcao
             // 
-            this.painelFrmAcao.Controls.Add(this.btnEntrada);
+            this.painelFrmAcao.Controls.Add(this.btnVenda);
             this.painelFrmAcao.Controls.Add(this.btnSaida);
             this.painelFrmAcao.Dock = System.Windows.Forms.DockStyle.Fill;
             this.painelFrmAcao.Location = new System.Drawing.Point(0, 0);
@@ -82,7 +82,7 @@
         private System.Windows.Forms.MenuItem mnuAcao_Opcoes;
         private System.Windows.Forms.MenuItem mnuAcao_Exit;
         private System.Windows.Forms.MenuItem mnuAcao_Logout;
-        private System.Windows.Forms.Button btnEntrada;
+        private System.Windows.Forms.Button btnVenda;
         private System.Windows.Forms.Button btnSaida;
         private System.Windows.Forms.Panel painelFrmAcao;
     }

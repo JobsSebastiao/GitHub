@@ -408,7 +408,7 @@ namespace TitaniumColector.SqlServer
 
                 if (strItem == "Password")
                 {
-                    Password = item.Substring(item.IndexOf("=", 0)+1);
+                    Password = item.Substring(item.IndexOf("=", 0) + 1);
                 }
                 else if (strItem == "Persist Security Info")
                 {
@@ -453,6 +453,5 @@ namespace TitaniumColector.SqlServer
 	        makeStrConnection();
 
         }
-
     }  
 }

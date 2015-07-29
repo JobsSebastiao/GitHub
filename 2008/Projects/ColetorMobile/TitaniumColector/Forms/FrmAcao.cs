@@ -58,12 +58,12 @@ namespace TitaniumColector.Forms
 
         private void configButton()
         {
-            this.btnEntrada.Location = new System.Drawing.Point(MainConfig.intPositionX + 20 ,MainConfig.intPositionY + 30);
-            this.btnEntrada.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
-            this.btnEntrada.Text = "Entrada";
-            this.btnEntrada.Font = MainConfig.FontPadraoBold;
+            this.btnVenda.Location = new System.Drawing.Point(MainConfig.intPositionX + 20 ,MainConfig.intPositionY + 30);
+            this.btnVenda.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
+            this.btnVenda.Text = "Entrada";
+            this.btnVenda.Font = MainConfig.FontPadraoBold;
 
-            this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnEntrada.Location.Y+ btnEntrada.Size.Height + 10);
+            this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnVenda.Location.Y+ btnVenda.Size.Height + 10);
             this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnSaida.Text = "Saída";
             this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
@@ -83,11 +83,13 @@ namespace TitaniumColector.Forms
             Application.Exit();
         }
 
-        private void btnEntrada_Click(object sender, EventArgs e)
+        private void btnVenda_Click(object sender, EventArgs e)
         {
             FrmProposta proposta = new FrmProposta();
             proposta.Show();
         }
+
+
 
 
     }

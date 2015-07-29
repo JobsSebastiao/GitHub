@@ -17,15 +17,34 @@ namespace TitaniumColector
         private static Size screenSize;
         private static Size clienteSize;
         private static Int64 intCodigoAcesso;
+
+        //Fontes Utiizadas no sistema.
+        private static Font fontPequenaRegular;
+        private static Font fontPequenaBold;
+        private static Font fontPequenaItalic;
+        private static Font fontPequenaItalicBold;
+
         private static Font fontPadraoRegular;
         private static Font fontPadraoBold;
-        private static Font fontGrande;
+        private static Font fontPadraoItalic;
+        private static Font fontPadraoItalicBold;
+
+        private static Font fontMediaBold;
+        private static Font fontMuitoGrandeBold;
+
+        private static Font fontGrandeRegular;
+        private static Font fontGrandeBold;
+        private static Font fontGrandeItalic;
+        private static Single tamanho;
+        private static FontStyle FontStyle;
 
         //Contantes
         public const int intPositionX = 0;
         public const int intPositionY = 0;
         public const Char PasswordChar = '*';
 
+
+        #region "GET & SETS"
         
 
         public static string VersaoSO
@@ -59,6 +78,38 @@ namespace TitaniumColector
             set { MainConfig.intUsuarioLogado = value;}
         }
 
+        public static Font FontPequenaRegular
+        {
+            get { return MainConfig.fontPequenaRegular; }
+            set { MainConfig.fontPequenaRegular = value; }
+        }
+
+
+        public static Font FontPequenaBold
+        {
+            get { return MainConfig.fontPequenaBold; }
+            set { MainConfig.fontPequenaBold = value; }
+        }
+
+
+        public static Font FontPequenaItalic
+        {
+            get { return MainConfig.fontPequenaItalic; }
+            set { MainConfig.fontPequenaItalic = value; }
+        }
+
+        public static Font FontPequenaItalicBold
+        {
+            get { return MainConfig.fontPequenaItalicBold; }
+            set { MainConfig.fontPequenaItalicBold = value; }
+        }
+
+        public static Font FontMediaBold
+        {
+            get { return MainConfig.fontMediaBold; }
+            set { MainConfig.fontMediaBold = value; }
+        }
+
         public static Font FontPadraoRegular
         {
             get  {  return fontPadraoRegular; }
@@ -71,11 +122,42 @@ namespace TitaniumColector
             set { fontPadraoBold = value; }
         }
 
+        public static Font FontPadraoItalic
+        {
+            get { return MainConfig.fontPadraoItalic; }
+            set { MainConfig.fontPadraoItalic = value; }
+        }
+
+        public static Font FontPadraoItalicBold
+        {
+            get { return MainConfig.fontPadraoItalicBold; }
+            set { MainConfig.fontPadraoItalicBold = value; }
+        }
+
         public static Font FontGrandeRegular
         {
-            get { return fontGrande; }
-            set { fontGrande = value; }
+            get { return fontGrandeRegular; }
+            set { fontGrandeRegular = value; }
         }
+
+        public static Font FontGrandeBold
+        {
+            get { return MainConfig.fontGrandeBold; }
+            set { MainConfig.fontGrandeBold = value; }
+        }
+
+        public static Font FontGrandeItalic
+        {
+            get { return MainConfig.fontGrandeItalic; }
+            set { MainConfig.fontGrandeItalic = value; }
+        }
+
+        public static Font FontMuitoGrandeBold
+        {
+            get { return MainConfig.fontMuitoGrandeBold; }
+            set { MainConfig.fontMuitoGrandeBold = value; }
+        }
+
 
         public static Int64 CodigoAcesso
         {
@@ -95,6 +177,9 @@ namespace TitaniumColector
             set { MainConfig.clienteSize = value; }
         }
 
+        #endregion
+
+        #region "MÉTODOS DE CONFIGURAÇÃO"
 
         public static void setMainConfigurations()
         {
@@ -102,9 +187,11 @@ namespace TitaniumColector
             capturaVersãoSo();
             capturaHostName();
             capturaIp();
-            defineFontPadraoRegular();
-            defineFontPadraoBold();
-            defineFontGrandeRegular();
+            defineFontPequena();
+            defineFontMedia();
+            defineFontPadrao();
+            defineFontGrande();
+            defineFontMuitoGrande();
         }
 
         private static void defineScreenSize() 
@@ -137,34 +224,117 @@ namespace TitaniumColector
             DeviceIp = addr.ToString() ;
         }
 
-        private static void defineFontPadraoRegular() 
+        private static void defineFontPadrao()
         {
-            Single tamanho = new Single();
-            tamanho = 8F;
-            FontStyle style = new FontStyle();
-            style = FontStyle.Regular;
-            fontPadraoRegular = new System.Drawing.Font("Arial",tamanho, style);
+            //REGULAR
+            tamanho = new Single();
+            tamanho = 10F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Regular;
+            FontPadraoRegular = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //BOLD
+            tamanho = new Single();
+            tamanho = 10F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold;
+            FontPadraoBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //ITALIC
+            tamanho = new Single();
+            tamanho = 10F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Italic;
+            FontPadraoItalic = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //ITALIC & BOLD
+            tamanho = new Single();
+            tamanho = 10F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold | FontStyle.Italic;
+            FontPadraoItalicBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
 
         }
 
-        private static void defineFontPadraoBold()
+        private static void defineFontMedia()
         {
-            Single tamanho = new Single();
-            tamanho = 8F;
-            FontStyle style = new FontStyle();
-            style = FontStyle.Bold;
-            fontPadraoBold = new System.Drawing.Font("Arial", tamanho, style);
+            //BOLD
+            tamanho = new Single();
+            tamanho = 12F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold;
+            FontMediaBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
 
         }
 
-        private static void defineFontGrandeRegular()
+        private static void defineFontMuitoGrande()
         {
-            Single tamanho = new Single();
+            //BOLD
+            tamanho = new Single();
+            tamanho = 31F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold;
+            FontMuitoGrandeBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+        }
+
+        private static void defineFontPequena()
+        {
+            //REGULAR
+            tamanho= new Single();
+            tamanho = 8F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Regular;
+            FontPequenaRegular = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //ITALIC
+            tamanho= new Single();
+            tamanho = 8F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Italic;
+            FontPequenaItalic = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //BOLD
+            tamanho= new Single();
+            tamanho = 8F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold;
+            FontPequenaBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //ITALIC & BOLD
+            tamanho = new Single();
+            tamanho = 8F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold | FontStyle.Italic ;
+            FontPequenaItalicBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+        }
+
+        private static void defineFontGrande()
+        {
+            //REGULAR 
+            tamanho= new Single();
             tamanho = 20F;
-            FontStyle style = new FontStyle();
-            style = FontStyle.Regular;
-            FontGrandeRegular = new System.Drawing.Font("Arial", tamanho, style);
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Regular;
+            FontGrandeRegular = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //BOLD
+            tamanho= new Single();
+            tamanho = 20F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Bold;
+            FontGrandeBold = new System.Drawing.Font("Arial", tamanho, FontStyle);
+
+            //Italic
+            tamanho= new Single();
+            tamanho = 20F;
+            FontStyle = new FontStyle();
+            FontStyle = FontStyle.Italic;
+            FontGrandeItalic = new System.Drawing.Font("Arial", tamanho, FontStyle);
         }
+
+        #endregion
 
         public static SizeF sizeStringEmPixel(string text,Font font)
         {
@@ -193,6 +363,11 @@ namespace TitaniumColector
             cb.SelectedItem = null;
         }
 
+        /// <summary>
+        /// Recupera o controle ao qual está com o focus ativo.
+        /// </summary>
+        /// <param name="parent">Formulário ao qual pertence o controle</param>
+        /// <returns>Controle no qual o foco está ativo.</returns>
         public static Control GetFocusedControl(Control parent)
         {
             if (parent.Focused)
