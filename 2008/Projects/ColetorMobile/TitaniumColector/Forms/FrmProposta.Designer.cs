@@ -186,7 +186,8 @@
             this.dgProposta.TabIndex = 0;
             this.dgProposta.RowHeadersVisible = false;
 
-            // txtCliente
+            // txtCliente  https://social.msdn.microsoft.com/Forums/pt-BR/9a347425-6c37-4b44-a642-060eb0046d6d/coletor-motorola-mc3090
+            //https://atgsupportcentral.motorolasolutions.com/content/emb/docs/ReleaseNotes/Release%20Notes%20-%20EMDK-M-020205-UP1.htm
              
             //this.txtCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + this.lbCliente.Size.Width + 2,
             //                                                    this.lbCliente.Location.Y - 3);
