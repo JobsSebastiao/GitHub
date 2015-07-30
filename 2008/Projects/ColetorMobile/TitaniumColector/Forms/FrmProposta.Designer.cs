@@ -232,7 +232,7 @@
             this.tbDescricao.Text = "Terminal Olhal";
             this.tbDescricao.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // tbPartNumber
+            // TbPartNumber
             // 
             this.tbPartNumber.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
             this.tbPartNumber.Location = new System.Drawing.Point(0, 0);
@@ -283,7 +283,6 @@
             this.Menu = this.menuPedido;
             this.Name = "FrmProposta";
             this.Text = "Proposta";
-            this.GotFocus += new System.EventHandler(this.FrmProposta_GotFocus);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmProposta_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.panelFrmProposta.ResumeLayout(false);
@@ -374,7 +373,7 @@
             this.pnCentral.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 30, 150);
             this.pnCentral.Location = new System.Drawing.Point(this.Size.Width / 2 - pnCentral.Size.Width/ 2, lbCliente.Location.Y + lbCliente.Size.Height + 5);
 
-            //tbPartNumber
+            //TbPartNumber
 
             this.tbPartNumber.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 32);
             this.tbPartNumber.Font = MainConfig.FontGrandeBold;
@@ -387,6 +386,7 @@
             this.tbDescricao.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 23);
             this.tbDescricao.Font = MainConfig.FontMediaBold;
             this.tbDescricao.Enabled = false;
+            this.tbDescricao.BackColor = System.Drawing.SystemColors.Window;
             this.tbDescricao.Location = new System.Drawing.Point(0, this.tbPartNumber.Location.Y + tbPartNumber.Size.Height);
 
             //tbLocal
@@ -394,6 +394,7 @@
             this.tbLocal.Size = new System.Drawing.Size(this.pnCentral.Size.Width/2,47);
             this.tbLocal.Font = MainConfig.FontMuitoGrandeBold;
             this.tbLocal.Enabled = false;
+            this.tbLocal.BackColor = System.Drawing.SystemColors.Window;
             this.tbLocal.Location = new System.Drawing.Point(0, tbDescricao.Location.Y + tbDescricao.Size.Height);
 
             //tbQuantidade
@@ -401,34 +402,80 @@
             this.tbQuantidade.Size = new System.Drawing.Size(this.pnCentral.Size.Width / 2, 47);
             this.tbQuantidade.Font = MainConfig.FontMuitoGrandeBold;
             this.tbQuantidade.Enabled = false;
+            this.tbQuantidade.BackColor = System.Drawing.SystemColors.Window;
             this.tbQuantidade.Location = new System.Drawing.Point(pnCentral.Size.Width/2, tbDescricao.Location.Y + tbDescricao.Size.Height);
 
-            //PnCentral
+            //pnCentral
             this.pnCentral.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 30, 
                                   tbPartNumber.Size.Height+ tbDescricao.Size.Height+ tbLocal.Size.Height);
 
-
             //lbProduto
 
-            this.lbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,pnCentral.Location.Y + pnCentral.Size.Height + 5);
+            this.lbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,pnCentral.Location.Y + pnCentral.Size.Height);
             this.lbProduto.Font = MainConfig.FontPequenaBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbProduto.Text, MainConfig.FontPequenaBold);
+            this.lbProduto.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
 
             //tbProduto
 
-            this.tbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,lbProduto.Location.Y + lbProduto.Size.Height +2 );
-            this.tbProduto.Size = new System.Drawing.Size(this.pnCentral.Size.Width,30);
+            this.tbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,lbProduto.Location.Y + lbProduto.Size.Height);
             this.tbProduto.Enabled = false;
+            this.tbProduto.Multiline = true;
+            this.tbProduto.Font = MainConfig.FontPequenaBold;
+            this.tbProduto.Size = new System.Drawing.Size(this.pnCentral.Size.Width,15);
+            this.tbProduto.BackColor = System.Drawing.SystemColors.Window;
 
+            //lbLote
+
+            this.lbLote.Location = new System.Drawing.Point(tbProduto.Location.X, tbProduto.Location.Y + tbProduto.Size.Height);
+            this.lbLote.Font = MainConfig.FontPequenaBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbLote.Text, MainConfig.FontPequenaBold);
+            this.lbLote.Size = new System.Drawing.Size((int)fontStringSize.Width+2, (int)fontStringSize.Height);
+
+            //tbLote
+
+            this.tbLote.Location = new System.Drawing.Point(lbLote.Location.X, lbLote.Location.Y + lbLote.Size.Height);
+            this.tbLote.Multiline = true;
+            this.tbLote.Font = MainConfig.FontPequenaBold;
+            this.tbLote.Size = new System.Drawing.Size(this.tbLote.Size.Width,15);
+            this.tbLote.Enabled = false;
+            this.tbLote.BackColor = System.Drawing.SystemColors.Window;
+
+            //lbSequencia
+
+            this.lbSequencia.Font = MainConfig.FontPequenaBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbSequencia.Text, MainConfig.FontPequenaBold);
+            this.lbSequencia.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
+            this.lbSequencia.Location = new System.Drawing.Point(this.Size.Width / 2 + 10, lbLote.Location.Y);
+
+            //tbSequencia
+
+            this.tbSequencia.Enabled = false;
+            this.tbSequencia.Multiline = true;
+            this.tbSequencia.Font = MainConfig.FontPequenaBold;
+            this.tbSequencia.Size = new System.Drawing.Size(tbQuantidade.Size.Width-10, 15);
+            this.tbSequencia.BackColor = System.Drawing.SystemColors.Window;
+            this.tbSequencia.Location = new System.Drawing.Point(this.Size.Width/2+10, tbLote.Location.Y);
+
+            //lbMensagem
+
+            this.lbMensagem.Font = MainConfig.FontPequenaBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbMensagem.Text, MainConfig.FontPequenaBold);
+            this.lbMensagem.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
+            this.lbMensagem.Location = new System.Drawing.Point(this.lbLote.Location.X, tbSequencia.Location.Y + tbSequencia.Size.Height);
+
+            //tbMensagem
+
+            this.tbMensagem.Location = new System.Drawing.Point(lbMensagem.Location.X, lbMensagem.Location.Y + lbMensagem.Size.Height);
+            this.tbMensagem.Enabled = false;
+            this.tbMensagem.Multiline = true;
+            this.tbMensagem.Font = MainConfig.FontPequenaBold;
+            this.tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 15);
+            this.tbMensagem.BackColor = System.Drawing.SystemColors.Window;
 
             // txtCliente  https://social.msdn.microsoft.com/Forums/pt-BR/9a347425-6c37-4b44-a642-060eb0046d6d/coletor-motorola-mc3090
             //https://atgsupportcentral.motorolasolutions.com/content/emb/docs/ReleaseNotes/Release%20Notes%20-%20EMDK-M-020205-UP1.htm
-             
-            //this.txtCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + this.lbCliente.Size.Width + 2,
-            //                                                    this.lbCliente.Location.Y - 3);
-            //this.txtCliente.MaxLength = 50;
-            //this.txtCliente.Enabled = false;
-            //this.txtCliente.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - lbCliente.Size.Width - 10, 23);
-             
+                         
         }
 
         #endregion

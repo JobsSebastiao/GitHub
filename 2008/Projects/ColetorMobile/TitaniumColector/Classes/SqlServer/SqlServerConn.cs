@@ -246,7 +246,7 @@ namespace TitaniumColector.SqlServer
             }
             catch (Exception ex )
             {
-                MessageBox.Show("Error " + ex.Message + ex.StackTrace);
+                MessageBox.Show("Error " + ex.Message);
                 throw;
             }
 

@@ -5,17 +5,13 @@ using System.Text;
 
 namespace TitaniumColector.Classes
 {
-    class ItemProposta
+    class ItemProposta : Produto 
     {
-        private int codigo;
+        private int codigoItemProposta;
         private int propostaItemProposta;
-        private string nomeProduto;
-        private string partNumber;
-        private string ean13;
-        private int produtoReserva;
         private double quantidade;
-        private statusSeparado separado;
-       
+        private statusSeparado isSeparado;
+        private Int32 lotereservaItemProposta;
 
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
 
@@ -24,23 +20,21 @@ namespace TitaniumColector.Classes
 
         }
 
-        public ItemProposta(int codigo,int propostaItemproposta,string nomeProduto,string partnumber,string ean13,int produtoReserva,double quantidade,statusSeparado isSeparado) 
+        public ItemProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,Int32 loteReservaItemProposta,
+                            Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote)  
+                            : base(codigoProduto,ean13, partnumber, nomeProduto,codigoLocalLote,nomeLocalLote)
         {
-            Codigo = codigo;
-            PropostaItemProposta = propostaItemproposta;
-            NomeProduto = nomeProduto;
-            PartNumber = partnumber;
-            Ean13 = ean13;
-            ProdutoReserva = produtoReserva;
-            Quantidade = quantidade;
-            Separado = Separado;
+            this.CodigoItemProposta = codigoItemProposta;
+            this.PropostaItemProposta = propostaItemProposta;
+            this.Quantidade = quantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = loteReservaItemProposta;
         }
 
-
-        public int Codigo
+        public int CodigoItemProposta
         {
-            get { return codigo; }
-            set { codigo = value; }
+            get { return codigoItemProposta; }
+            set { codigoItemProposta = value; }
         }
 
 
@@ -49,44 +43,29 @@ namespace TitaniumColector.Classes
             get { return propostaItemProposta; }
             set { propostaItemProposta = value; }
         }
-
-        public string NomeProduto
-        {
-            get { return nomeProduto; }
-            set { nomeProduto = value; }
-        }
-
-        public string PartNumber
-        {
-            get { return partNumber; }
-            set { partNumber = value; }
-        }
-
-        public string Ean13
-        {
-            get { return ean13; }
-            set 
-            {
-                ean13 = value.Trim() != "" ? value : "N/D"; 
-            }
-        }
-
-        public int ProdutoReserva
-        {
-            get { return produtoReserva; }
-            set { produtoReserva = value; }
-        }
-        
+  
         public double Quantidade
         {
             get { return quantidade; }
             set { quantidade = value; }
         }
 
-        internal statusSeparado Separado
+        internal statusSeparado StatusSeparado
         {
-            get { return separado; }
-            set { separado = value; }
-        }    
+            get { return isSeparado; }
+            set { isSeparado = value; }
+        }
+
+        public Int32 LotereservaItemProposta
+        {
+            get { return lotereservaItemProposta; }
+            set { lotereservaItemProposta = value; }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + String.Format("\n Código Item : {0} \n Proposta Item : {1} \n Quantidade : {2} \n Status Separado : {3} \n Lote da Reserva : {4}",
+                                                    this.CodigoItemProposta,this.PropostaItemProposta,this.Quantidade,this.StatusSeparado,this.LotereservaItemProposta );
+        }
     }
 }
