@@ -121,8 +121,13 @@ namespace TitaniumColector.Classes.SqlServer
 		    try {
                 SqlCeDataAdapter da = new SqlCeDataAdapter(sql01, openConnCe());
 			    da.Fill(dt);
-		    } catch (Exception ex) {
-			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
+		    }
+            catch (SqlCeException)
+            {
+                throw;
+            }
+            catch (Exception ex) {
+			   MessageBox.Show("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
 		    }
 
 	    }
@@ -138,13 +143,20 @@ namespace TitaniumColector.Classes.SqlServer
         
 	    public static void execCommandSqlCe(string sql01)
 	    {
-		    try {
+		    try 
+            {
 			    SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
 			    cmd.ExecuteNonQuery();
                 closeConnCe();
-		    } catch (Exception ex) {
-			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
+		    } 
+            catch (SqlCeException) 
+            {
+                throw;
 		    }
+            catch (Exception)
+            {
+                throw;
+            }
 
 	    }
 

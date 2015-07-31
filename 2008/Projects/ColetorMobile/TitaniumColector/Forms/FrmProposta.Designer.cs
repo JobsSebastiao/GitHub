@@ -1,4 +1,5 @@
-﻿namespace TitaniumColector.Forms
+﻿using System.Drawing;
+namespace TitaniumColector.Forms
 {
     partial class FrmProposta
     {
@@ -7,6 +8,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.MainMenu menuPedido;
+        private SizeF fontStringSize;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -31,7 +33,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.menuPedido = new System.Windows.Forms.MainMenu();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.mnuPropostas = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
             this.itemPropostaBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -62,12 +64,12 @@
             // 
             // menuPedido
             // 
-            this.menuPedido.MenuItems.Add(this.menuItem1);
+            this.menuPedido.MenuItems.Add(this.mnuPropostas);
             // 
-            // menuItem1
+            // mnuPropostas
             // 
-            this.menuItem1.Text = "Opções";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click);
+            this.mnuPropostas.Text = "Opções";
+            this.mnuPropostas.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // lbPedido
             // 
@@ -85,7 +87,7 @@
             // 
             // itemPropostaBindingSource
             // 
-            this.itemPropostaBindingSource.DataSource = typeof(TitaniumColector.Classes.ItemProposta);
+            this.itemPropostaBindingSource.DataSource = typeof(TitaniumColector.Classes.ProdutoProposta);
             // 
             // dgProposta
             // 
@@ -232,7 +234,7 @@
             this.tbDescricao.Text = "Terminal Olhal";
             this.tbDescricao.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TbPartNumber
+            // tbPartNumber
             // 
             this.tbPartNumber.Font = new System.Drawing.Font("Tahoma", 20F, System.Drawing.FontStyle.Bold);
             this.tbPartNumber.Location = new System.Drawing.Point(0, 0);
@@ -480,7 +482,7 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem mnuPropostas;
         private System.Windows.Forms.Label lbPedido;
         private System.Windows.Forms.Label lbCliente;
         private System.Windows.Forms.DataGrid dgProposta;

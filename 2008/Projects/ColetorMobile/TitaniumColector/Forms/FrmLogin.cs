@@ -39,7 +39,8 @@ namespace TitaniumColector
                 {
                     Application.Exit();
                 }
-                this.configFrmLogin();
+
+                this.configControls();
                 this.carregarComboUsuario();
 
             }
@@ -75,19 +76,6 @@ namespace TitaniumColector
 
         //PRINCIPAIS MÉTODOS DO FORMULÁRIO.
         #region "Métodos Principais"  
-
-
-        /// <summary>
-        /// Configurações do fomulário.
-        /// </summary>
-        private void configFrmLogin() 
-        {
-            this.SuspendLayout();
-            this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
-            this.configControls();
-            this.cbUsuario.Focus();
-            this.ResumeLayout();
-        }
 
         /// <summary>
         /// Carrega a combo de usuários
@@ -406,126 +394,113 @@ namespace TitaniumColector
         #region "Configurações de Controls"
 
 
-        private void configControls()
-        {
-            this.configPictureBox();
-            this.configPainel();
-            this.configLabel();
-            this.configComboBox();
-            this.configTextBox();
-            this.configButton();
-            Size size = new Size(this.ClientSize.Width, this.ClientSize.Height);
-            MainConfig.defineClienteSize(size);
-        }
+        //private void configPictureBox()
+        //{
+        //    this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
+        //    this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
+        //    //Tamanho da Imagem a ser mostrada no Picture Box
+        //    this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 77);
+        //    this.pboxFrmLogin.BackColor = Color.Black;
+        //    this.pboxFrmLogin.Image = ImgLogin.Images[0];
+
+        //}
+
+        //private void configPainel()
+        //{
+        //    this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
+        //    this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
+        //}
 
 
-        private void configPictureBox()
-        {
-            this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
-            this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
-            //Tamanho da Imagem a ser mostrada no Picture Box
-            this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 77);
-            this.pboxFrmLogin.BackColor = Color.Black;
-            this.pboxFrmLogin.Image = ImgLogin.Images[0];
+        //private void configLabel()
+        //{
+        //    // 
+        //    // Label Descrição
+        //    // 
+        //    this.lbDescricao.Font = MainConfig.FontGrandeRegular;
+        //    this.lbDescricao.Size = new System.Drawing.Size(90, 35);
+        //    this.lbDescricao.Text = "Login :";
+        //    this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        //    sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
+        //    this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - sizeString.Width / 2),
+        //                                                          this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
 
-        }
+        //    //
+        //    //Label Usuário
+        //    //
+        //    this.lbUsuario.Font = MainConfig.FontPadraoBold;
+        //    this.lbUsuario.Size = new System.Drawing.Size(90, 35);
+        //    this.lbUsuario.Text = "Usuário :";
+        //    this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        //    sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
+        //    this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
+        //                                                          this.lbDescricao.Location.Y + 80);
 
-        private void configPainel()
-        {
-            this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
-            this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
-        }
+        //    //
+        //    //Label Senha
+        //    //
+        //    this.lbSenha.Font = MainConfig.FontPadraoBold;
+        //    this.lbSenha.Text = "Senha :";
+        //    this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+        //    sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+        //    this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
+        //    this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
+        //                                                           this.lbUsuario.Location.Y + 25);
 
+        //}
 
-        private void configLabel()
-        {
-            // 
-            // Label Descrição
-            // 
-            this.lbDescricao.Font = MainConfig.FontGrandeRegular;
-            this.lbDescricao.Size = new System.Drawing.Size(90, 35);
-            this.lbDescricao.Text = "Login :";
-            this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
-            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - sizeString.Width / 2),
-                                                                  this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
+        //private void configComboBox()
+        //{
+        //    //
+        //    //ComboBox Usuário
+        //    //
+        //    this.cbUsuario.Font = MainConfig.FontPadraoRegular;
+        //    sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
+        //    this.cbUsuario.Visible = true;
+        //    this.cbUsuario.Size = new System.Drawing.Size(120, 27);
+        //    this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
+        //                                                           this.lbUsuario.Location.Y - 3);
+        //    this.cbUsuario.DropDownStyle = ComboBoxStyle.DropDown;
 
-            //
-            //Label Usuário
-            //
-            this.lbUsuario.Font = MainConfig.FontPadraoBold;
-            this.lbUsuario.Size = new System.Drawing.Size(90, 35);
-            this.lbUsuario.Text = "Usuário :";
-            this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
-            this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
-                                                                  this.lbDescricao.Location.Y + 80);
+        //}
 
-            //
-            //Label Senha
-            //
-            this.lbSenha.Font = MainConfig.FontPadraoBold;
-            this.lbSenha.Text = "Senha :";
-            this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-            this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
-            this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
-                                                                   this.lbUsuario.Location.Y + 25);
+        //private void configTextBox()
+        //{
+        //    //
+        //    // TextBox Senha
+        //    //
+        //    this.txtSenha.Font = MainConfig.FontPadraoRegular;
+        //    this.txtSenha.Text = "";
+        //    this.txtSenha.MaxLength = 12;
+        //    this.txtSenha.PasswordChar = MainConfig.PasswordChar;
+        //    this.txtSenha.Visible = true;
+        //    this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
+        //    this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
+        //                                                            this.lbSenha.Location.Y - 3);
+        //    this.txtSenha.Enabled = false;
+        //}
 
-        }
+        //private void configButton()
+        //{
+        //    //
+        //    //Button Login 
+        //    //
+        //    this.btLogin.Font = MainConfig.FontPadraoRegular;
+        //    this.btLogin.Visible = true;
+        //    this.btLogin.Size = new System.Drawing.Size(72, 20);
+        //    this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - btLogin.Size.Width - 3),
+        //                                                            this.lbSenha.Location.Y + 40);
 
-        private void configComboBox()
-        {
-            //
-            //ComboBox Usuário
-            //
-            this.cbUsuario.Font = MainConfig.FontPadraoRegular;
-            sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-            this.cbUsuario.Visible = true;
-            this.cbUsuario.Size = new System.Drawing.Size(120, 27);
-            this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
-                                                                   this.lbUsuario.Location.Y - 3);
-            this.cbUsuario.DropDownStyle = ComboBoxStyle.DropDown;
+        //    //
+        //    //Button Sair
+        //    //
+        //    this.btSair.Font = MainConfig.FontPadraoRegular;
+        //    this.btSair.Visible = true;
+        //    this.btSair.Size = new System.Drawing.Size(72, 20);
+        //    this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 + 3),
+        //                                                            this.lbSenha.Location.Y + 40);
 
-        }
-
-        private void configTextBox()
-        {
-            //
-            // TextBox Senha
-            //
-            this.txtSenha.Font = MainConfig.FontPadraoRegular;
-            this.txtSenha.Text = "";
-            this.txtSenha.MaxLength = 12;
-            this.txtSenha.PasswordChar = MainConfig.PasswordChar;
-            this.txtSenha.Visible = true;
-            this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
-            this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
-                                                                    this.lbSenha.Location.Y - 3);
-            this.txtSenha.Enabled = false;
-        }
-
-        private void configButton()
-        {
-            //
-            //Button Login 
-            //
-            this.btLogin.Font = MainConfig.FontPadraoRegular;
-            this.btLogin.Visible = true;
-            this.btLogin.Size = new System.Drawing.Size(72, 20);
-            this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - btLogin.Size.Width - 3),
-                                                                    this.lbSenha.Location.Y + 40);
-
-            //
-            //Button Sair
-            //
-            this.btSair.Font = MainConfig.FontPadraoRegular;
-            this.btSair.Visible = true;
-            this.btSair.Size = new System.Drawing.Size(72, 20);
-            this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 + 3),
-                                                                    this.lbSenha.Location.Y + 40);
-
-        }
+        //}
 
 
 

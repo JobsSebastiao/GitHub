@@ -5,13 +5,17 @@ using System.Text;
 using System.Data.SqlClient;
 using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.SqlServer;
+using System.Data;
 
 namespace TitaniumColector.Classes
 {
-    class Carga
+    class TransacoesDados
     {
         private String sql01;
-        private ItemProposta objItemProposta;
+        private ProdutoProposta objItemProposta;
+        private DataTable dt;
+
+        #region "SELECTS"
 
         /// <summary>
         ///  Efetua carga na base mobile tb0001_Propostas com informações sobre a 
@@ -91,11 +95,11 @@ namespace TitaniumColector.Classes
         /// </summary>
         /// <param name="codigoProposta">Código da proposta da qual serão recuperados os itens.</param>
         /// <returns>List do tipo ItemProposta </returns>
-        public IEnumerable<ItemProposta> recuperaItensProposta(int codigoProposta)
+        public IEnumerable<ProdutoProposta> recuperaItensProposta(int codigoProposta)
         {
-            objItemProposta = new ItemProposta();
+            objItemProposta = new ProdutoProposta();
 
-            List<ItemProposta> listItensProposta = new List<ItemProposta>();
+            List<ProdutoProposta> listItensProposta = new List<ProdutoProposta>();
 
             StringBuilder query = new StringBuilder();
             query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
@@ -120,7 +124,7 @@ namespace TitaniumColector.Classes
             {
                 while ((dr.Read()))
                 {
-                    objItemProposta = new ItemProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), Convert.ToDouble(dr["QTD"]), ItemProposta.statusSeparado.NAOSEPARADO, Convert.ToInt32(dr["loteRESERVA"]),
+                    objItemProposta = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), Convert.ToDouble(dr["QTD"]), ProdutoProposta.statusSeparado.NAOSEPARADO, Convert.ToInt32(dr["loteRESERVA"]),
                                                      Convert.ToInt32(dr["codigoPRODUTO"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"], (string)(dr["nomePRODUTO"]), Convert.ToInt32(dr["localLOTELOCAL"]), (String)dr["nomeLOCAL"]);
 
 
@@ -137,18 +141,21 @@ namespace TitaniumColector.Classes
         }
 
 
-//SELECT        codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA, statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA
-//FROM            tb0002_ItensProposta
+        private void buscaItensBaseMobile()
+        {
+            dt = new DataTable();
 
-//INSERT INTO tb0002_ItensProposta
-//(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA, statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA)
-//VALUES        (,,,,,)
+            StringBuilder stb = new StringBuilder();
+            stb.Append("SELECT codigoITEMPROPOSTA, propostaITEMPROPOSTA, partnumberITEMPROPOSTA, nomeITEMPROPOSTA,");
+            stb.Append("produtopedidoITEMPROPOSTA, quantidadeITEMPROPOSTA, ean13ITEMPROPOSTA,statusseparadoITEMPROPOSTA ");
+            stb.Append(" FROM  tb0011_ItensProposta");
+            CeSqlServerConn.fillDataTableCe(dt, stb.ToString());
 
+        }
 
-//UPDATE       tb0002_ItensProposta
-//SET                codigoITEMPROPOSTA =, propostaITEMPROPOSTA =, quantidadeITEMPROPOSTA =, statusseparadoITEMPROPOSTA =, codigoprodutoITEMPROPOSTA =, lotereservaITEMPROPOSTA =
+        #endregion 
 
-
+        #region "INSERTS"
 
         /// <summary>
         /// Realiza o insert na tabela de Propostas
@@ -181,73 +188,96 @@ namespace TitaniumColector.Classes
             CeSqlServerConn.execCommandSqlCe(sql01);
         }
 
-
-
         /// <summary>
         /// Insert na base Mobile tabela de itens da proposta
         /// </summary>
         /// <param name="listProposta">List com objetos do tipo ItemProposta </param>
-        private void insertItensProposta(List<ItemProposta> listItensProposta)
+        public void insertItensProposta(List<ProdutoProposta> listProdutoProposta)
         {
 
-            //Limpa a tabela..
-            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
-
-            foreach (var item in listItensProposta)
+            try
             {
-                //Query de insert na Base Mobile
-                StringBuilder query = new StringBuilder();
-                query.Append("Insert INTO tb0002_ItensProposta VALUES (");
-                query.AppendFormat("{0},", item.CodigoItemProposta);
-                query.AppendFormat("\'{0}\',", item.PropostaItemProposta);
-                query.AppendFormat("\'{0}\',", item.Partnumber);
-                query.AppendFormat("\'{0}\',", item.Descricao);
-                query.AppendFormat("{0},", item.CodigoProduto);
-                query.AppendFormat("{0},", item.Quantidade);
-                query.AppendFormat("\'{0}\',", item.Ean13);
-                query.AppendFormat("{0})", (int)item.StatusSeparado);
-                sql01 = query.ToString();
+                //Limpa a tabela..
+                CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
 
-                CeSqlServerConn.execCommandSqlCe(sql01);
+                foreach (var item in listProdutoProposta)
+                {
+
+                    //Query de insert na Base Mobile
+                    StringBuilder query = new StringBuilder();
+                    query.Append("INSERT INTO tb0002_ItensProposta ");
+                    query.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,");
+                    query.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA) ");
+                    query.Append("VALUES (");
+                    query.AppendFormat("{0},", item.CodigoItemProposta);
+                    query.AppendFormat("{0},", item.PropostaItemProposta);
+                    query.AppendFormat("{0},", item.Quantidade);
+                    query.AppendFormat("{0},", (int)item.StatusSeparado);
+                    query.AppendFormat("{0},", item.CodigoProduto);
+                    query.AppendFormat("{0})", item.LotereservaItemProposta);
+                    sql01 = query.ToString();
+
+                    CeSqlServerConn.execCommandSqlCe(sql01);
+                }
+
             }
+            catch (SqlException sqlEx)
+            {
+                System.Windows.Forms.MessageBox.Show("Erro durante a carga de dados na base Mobile!! \n Erro : " + sqlEx.Message);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Erro durante a carga de dados na base Mobile!! \n Erro : " + ex.Message);
+            }
+            
         }
 
-
         /// <summary>
-        /// Insert na base Mobile tabela ItensProposta.
+        /// Realiza Insert na base Mobile table tb0002_ItensProposta
         /// </summary>
-        /// <param name="codigoITEMPROPOSTA"> Código do item da proposta</param>
-        /// <param name="propostaITEMPROPOSTA">código da proposta ao qual o item está vínculado</param>
-        /// <param name="nomePRODUTO">Nome(Descrição ) do item.</param>
-        /// <param name="partnumberPRODUTO"> Partnumber do item</param>
-        /// <param name="ean13PRODUTO">Ean 13 do item</param>
-        /// <param name="PRODUTO"> produto separado</param>
-        /// <param name="quantidade">quantidade do item  </param>
-        /// <param name="statusseparadoPROPODUTO"> Status indicando se o item está separado ou não.</param>
-        private void insertItemProposta(Int64 codigoITEMPROPOSTA, Int32 propostaITEMPROPOSTA, string nomePRODUTO, string partnumberPRODUTO,
-                                        string ean13PRODUTO, int PRODUTO, double quantidade, int statusseparadoPROPODUTO)
+        /// <param name="codigoItem">Código do Item da Proposta</param>
+        /// <param name="propostaItemProposta">Proposta (ForeingKey)</param>
+        /// <param name="quantidade">Qunatidade de itens</param>
+        /// <param name="statusSeparado">status (Separado ou não)</param>
+        /// <param name="codigoProduto">Código do produto </param>
+        /// <param name="loteReserva">Lote referente a reserva do item</param>
+        private void insertItemProposta(Int64 codigoItem, Int64 propostaItemProposta, Double quantidade , ProdutoProposta.statusSeparado statusSeparado,
+                                        Int64 codigoProduto,Int64 loteReserva)
         {
 
+            Produto asdf = new ProdutoProposta();
             //Limpa a tabela..
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0011_ItensProposta");
 
-            //Query de insert na Tabela de itens da prosposta
+            //Query de insert na Base Mobile
             StringBuilder query = new StringBuilder();
-            query.Append("Insert INTO tb0011_ItensProposta VALUES (");
-            query.AppendFormat("{0},", codigoITEMPROPOSTA);
-            query.AppendFormat("\'{0}\',", propostaITEMPROPOSTA);
-            query.AppendFormat("\'{0}\',", partnumberPRODUTO);
-            query.AppendFormat("\'{0}\',", nomePRODUTO);
-            query.AppendFormat("{0},", PRODUTO);
+            query.Append("INSERT INTO tb0002_ItensProposta ");
+            query.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,");
+            query.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA) ");
+            query.Append("VALUES (");
+            query.AppendFormat("{0},", codigoItem);
+            query.AppendFormat("{0},", propostaItemProposta);
             query.AppendFormat("{0},", quantidade);
-            query.AppendFormat("\'{0}\',", ean13PRODUTO);
-            query.AppendFormat("{0})", statusseparadoPROPODUTO);
+            query.AppendFormat("{0},", (int)statusSeparado);
+            query.AppendFormat("{0},", codigoProduto);
+            query.AppendFormat("{0})", loteReserva);
             sql01 = query.ToString();
 
             CeSqlServerConn.execCommandSqlCe(sql01);
 
         }
 
+        #endregion 
+
+
+
+
+        //SELECT        codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA, statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA
+        //FROM            tb0002_ItensProposta
+
+
+        //UPDATE       tb0002_ItensProposta
+        //SET                codigoITEMPROPOSTA =, propostaITEMPROPOSTA =, quantidadeITEMPROPOSTA =, statusseparadoITEMPROPOSTA =, codigoprodutoITEMPROPOSTA =, lotereservaITEMPROPOSTA =
 
 
 

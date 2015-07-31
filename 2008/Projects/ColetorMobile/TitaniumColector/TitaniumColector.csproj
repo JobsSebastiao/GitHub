@@ -62,8 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Carga.cs" />
-    <Compile Include="Classes\ItemProposta.cs" />
+    <Compile Include="Classes\TransacoesDados.cs" />
+    <Compile Include="Classes\ProdutoProposta.cs" />
     <Compile Include="Classes\Produto.cs" />
     <Compile Include="Classes\Proposta.cs" />
     <Compile Include="Classes\SqlServer\CeSqlServerConn.cs" />

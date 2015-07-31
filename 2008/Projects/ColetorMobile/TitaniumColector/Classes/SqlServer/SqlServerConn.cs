@@ -347,7 +347,6 @@ namespace TitaniumColector.SqlServer
                 if (File.Exists(fU.getFullPath()))
                 {
                     List<string> fileStrConn = new List<string>(fU.readTextFile());
-                    //string strConnection = fileStrConn[0];
                     return fileStrConn[0];
                 }
                 else
