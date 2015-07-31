@@ -18,35 +18,75 @@ namespace TitaniumColector.Forms
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
         private List<ProdutoProposta> listaProdutoProposta;
+        private List<Produto> listaProduto;
 
         //Contrutor.
         public FrmProposta()
         {
             InitializeComponent();
             configControls();
-            this.realizaCargaBaseMobile();   
+            this.carregaBaseMobile();   
         }
 
         /// <summary>
         /// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
         /// </summary>
-        public void realizaCargaBaseMobile()
+        private void carregaBaseMobile()
         {
+
             objTransacoes = new TransacoesDados();
             objProposta = new Proposta();
 
-            //Carrega um objeto Proposta
-            objProposta = objTransacoes.top1PropostaServidor();
+            try 
+            {
+                //Limpa a Base.
+                objTransacoes.clearBaseMobile();
 
-            //Realiza o Insert na Base Mobile
-            objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao, objProposta.CodigoCliente, objProposta.RazaoCliente, (int)objProposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
-            
-            //Recupera List com itens da proposta
-            this.listaProdutoProposta = objTransacoes.recuperaItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
+                //Carrega um objeto Proposta
+                objProposta = objTransacoes.top1PropostaServidor();
 
-            //Insert na Base Mobile
-            objTransacoes.insertItensProposta(listaProdutoProposta.ToList<ProdutoProposta>());
+                //Realiza o Insert na Base Mobile
+                objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao, objProposta.CodigoCliente, objProposta.RazaoCliente, (int)objProposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
+                
+                //Recupera List com itens da proposta
+                this.listaProdutoProposta = objTransacoes.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
 
+                //Insert na Base Mobile tabela tb0002_ItensProsposta
+                objTransacoes.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
+
+                //Recupera informações sobre os produtos esistentes na proposta
+                this.listaProduto = objTransacoes.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
+                
+                //Insert na base Mobile tabela tb0003_Produtos
+                objTransacoes.insertProduto(listaProduto.ToList<Produto>());
+            }
+            catch(Exception ex)
+            {
+                StringBuilder sbMsg = new StringBuilder();
+                sbMsg.Append("Ocorreram problemas durante a carga de dados para a Base Mobile \n");
+                sbMsg.AppendFormat("Error : {0}", ex.Message);
+                sbMsg.Append("Contate o Administrador do sistema.");
+                MainConfig.errorMessage(sbMsg.ToString(),"Sistem Error!");
+            }
+            finally 
+            {
+                objTransacoes = null;
+                objProposta = null;
+            }
+
+
+        }
+
+
+        private void carregarInformacoesProposta() 
+        {
+            objTransacoes = new TransacoesDados();
+            objTransacoes.informacoesProposta();
+        }
+
+        private void FrmProposta_Load(object sender, System.EventArgs e)
+        {
+           // this.carregarInformacoesProposta();
         }
 
         private void menuItem1_Click(object sender, EventArgs e)
@@ -56,38 +96,7 @@ namespace TitaniumColector.Forms
             this.Hide();
         }
 
-#region   "NAO UTILIZADOS"
-
-        //public void carregaObjProposta(string sql01)
-        //{
-        //    ///Carrega o dataReader.
-        //    SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
-
-        //    if ((dr.FieldCount > 0))
-        //    {
-        //        while ((dr.Read()))
-        //        {
-        //            //Limpa a tabela de propostas.
-        //            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0010_Propostas");
-
-
-        //            this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-        //                              Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]), MainConfig.CodigoUsuarioLogado);
-
-
-        //            //Carrega o objeto Proposta.
-        //            objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-        //                                    Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
-        //        }
-        //    }
-
-        //    SqlServerConn.closeConn();
-
-        //}
-
-
-#endregion
-
+    #region   "NAO UTILIZADOS"
 
         /// <summary>
         /// Atualiza o grid a partir de uma List que refência a classe ItemProposta.
@@ -153,6 +162,11 @@ namespace TitaniumColector.Forms
         {
             //string = "EAN=789123654587|LOTE=LT-01|SEQ=023654|QTD=5"
         }
+
+
+
+    #endregion
+
 
     }
 }

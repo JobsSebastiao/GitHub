@@ -286,6 +286,7 @@ namespace TitaniumColector.Forms
             this.Name = "FrmProposta";
             this.Text = "Proposta";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmProposta_KeyDown);
+            this.Load += new System.EventHandler(FrmProposta_Load);
             ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.panelFrmProposta.ResumeLayout(false);
             this.pnCentral.ResumeLayout(false);

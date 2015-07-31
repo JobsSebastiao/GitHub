@@ -12,7 +12,7 @@ namespace TitaniumColector.Classes.SqlServer
     static class CeSqlServerConn
     {
 
-	    //'sqlCE
+
 	    private static SqlCeConnection sqlCeConn = new SqlCeConnection();
         private static SqlCeTransaction transacaoCe;
         private static string nomeDataBase;
@@ -53,7 +53,6 @@ namespace TitaniumColector.Classes.SqlServer
 		    }
 	    }
 
-
 	    public static SqlCeConnection openConnCe()
 	    {
 		    try {
@@ -66,7 +65,8 @@ namespace TitaniumColector.Classes.SqlServer
                 }
                 else 
                 {
-                    throw new Exception("Error.");
+                    closeConnCe();
+                    return openConnCe();
                 }
 		    } catch (Exception ex) {
 			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
@@ -78,8 +78,7 @@ namespace TitaniumColector.Classes.SqlServer
 	    {
 		    try {
 			    if ((sqlCeConn.State == ConnectionState.Open)) {
-				    sqlCeConn.Close();
-				    
+				    sqlCeConn.Close(); 
 			    }
 		    } catch (Exception ex) {
 			  
@@ -115,7 +114,6 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    }
 
-
         public static void fillDataTableCe(DataTable dt, string sql01)
 	    {
 		    try {
@@ -135,7 +133,7 @@ namespace TitaniumColector.Classes.SqlServer
 	    public static SqlCeDataReader fillDataReaderCe(string sql01)
 	    {
 
-		    SqlCeCommand cmd = new SqlCeCommand(sql01, sqlCeConn);
+		    SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
 		    SqlCeDataReader dr = cmd.ExecuteReader();
 		    return dr;
 
@@ -143,18 +141,20 @@ namespace TitaniumColector.Classes.SqlServer
         
 	    public static void execCommandSqlCe(string sql01)
 	    {
-		    try 
+            try
             {
-			    SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
-			    cmd.ExecuteNonQuery();
+                SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
+                cmd.ExecuteNonQuery();
                 closeConnCe();
-		    } 
-            catch (SqlCeException) 
+            }
+            catch (SqlCeException)
             {
+                closeConnCe();
                 throw;
-		    }
+            }
             catch (Exception)
             {
+                closeConnCe();
                 throw;
             }
 
@@ -171,7 +171,6 @@ namespace TitaniumColector.Classes.SqlServer
 		    }
 
 	    }
-
 
 	    public static  void EndTransactionCe(ref bool flag)
 	    {

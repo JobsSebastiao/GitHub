@@ -15,7 +15,6 @@ namespace TitaniumColector.Classes
         private int codigoCliente;
         private statusOrdemSeparacao ordemSeparacao;
 
-
         public Proposta() 
         { }
 

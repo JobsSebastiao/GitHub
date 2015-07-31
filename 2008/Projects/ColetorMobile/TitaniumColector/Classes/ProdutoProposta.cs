@@ -15,11 +15,6 @@ namespace TitaniumColector.Classes
 
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
 
-        public ProdutoProposta() 
-        {
-
-        }
-
         public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,Int32 loteReservaItemProposta,
                             Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote)  
                             : base(codigoProduto,ean13, partnumber, nomeProduto,codigoLocalLote,nomeLocalLote)
@@ -29,6 +24,11 @@ namespace TitaniumColector.Classes
             this.Quantidade = quantidade;
             this.StatusSeparado = isSeparado;
             this.LotereservaItemProposta = loteReservaItemProposta;
+        }
+
+        public ProdutoProposta()
+        {
+
         }
 
         public int CodigoItemProposta

@@ -37,23 +37,24 @@
             // 
             // btnVenda
             // 
-            this.btnVenda.Location = new System.Drawing.Point(44, 59);
+            this.btnVenda.Location = new System.Drawing.Point(41, 39);
             this.btnVenda.Name = "btnVenda";
-            this.btnVenda.Size = new System.Drawing.Size(256, 129);
+            this.btnVenda.Size = new System.Drawing.Size(265, 174);
             this.btnVenda.TabIndex = 0;
             this.btnVenda.Text = "Próxima Venda";
             this.btnVenda.Click += new System.EventHandler(this.btnVenda_Click);
             // 
             // btnSaida
             // 
-            this.btnSaida.Location = new System.Drawing.Point(44, 228);
+            this.btnSaida.Location = new System.Drawing.Point(41, 241);
             this.btnSaida.Name = "btnSaida";
-            this.btnSaida.Size = new System.Drawing.Size(256, 129);
+            this.btnSaida.Size = new System.Drawing.Size(265, 174);
             this.btnSaida.TabIndex = 1;
             this.btnSaida.Text = "Saída";
             // 
             // painelFrmAcao
             // 
+            this.painelFrmAcao.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.painelFrmAcao.Controls.Add(this.btnVenda);
             this.painelFrmAcao.Controls.Add(this.btnSaida);
             this.painelFrmAcao.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -73,6 +74,65 @@
             this.Text = "FrmAcao";
             this.painelFrmAcao.ResumeLayout(false);
             this.ResumeLayout(false);
+
+        }
+
+        /// <summary>
+        /// Configura todos os controles do formulário
+        /// </summary>
+        private void controlsConfig()
+        {
+
+            //
+            //FrmAcao
+            //
+            this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
+            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.Text = "Próxima ação";
+
+            //Menus 
+
+            ////menuItem Opções
+            this.mnuAcao_Opcoes = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Opcoes.Text = "Opção";
+            this.mnuAcao_Opcoes.Enabled = true;
+
+            ////menuItem Exit
+            this.mnuAcao_Exit = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Exit.Text = "Exit";
+            this.mnuAcao_Exit.Enabled = true;
+            this.mnuAcao_Exit.Click += new System.EventHandler(mnuAcao_Exit_Click);
+           
+
+            ////MenuItem Logout
+            this.mnuAcao_Logout = new System.Windows.Forms.MenuItem();
+            this.mnuAcao_Logout.Text = "Logout";
+            this.mnuAcao_Logout.Enabled = true;
+            this.mnuAcao_Logout.Click += new System.EventHandler(mnuAcao_Logout_Click);
+            //
+            ////Adiciona os menus ao MenuPrincipal.
+            //
+            this.menuFrmAcao = new System.Windows.Forms.MainMenu();
+            this.menuFrmAcao.MenuItems.Add(mnuAcao_Opcoes);
+            this.mnuAcao_Opcoes.MenuItems.Add(this.mnuAcao_Exit);
+            this.mnuAcao_Opcoes.MenuItems.Add(this.mnuAcao_Logout);
+            this.Menu = this.menuFrmAcao;
+
+            //
+            //btnVenda
+            //
+            this.btnVenda.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, MainConfig.intPositionY + 30);
+            this.btnVenda.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
+            this.btnVenda.Text = "Próxima Venda";
+            this.btnVenda.Font = MainConfig.FontMediaBold;
+            //
+            //btnSaida
+            //
+            this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnVenda.Location.Y + btnVenda.Size.Height + 10);
+            this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
+            this.btnSaida.Text = "Próxima Compra";
+            this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
+            this.btnSaida.Font = MainConfig.FontMediaBold;
 
         }
 

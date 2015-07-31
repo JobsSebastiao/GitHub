@@ -34,7 +34,8 @@ namespace TitaniumColector
                 InitializeComponent();
                 MainConfig.setMainConfigurations();
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
-                CeSqlServerConn.createStringConectionCe("\\Storage Card\\BaseMobile\\EngineMobile.sdf", "tec9TIT16");
+                String informacoes = TransacoesDados.CriarDataBaseMobile();
+                CeSqlServerConn.createStringConectionCe(informacoes.Substring(1, informacoes.Length -11), informacoes.Substring( informacoes.Length - 9));
                 if (SqlServerConn.testConnection() == false)
                 {
                     Application.Exit();

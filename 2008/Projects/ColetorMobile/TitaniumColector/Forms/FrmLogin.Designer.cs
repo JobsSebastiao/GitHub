@@ -80,6 +80,7 @@ namespace TitaniumColector
             // 
             // panelFrmLogin
             // 
+            //this.panelFrmLogin.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.panelFrmLogin.Controls.Add(this.lbDescricao);
             this.panelFrmLogin.Controls.Add(this.txtSenha);
             this.panelFrmLogin.Controls.Add(this.cbUsuario);
@@ -195,10 +196,10 @@ namespace TitaniumColector
             this.pboxFrmLogin.BackColor = Color.Black;
             this.pboxFrmLogin.Image = ImgLogin.Images[1];
             //
-            //pnFrmLogin
+            //pnFrmLogin  
             //
             this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
-            this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.panelFrmLogin.BackColor = System.Drawing.SystemColors.AppWorkspace;
             // 
             // Label Descrição
             // 

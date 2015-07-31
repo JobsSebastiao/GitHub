@@ -387,5 +387,11 @@ namespace TitaniumColector
         }
 
 
+        public static void errorMessage(String msg,String head) 
+        {
+            System.Windows.Forms.MessageBox.Show(msg, head, System.Windows.Forms.MessageBoxButtons.OK,
+                               System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+        }
+
     }
 }
