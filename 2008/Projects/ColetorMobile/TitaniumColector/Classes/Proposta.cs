@@ -14,21 +14,95 @@ namespace TitaniumColector.Classes
         private string razaoCliente;
         private int codigoCliente;
         private statusOrdemSeparacao ordemSeparacao;
+        private List<ProdutoProposta> listItemProposta;
 
         public Proposta() 
         { }
 
+        /// <summary>
+        /// Instância um Obj Proposta
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da proposta</param>
+        /// <param name="dataLiberacaoProposta">Data liberação Proposta</param>
+        /// <param name="codigoCliente">Código cliente Proposta</param>
+        /// <param name="razaoCliente">Razão cliente Proposta</param>
+        /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
+        public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
+                        string razaoCliente)
+        {
+            this.Codigo = codigoProposta;
+            this.Numero = numeroProposta;
+            this.DataLiberacao = dataLiberacaoProposta;
+            this.CodigoCliente = codigoCliente;
+            this.RazaoCliente = razaoCliente;
+        }
+
+        /// <summary>
+        /// Instância um Obj Proposta
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da proposta</param>
+        /// <param name="dataLiberacaoProposta">Data liberação Proposta</param>
+        /// <param name="codigoCliente">Código cliente Proposta</param>
+        /// <param name="razaoCliente">Razão cliente Proposta</param>
+        /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
         public Proposta(Int64 codigoProposta,string numeroProposta,string dataLiberacaoProposta,int codigoCliente,
                         string razaoCliente,statusOrdemSeparacao statusOrdemSeparacao)
         {
-            Codigo = codigoProposta;
-            Numero = numeroProposta;
-            DataLiberacao  = dataLiberacaoProposta;
-            CodigoCliente = codigoCliente;
-            RazaoCliente = razaoCliente;
-            StatusOrdemSeparacao = statusOrdemSeparacao;
-            
+            this.Codigo = codigoProposta;
+            this.Numero = numeroProposta;
+            this.DataLiberacao = dataLiberacaoProposta;
+            this.CodigoCliente = codigoCliente;
+            this.RazaoCliente = razaoCliente;
+            this.StatusOrdemSeparacao = statusOrdemSeparacao;
+        }
+
+
+        /// <summary>
+        /// Recebe outro obj do tipo Proposta e set os parâmetros para a nova instância a ser criada.
+        /// </summary>
+        /// <param name="obj"></param>
+        public Proposta(Object obj)
+        {
+            if (obj.GetType() != typeof(Proposta))
+            {
+
+                this.Codigo = ((Proposta)obj).Codigo ;
+                this.Numero = ((Proposta)obj).Numero;
+                this.DataLiberacao = ((Proposta)obj).DataLiberacao;
+                this.CodigoCliente = ((Proposta)obj).CodigoCliente;
+                this.RazaoCliente = ((Proposta)obj).RazaoCliente;
+                this.StatusOrdemSeparacao = ((Proposta)obj).StatusOrdemSeparacao;
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// Instância um Obj Proposta recebendo um List do tipo ProdutoProposta
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da proposta</param>
+        /// <param name="dataLiberacaoProposta">Data liberação Proposta</param>
+        /// <param name="codigoCliente">Código cliente Proposta</param>
+        /// <param name="razaoCliente">Razão cliente Proposta</param>
+        /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
+        /// <param name="listItemProposta">List de objetos do tipo ProdutoProposta</param>
+        public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
+                string razaoCliente, statusOrdemSeparacao statusOrdemSeparacao,List<ProdutoProposta> listItemProposta)
+        {
+            this.Codigo = codigoProposta;
+            this.Numero = numeroProposta;
+            this.DataLiberacao = dataLiberacaoProposta;
+            this.CodigoCliente = codigoCliente;
+            this.RazaoCliente = razaoCliente;
+            this.StatusOrdemSeparacao = statusOrdemSeparacao;
+            this.ListObjItemProposta = listItemProposta;
+
         } 
+
 
         public enum statusOrdemSeparacao 
         {
@@ -72,6 +146,12 @@ namespace TitaniumColector.Classes
             set { razaoCliente = value; }
         }
 
+        internal List<ProdutoProposta> ListObjItemProposta
+        {
+            get { return listItemProposta; }
+            set { listItemProposta = value; }
+        }
+
 
         /// <summary>
         /// Altera o status da Ordem de separação Entre Impressa e não Impressa.
@@ -103,7 +183,6 @@ namespace TitaniumColector.Classes
             {
                 return Codigo == ((Proposta)obj).Codigo;
             }
-
         }
 
         public override int GetHashCode()
@@ -118,7 +197,8 @@ namespace TitaniumColector.Classes
                    "\n Data Liberação : " + DataLiberacao +
                    "\n Código Cliente : " + CodigoCliente +
                    "\n Razao Cliente : " + RazaoCliente +
-                   "\n StatusOrdemSeparação : " + StatusOrdemSeparacao;
+                   "\n StatusOrdemSeparação : " + StatusOrdemSeparacao +
+                   "\n Quantidade de Itens : " + ListObjItemProposta.Count();
         }
     }
 }

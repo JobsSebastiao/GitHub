@@ -17,16 +17,35 @@ namespace TitaniumColector.Forms
     {
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
+
+        //LIST
         private List<ProdutoProposta> listaProdutoProposta;
         private List<Produto> listaProduto;
+        private List<String> listInfoProposta;
 
         //Contrutor.
         public FrmProposta()
         {
             InitializeComponent();
             configControls();
-            this.carregaBaseMobile();   
+            this.carregaBaseMobile();
         }
+
+        //carga do formulário
+        private void FrmProposta_Load(object sender, System.EventArgs e)
+        {
+            this.carregarForm();
+        }
+
+        private void menuItem1_Click(object sender, EventArgs e)
+        {
+            frmLogin frlLogin = new frmLogin();
+            frlLogin.Show();
+            this.Hide();
+        }
+
+
+    #region "CARGA BASE DE DADOS MOBILE"
 
         /// <summary>
         /// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
@@ -37,7 +56,7 @@ namespace TitaniumColector.Forms
             objTransacoes = new TransacoesDados();
             objProposta = new Proposta();
 
-            try 
+            try
             {
                 //Limpa a Base.
                 objTransacoes.clearBaseMobile();
@@ -47,7 +66,7 @@ namespace TitaniumColector.Forms
 
                 //Realiza o Insert na Base Mobile
                 objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao, objProposta.CodigoCliente, objProposta.RazaoCliente, (int)objProposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
-                
+
                 //Recupera List com itens da proposta
                 this.listaProdutoProposta = objTransacoes.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
 
@@ -56,19 +75,19 @@ namespace TitaniumColector.Forms
 
                 //Recupera informações sobre os produtos esistentes na proposta
                 this.listaProduto = objTransacoes.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
-                
+
                 //Insert na base Mobile tabela tb0003_Produtos
                 objTransacoes.insertProduto(listaProduto.ToList<Produto>());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 StringBuilder sbMsg = new StringBuilder();
                 sbMsg.Append("Ocorreram problemas durante a carga de dados para a Base Mobile \n");
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
                 sbMsg.Append("Contate o Administrador do sistema.");
-                MainConfig.errorMessage(sbMsg.ToString(),"Sistem Error!");
+                MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
             }
-            finally 
+            finally
             {
                 objTransacoes = null;
                 objProposta = null;
@@ -77,24 +96,113 @@ namespace TitaniumColector.Forms
 
         }
 
+    #endregion 
+      
+    #region "CARGA DO FORMULÁRIO"
 
-        private void carregarInformacoesProposta() 
+
+        private void carregarForm()
+        {
+            //this.fillListInfoProposta();
+            this.fillCamposForm(this.fillListInfoProposta());
+            
+
+        }
+
+        /// <summary>
+        ///  Preenche um objeto List com informações sobre a proposta que está sendo trabalhada.
+        /// </summary>
+        /// <returns> Objeto List com informações sobre a proposta</returns>
+        private List<String> fillListInfoProposta()
         {
             objTransacoes = new TransacoesDados();
-            objTransacoes.informacoesProposta();
+            List<String> list  = objTransacoes.informacoesProposta();
+
+            objTransacoes.carregaProposta();
+
+
+            objTransacoes = null;
+            return list;
+
+
         }
 
-        private void FrmProposta_Load(object sender, System.EventArgs e)
+
+        /// <summary>
+        /// Carrega os campos do Formulário
+        /// É nescessário que o objeto listInfoProposta esteja carregado e atualizado pois 
+        /// a carga será feita  a partir dos dados contidos neste Objeto.
+        /// </summary>
+        private void fillCamposForm()
         {
-           // this.carregarInformacoesProposta();
+            lbNumeroPedido.Text = ListInformacoesProposta[1];
+            lbNomeCliente.Text = ListInformacoesProposta[2];
+            lbQtdPecas.Text = ListInformacoesProposta[3] + " Pçs";
+            lbQtdItens.Text = ListInformacoesProposta[4] + " Itens";
         }
 
-        private void menuItem1_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Carrega os campos do Formulário.
+        /// Caso o Objeto listInfoPropostas esteja vazio 
+        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
+        /// </summary>
+        /// <param name="listInfoProposta">List do tipo String com informações sobre a proposta a ser trabalhada.</param>
+        private void fillCamposForm(List<String> listInfoProposta)
         {
-            frmLogin frlLogin = new frmLogin();
-            frlLogin.Show();
-            this.Hide();
+            lbNumeroPedido.Text = listInfoProposta[1];
+            lbNomeCliente.Text = listInfoProposta[2];
+            lbQtdPecas.Text = listInfoProposta[3] + " Pçs";
+            lbQtdItens.Text = listInfoProposta[4] + " Itens";
+
+            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0 )
+            {
+                this.ListInformacoesProposta = listInfoProposta;
+            }
+
         }
+
+        /// <summary>
+        /// Preenche os campos do Fomulário.  
+        /// Caso o Objeto listInfoPropostas esteja vazio 
+        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
+        /// </summary>
+        ///<param name="codigoProposta"> Código Proposta</param>
+        /// <param name="numeroPedido">Número Proposta</param>
+        /// <param name="nomeCliente">Nome Cliente</param>
+        /// <param name="qtdPecas">Quantidade de Peças</param>
+        /// <param name="qtdItens">Quantidade de Itens.</param>
+        private void fillCamposForm(String codigoProposta,String numeroPedido, String nomeCliente, String qtdPecas, String qtdItens)
+        {
+            var codigo = codigoProposta;
+            lbNumeroPedido.Text = numeroPedido;
+            lbNomeCliente.Text = nomeCliente;
+            lbQtdPecas.Text = qtdPecas + " Pçs";
+            lbQtdItens.Text = qtdItens + " Itens";
+
+            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0) 
+            {
+                List<String> list = new List<String>();
+                list.Add(codigoProposta);
+                list.Add(numeroPedido);
+                list.Add(nomeCliente);
+                list.Add(qtdPecas);
+                list.Add(qtdItens);
+
+                this.ListInformacoesProposta = list;
+            }
+        }
+
+    #endregion
+
+    #region "GET E SET"
+
+        public List<String> ListInformacoesProposta
+        {
+            get { return listInfoProposta; }
+            set { listInfoProposta = value; }
+        }
+
+    #endregion
 
     #region   "NAO UTILIZADOS"
 

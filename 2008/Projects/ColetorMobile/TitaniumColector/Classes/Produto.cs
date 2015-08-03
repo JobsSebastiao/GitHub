@@ -61,6 +61,26 @@ namespace TitaniumColector.Classes
 
         }
 
+        /// <summary>
+        /// Recebe outro objeto do tipo Produto e seta seus valores para a nova instância do objeto.
+        /// </summary>
+        /// <param name="obj">Objeto do tipo Produto</param>
+        public Produto(Object obj)
+        {
+            if (obj.GetType() != typeof(Produto))
+            {
+                CodigoProduto = ((Produto)obj).CodigoProduto;
+                Ean13 = ((Produto)obj).Ean13;
+                Partnumber = ((Produto)obj).Partnumber;
+                Descricao = ((Produto)obj).Descricao ;
+                CodigoLocalLote = ((Produto)obj).CodigoLocalLote;
+                NomeLocalLote = ((Produto)obj).NomeLocalLote;
+                CodigoLoteProduto = ((Produto)obj).CodigoLoteProduto;
+                IdentificacaoLoteProduto = ((Produto)obj).IdentificacaoLoteProduto;
+            }
+        }
+
+
         public Produto()
         {
 

@@ -15,9 +15,23 @@ namespace TitaniumColector.Classes
 
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
 
-        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,Int32 loteReservaItemProposta,
-                            Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote)  
-                            : base(codigoProduto,ean13, partnumber, nomeProduto,codigoLocalLote,nomeLocalLote)
+        /// <summary>
+        /// Sem informações de LOTE
+        /// </summary>
+        /// <param name="codigoItemProposta"></param>
+        /// <param name="propostaItemProposta"></param>
+        /// <param name="quantidade"></param>
+        /// <param name="isSeparado"></param>
+        /// <param name="loteReservaItemProposta"></param>
+        /// <param name="codigoProduto"></param>
+        /// <param name="ean13"></param>
+        /// <param name="partnumber"></param>
+        /// <param name="nomeProduto"></param>
+        /// <param name="codigoLocalLote"></param>
+        /// <param name="nomeLocalLote"></param>
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,
+                       Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote)
+            : base(codigoProduto, ean13, partnumber, nomeProduto, codigoLocalLote, nomeLocalLote)
         {
             this.CodigoItemProposta = codigoItemProposta;
             this.PropostaItemProposta = propostaItemProposta;
@@ -25,6 +39,28 @@ namespace TitaniumColector.Classes
             this.StatusSeparado = isSeparado;
             this.LotereservaItemProposta = loteReservaItemProposta;
         }
+
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,Int32 loteReservaItemProposta,
+                               Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote,Int32 codigoLoteProduto,String identificacaoLoteProduto)
+                             : base(codigoProduto, ean13, partnumber, nomeProduto, codigoLocalLote, nomeLocalLote, codigoLoteProduto, identificacaoLoteProduto)
+        {
+            this.CodigoItemProposta = codigoItemProposta;
+            this.PropostaItemProposta = propostaItemProposta;
+            this.Quantidade = quantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = loteReservaItemProposta;
+        }
+
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,object objProduto)
+            : base(objProduto)
+        {
+            this.CodigoItemProposta = codigoItemProposta;
+            this.PropostaItemProposta = propostaItemProposta;
+            this.Quantidade = quantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = loteReservaItemProposta;
+        }
+
 
         public ProdutoProposta()
         {
@@ -61,6 +97,43 @@ namespace TitaniumColector.Classes
             get { return lotereservaItemProposta; }
             set { lotereservaItemProposta = value; }
         }
+
+
+        /// <summary>
+        /// Altera o statusSeparado do Produto entre SEPARADO e NAOSEPARADO
+        /// </summary>
+        /// <param name="itemProposta">OBJETO </param>
+        public void alteraStatusSeparado()
+        {
+            if (this.StatusSeparado == statusSeparado.NAOSEPARADO)
+            {
+                this.StatusSeparado = statusSeparado.SEPARADO;
+            }
+            else
+            {
+                this.StatusSeparado = statusSeparado.NAOSEPARADO;
+            }  
+        }
+
+        /// <summary>
+        /// Altera o statusSeparado do Produto entre SEPARADO e NAOSEPARADO
+        /// </summary>
+        /// <param name="itemProposta">OBJETO DO TIPO PRODUTOPROPOSTA</param>
+        public void alteraStatusSeparado(ProdutoProposta itemProposta)
+        {
+            if (itemProposta.GetType() == typeof(ProdutoProposta))
+            {
+                if (itemProposta.StatusSeparado == statusSeparado.NAOSEPARADO)
+                {
+                    itemProposta.StatusSeparado = statusSeparado.SEPARADO;
+                }
+                else
+                {
+                    itemProposta.StatusSeparado = statusSeparado.NAOSEPARADO;
+                }
+            }
+        }
+
 
         public override string ToString()
         {

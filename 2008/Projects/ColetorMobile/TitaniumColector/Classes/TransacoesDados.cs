@@ -15,6 +15,7 @@ namespace TitaniumColector.Classes
         private String sql01;
         private ProdutoProposta objItemProposta;
         private DataTable dt;
+        private Proposta objProp;
 
         #region "SELECTS"
 
@@ -41,7 +42,7 @@ namespace TitaniumColector.Classes
                 while ((dr.Read()))
                 {
                     objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
+                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"],(Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
 
                 }
             }
@@ -156,6 +157,19 @@ namespace TitaniumColector.Classes
 
         }
 
+
+        /// <summary>
+        /// Preenche um objeto List com informações sobre a proposta que está sendo trabalhada.
+        /// </summary>
+        /// <returns>Objeto List do tipo String com informações da atual proposta na base de dados mobile.</returns>
+        /// <remarks>
+        ///            O list contém as seguintes informações
+        ///            list.Add(dr["CodProp"].ToString());
+        ///            list.Add(dr["NumProp"].ToString());
+        ///            list.Add(dr["nomeCLIENTE"].ToString());
+        ///            list.Add(dr["qtdPECAS"].ToString());
+        ///            list.Add(dr["qtdITENS"].ToString());
+        /// </remarks>
         public List<String> informacoesProposta() 
         {
             List<String> list = new List<String>();
@@ -175,13 +189,70 @@ namespace TitaniumColector.Classes
             {
                 while ((dr.Read()))
                 {
-                    list.Add((String)dr["CodProp"]);
-                    list.Add((String)dr["NumProp"]);
-                    list.Add((String)dr["nomeCLIENTE"]);
-                    list.Add((String)dr["qtdPECAS"]);
-                    list.Add((String)dr["qtdITENS"]);
+                    list.Add(dr["CodProp"].ToString());
+                    list.Add(dr["NumProp"].ToString());
+                    list.Add(dr["nomeCLIENTE"].ToString());
+                    list.Add(dr["qtdPECAS"].ToString());
+                    list.Add(dr["qtdITENS"].ToString());
 
                 }
+            }
+
+            SqlServerConn.closeConn();
+
+            return list;
+        }
+
+        public List<String> carregaProposta()
+        {
+
+            List<String> list = new List<String>();
+
+            StringBuilder sbQuery = new StringBuilder();
+
+            sbQuery.Append("SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
+            sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,"); 
+            sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
+            sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");  
+            sbQuery.Append("TB_PROD.nomelocalPRODUTO"); 
+            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP "); 
+            sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
+            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO"); 
+            sbQuery.ToString();
+
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sbQuery.ToString());
+
+            List<ProdutoProposta> listProd = new List<ProdutoProposta>();
+
+            int i = 0;
+
+            if ((dr != null  ))
+            {
+                while ((dr.Read()))
+                {
+                    i++;
+                    if(i==1)
+                    {
+                        int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
+                        objProp = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao);
+
+                    }
+
+
+
+                    int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
+                    ProdutoProposta objProdProp =
+                     new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProp.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                                                                     (ProdutoProposta.statusSeparado)statusSeparadoItem, Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
+                                                                      Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"],
+                                                                     (string)dr["descricaoPRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (string)dr["nomelocalPRODUTO"],
+                                                                      Convert.ToInt32(dr["codigolotePRODUTO"]), (string)dr["identificacaolotePRODUTO"]);
+
+                    listProd.Add(objProdProp);
+                }
+
+
             }
 
             SqlServerConn.closeConn();
@@ -217,7 +288,7 @@ namespace TitaniumColector.Classes
             {
                 while ((dr.Read()))
                 {
-
+                   
                     this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
                                              Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (int)(Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"], MainConfig.CodigoUsuarioLogado);
 
@@ -439,11 +510,11 @@ namespace TitaniumColector.Classes
     #region "CRIACAO BASE MOBILE "
 
 
-        public static String CriarDataBaseMobile()
+        public static String criarDataBaseMobile()
         {
-            if (System.IO.File.Exists("\\Program File\\TitaniumColector\\EngineMobile.sdf"))
+            if (System.IO.File.Exists("\\Storage Card\\BaseMobile\\EngineMobile.sdf"))
             {
-                return String.Format("{0},{1}", "\\Program Files\\Connections\\EngineMobile.sdf", "tec9TIT16");
+                return String.Format("{0},{1}", "\\Storage Card\\BaseMobile\\EngineMobile.sdf", "tec9TIT16");
             }
             else
             {

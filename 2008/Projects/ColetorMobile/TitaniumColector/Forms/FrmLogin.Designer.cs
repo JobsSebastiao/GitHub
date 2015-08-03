@@ -53,7 +53,6 @@ namespace TitaniumColector
                 }
             }
             return null;
-
         } 
 
         #region Windows Form Designer generated code
@@ -282,7 +281,6 @@ namespace TitaniumColector
             this.ResumeLayout();
 
         }
-
 
         #endregion
 

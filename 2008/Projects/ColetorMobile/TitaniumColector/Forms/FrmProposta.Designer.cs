@@ -318,6 +318,7 @@ namespace TitaniumColector.Forms
             // lbQtdItens
 
             this.lbQtdItens.Text = "1000_Itens";
+            this.lbQtdItens.TextAlign = ContentAlignment.TopRight;
             this.lbQtdItens.Font = MainConfig.FontPadraoItalicBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbQtdItens.Text, MainConfig.FontPadraoItalicBold);
             this.lbQtdItens.BackColor = System.Drawing.Color.Black;
@@ -336,6 +337,7 @@ namespace TitaniumColector.Forms
             // lbQtdPeças
 
             this.lbQtdPecas.Text = "100000_Pçs";
+            this.lbQtdPecas.TextAlign = ContentAlignment.TopRight;
             this.lbQtdPecas.Font = MainConfig.FontPadraoItalicBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbQtdPecas.Text, MainConfig.FontPadraoItalicBold);
             this.lbQtdPecas.BackColor = System.Drawing.Color.Black;
@@ -346,10 +348,10 @@ namespace TitaniumColector.Forms
             // lbNomeCliente
 
             this.lbNomeCliente.Text = "Nome cliente prosposta";
-            this.lbNomeCliente.Font = MainConfig.FontPadraoBold;
-            fontStringSize = MainConfig.sizeStringEmPixel(this.lbNomeCliente.Text, MainConfig.FontPadraoBold);
+            this.lbNomeCliente.Font = MainConfig.FontPequenaBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbNomeCliente.Text, MainConfig.FontPequenaBold);
             this.lbNomeCliente.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - lbCliente.Size.Width - lbQtdPecas.Size.Width - 13, (int)fontStringSize.Height);
-            this.lbNomeCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + lbCliente.Size.Width + 1, lbCliente.Location.Y - 2);
+            this.lbNomeCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + lbCliente.Size.Width + 1, lbCliente.Location.Y);
            
             // lbItemProposta
 
