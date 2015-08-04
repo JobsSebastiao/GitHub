@@ -103,28 +103,23 @@ namespace TitaniumColector.Forms
 
         private void carregarForm()
         {
-            //this.fillListInfoProposta();
-            this.fillCamposForm(this.fillListInfoProposta());
-            
-
+            objProposta = new Proposta();
+            objProposta = this.fillListInfoProposta();
         }
 
         /// <summary>
-        ///  Preenche um objeto List com informações sobre a proposta que está sendo trabalhada.
+        ///  Preenche um objeto proposta com todas as informações contidas na base de dados da Proposta de de todos os seus itens.
         /// </summary>
-        /// <returns> Objeto List com informações sobre a proposta</returns>
-        private List<String> fillListInfoProposta()
+        /// <returns> Objeto Proposta </returns>
+        private Proposta fillListInfoProposta()
         {
+            Proposta objProposta = null;
             objTransacoes = new TransacoesDados();
-            List<String> list  = objTransacoes.informacoesProposta();
-
-            objTransacoes.carregaProposta();
-
-
+            listInfoProposta = objTransacoes.informacoesProposta();
+            objProposta = objTransacoes.carregaProposta();
             objTransacoes = null;
-            return list;
-
-
+            return objProposta;
+            //this.fillCamposForm(objProposta.Numero,objProposta.RazaoCliente,obj);
         }
 
 
@@ -160,6 +155,36 @@ namespace TitaniumColector.Forms
             }
 
         }
+
+        /// <summary>
+        /// Carrega parcial os campos do Formulário
+        /// </summary>
+        private void fillCamposForm(String numeroPedido,String nomeCliente,Double qtdPecas, Double qtdItens)
+        {
+            lbNumeroPedido.Text = numeroPedido;
+            lbNomeCliente.Text = nomeCliente;
+            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
+            lbQtdItens.Text = qtdItens.ToString() + " Itens";
+        }
+
+        /// <summary>
+        /// Carrega os campos do Formulário
+        /// É nescessário que o objeto listInfoProposta esteja carregado e atualizado pois 
+        /// </summary>
+        private void fillCamposForm(Int32 numeroPedido, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
+        {
+            lbNumeroPedido.Text = numeroPedido.ToString();
+            lbNomeCliente.Text = nomeCliente;
+            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
+            lbQtdItens.Text = qtdItens.ToString() + " Itens";
+            tbPartNumber.Text = partnumber;
+            tbProduto.Text = produto;
+            tbLocal.Text = local;
+            tbQuantidade.Text = quantidadeItem;
+        }
+
+
+
 
         /// <summary>
         /// Preenche os campos do Fomulário.  

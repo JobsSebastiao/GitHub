@@ -132,10 +132,16 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    public static SqlCeDataReader fillDataReaderCe(string sql01)
 	    {
-
-		    SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
-		    SqlCeDataReader dr = cmd.ExecuteReader();
-		    return dr;
+            try
+            {
+                SqlCeCommand cmd = new SqlCeCommand(sql01, openConnCe());
+                SqlCeDataReader dr = cmd.ExecuteReader();
+                return dr;
+            }
+            catch (SqlCeException)
+            {
+                throw;
+            }		   
 
 	    }
         

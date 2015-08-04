@@ -203,27 +203,34 @@ namespace TitaniumColector.Classes
             return list;
         }
 
-        public List<String> carregaProposta()
-        {
 
-            List<String> list = new List<String>();
+        /// <summary>
+        /// Preenche um objeto do tipo Proposta com todas as suas informações inclusive os itens e detalhes sobre os mesmos
+        /// </summary>
+        /// <returns>Objeto do tipo Proposta</returns>
+        public Proposta carregaProposta()
+        {
+            Proposta objProposta = null;
+
+            List<ProdutoProposta> listProd = new List<ProdutoProposta>();
 
             StringBuilder sbQuery = new StringBuilder();
 
-            sbQuery.Append("SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
-            sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,"); 
-            sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
-            sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");  
-            sbQuery.Append("TB_PROD.nomelocalPRODUTO"); 
-            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP "); 
+            sbQuery.Append(" SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
+            sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
+            sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
+            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
             sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
-            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO"); 
+            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
+            sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
+            sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
             sbQuery.ToString();
 
             SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sbQuery.ToString());
 
-            List<ProdutoProposta> listProd = new List<ProdutoProposta>();
-
+          
             int i = 0;
 
             if ((dr != null  ))
@@ -234,16 +241,13 @@ namespace TitaniumColector.Classes
                     if(i==1)
                     {
                         int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
-                        objProp = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                        objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
                                                Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao);
 
                     }
 
-
-
                     int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
-                    ProdutoProposta objProdProp =
-                     new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProp.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                    ProdutoProposta objProdProp = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProposta.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
                                                                      (ProdutoProposta.statusSeparado)statusSeparadoItem, Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
                                                                       Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"],
                                                                      (string)dr["descricaoPRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (string)dr["nomelocalPRODUTO"],
@@ -252,13 +256,78 @@ namespace TitaniumColector.Classes
                     listProd.Add(objProdProp);
                 }
 
+                objProposta = new Proposta(objProposta, listProd);
 
             }
 
             SqlServerConn.closeConn();
 
-            return list;
+            return objProposta;
         }
+
+
+        /// <summary>
+        /// Preenche um objeto do tipo Proposta com todas as suas informações e com o itemTop um da base de dados
+        /// de acordo com o campo Nome Local e o status de separado = 0; (NAOSEPARADO)
+        /// </summary>
+        /// <returns>Objeto do tipo Proposta</returns>
+        public Proposta carregaPropostaTop1Item()
+        {
+            Proposta objProposta = null;
+
+            List<ProdutoProposta> listProd = new List<ProdutoProposta>();
+
+            StringBuilder sbQuery = new StringBuilder();
+
+            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
+            sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
+            sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
+            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
+            sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
+            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
+            sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
+            sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
+            sbQuery.ToString();
+
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sbQuery.ToString());
+
+            int i = 0;
+
+            if ((dr != null))
+            {
+                while ((dr.Read()))
+                {
+                    i++;
+                    if (i == 1)
+                    {
+                        int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
+                        objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao,
+                                                   Convert.ToDouble(dr["qtdITENS"]), Convert.ToDouble(dr["qtdPECAS"]));
+
+                    }
+
+                    int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
+                    ProdutoProposta objProdProp = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProposta.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                                                                     (ProdutoProposta.statusSeparado)statusSeparadoItem, Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
+                                                                      Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"],
+                                                                     (string)dr["descricaoPRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (string)dr["nomelocalPRODUTO"],
+                                                                      Convert.ToInt32(dr["codigolotePRODUTO"]), (string)dr["identificacaolotePRODUTO"]);
+
+                    listProd.Add(objProdProp);
+                }
+
+                objProposta = new Proposta(objProposta, listProd);
+
+            }
+
+            SqlServerConn.closeConn();
+
+            return objProposta;
+        }
+
 
 
         #endregion 
