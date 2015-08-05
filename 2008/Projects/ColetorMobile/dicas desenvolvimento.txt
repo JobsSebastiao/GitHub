@@ -4,3 +4,42 @@
 Desenvolver métodos para criação d a base mobile;
 
 	
+	
+	 SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, 
+	 TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA, TB_ITEMPROPOP.codigoITEMPROPOSTA, 
+	 TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA, TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA, TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, 
+	 TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO, TB_PROD.nomelocalPRODUTO 
+	 FROM   tb0001_Propostas AS TB_PROP  
+	 INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA 
+	 INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO 
+	 WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0 
+	 ORDER BY TB_PROD.nomelocalPRODUTO ASC
+
+	 
+	 codigoPROPOSTA	int	4	No	No	Yes
+	 numeroPROPOSTA	nvarchar	20	Yes	No	No
+	 dataliberacaoPROPOSTA	nvarchar	20	Yes	No	No
+	 clientePROPOSTA	int	4	Yes	No	No
+	 razaoclientePROPOSTA	nvarchar	100	Yes	No	No
+	 ordemseparacaoimpressaPROPOSTA	smallint	2	Yes NO	No
+	 operadorPROPOSTA	int	4	Yes	No	No
+	 
+	 
+	 
+	 CREATE TABLE tb0001_Propostas (
+	 codigoPROPOSTA int not null,
+	 numeroPROPOSTA nvarchar(20) not null,dataliberacaoPROPOSTA nvarchar(20) not null,clientePROPOSTA int not null,
+	 razaoclientePROPOSTA nvarchar(200),ordemseparacaoimpressaPROPOSTA smallint,operadorPROPOSTA int 
+	 Primary key codigoPROPOSTA)"
+
+	 
+	 codigoITEMPROPOSTA	int	4	Yes	No	No
+	 propostaITEMPROPOSTA	int	4	Yes	No	No
+	 quantidadeITEMPROPOSTA	real	4	Yes	No	No
+	 statusseparadoITEMPROPOSTA	smallint	2	Yes	No	No
+	 codigoprodutoITEMPROPOSTA	int	4	Yes	No	No
+	 lotereservaITEMPROPOSTA	int	4	Yes	No	No
+	 localloteITEMPROPOSTA	int	4	Yes	No	No
+	 
+	 
+	 

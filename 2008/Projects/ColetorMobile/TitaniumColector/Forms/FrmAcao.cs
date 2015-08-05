@@ -35,6 +35,7 @@ namespace TitaniumColector.Forms
 
         private void btnVenda_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             FrmProposta proposta = new FrmProposta();
             proposta.Show();
         }

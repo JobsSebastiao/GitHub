@@ -24,7 +24,7 @@ namespace TitaniumColector.Classes
         /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
-        public Proposta top1PropostaServidor()
+        public Proposta fillTop1PropostaServidor()
         {
             Proposta objProposta = new Proposta();
 
@@ -33,7 +33,7 @@ namespace TitaniumColector.Classes
             sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
             this.sql01 = sbSql01.ToString();
-
+            
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
 
@@ -170,7 +170,7 @@ namespace TitaniumColector.Classes
         ///            list.Add(dr["qtdPECAS"].ToString());
         ///            list.Add(dr["qtdITENS"].ToString());
         /// </remarks>
-        public List<String> informacoesProposta() 
+        public List<String> fillInformacoesProposta() 
         {
             List<String> list = new List<String>();
  
@@ -208,7 +208,7 @@ namespace TitaniumColector.Classes
         /// Preenche um objeto do tipo Proposta com todas as suas informações inclusive os itens e detalhes sobre os mesmos
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
-        public Proposta carregaProposta()
+        public Proposta fillProposta()
         {
             Proposta objProposta = null;
 
@@ -265,13 +265,12 @@ namespace TitaniumColector.Classes
             return objProposta;
         }
 
-
         /// <summary>
         /// Preenche um objeto do tipo Proposta com todas as suas informações e com o itemTop um da base de dados
         /// de acordo com o campo Nome Local e o status de separado = 0; (NAOSEPARADO)
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
-        public Proposta carregaPropostaTop1Item()
+        public Proposta fillPropostaTop1Item()
         {
             Proposta objProposta = null;
 
@@ -329,6 +328,11 @@ namespace TitaniumColector.Classes
 
         #endregion 
 
+
+        public void fillNextItemProposta() 
+        {
+
+        }
         #region "INSERTS"
 
 
@@ -576,9 +580,10 @@ namespace TitaniumColector.Classes
 
         public static String criarDataBaseMobile()
         {
-            if (System.IO.File.Exists("\\Storage Card\\BaseMobile\\EngineMobile.sdf"))
+            //"\\Storage Cardw\\BaseMobile\\EngineMobile.sdf"
+            if (System.IO.File.Exists("\\Program Files\\Connections\\EngineMobile.sdf"))
             {
-                return String.Format("{0},{1}", "\\Storage Card\\BaseMobile\\EngineMobile.sdf", "tec9TIT16");
+                return String.Format("{0},{1}", "\\Program Files\\Connections\\EngineMobile.sdf", "tec9TIT16");
             }
             else
             {
@@ -589,6 +594,38 @@ namespace TitaniumColector.Classes
                 SqlEng.CreateDatabase();
                 return String.Format("{0},{1}", dataSource, senha);
             }
+
+        }
+
+        public static void criarTabelas()
+        {
+
+            //TABELAS tb0001_Propostas
+            StringBuilder sbQuery = new StringBuilder();
+            sbQuery.Append("CREATE TABLE tb0001_Propostas (");
+            sbQuery.Append("codigoPROPOSTA int not null CONSTRAINT PKPropostas Primary key,");
+            sbQuery.Append("numeroPROPOSTA nvarchar(20) not null,");
+            sbQuery.Append("dataliberacaoPROPOSTA nvarchar(20) not null,");
+            sbQuery.Append("clientePROPOSTA int not null,");
+            sbQuery.Append("razaoclientePROPOSTA nvarchar(200),");
+            sbQuery.Append("ordemseparacaoimpressaPROPOSTA smallint,");
+            sbQuery.Append("operadorPROPOSTA int) ");
+            CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
+
+            //TABELAS tb0002_ItensProposta
+            sbQuery.Length = 0;
+            sbQuery.Append("CREATE TABLE tb0002_ItensProposta (");
+            sbQuery.Append("codigoITEMPROPOSTA int not null CONSTRAINT PKItensProposta PRIMARY KEY,");
+            sbQuery.Append("propostaITEMPROPOSTA int ,");
+            sbQuery.Append("quantidadeITEMPROPOSTA real,");
+            sbQuery.Append("statusseparadoITEMPROPOSTA smallint,");
+            sbQuery.Append("codigoprodutoITEMPROPOSTA int,");
+            sbQuery.Append("lotereservaITEMPROPOSTA int,");
+            sbQuery.Append("localloteITEMPROPOSTA int,");
+            sbQuery.Append("xmlSequenciaITEMPROPOSTA nvarchar(500),");
+            sbQuery.Append(" CONSTRAINT FKItensProposta FOREIGN KEY (propostaITEMPROPOSTA) REFERENCES tb0001_Propostas(codigoPROPOSTA)     )");
+            CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
+           
 
         }
 

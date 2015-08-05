@@ -23,6 +23,11 @@ namespace TitaniumColector.Forms
         private List<Produto> listaProduto;
         private List<String> listInfoProposta;
 
+        //ATRIBUTOS AUXILIARES
+        private Double dblTotalItens;
+        private Double dblTotalPecas;
+        private Double dblQuantidade;
+
         //Contrutor.
         public FrmProposta()
         {
@@ -31,12 +36,19 @@ namespace TitaniumColector.Forms
             this.carregaBaseMobile();
         }
 
+
+    #region "EVENTOS"
+
         private void FrmProposta_Load(object sender, System.EventArgs e)
         {
             //carga do formulário
-            this.carregarForm();
-        }
 
+            this.clearFormulario(true, true);
+            this.carregarForm();
+            this.atualizaFormTotalPecasTotalItens(1, 300);
+            this.atualizaFormQuantidadeItens(30);
+            Cursor.Current = Cursors.Default;
+        }
 
 
         private void menuItem1_Click(object sender, EventArgs e)
@@ -46,6 +58,7 @@ namespace TitaniumColector.Forms
             this.Hide();
         }
 
+    #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
 
@@ -64,7 +77,7 @@ namespace TitaniumColector.Forms
                 objTransacoes.clearBaseMobile();
 
                 //Carrega um objeto Proposta
-                objProposta = objTransacoes.top1PropostaServidor();
+                objProposta = objTransacoes.fillTop1PropostaServidor();
 
                 //Realiza o Insert na Base Mobile
                 objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao, objProposta.CodigoCliente, objProposta.RazaoCliente, (int)objProposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
@@ -122,14 +135,17 @@ namespace TitaniumColector.Forms
             try
             {
                 //Carrega um list com informações gerais sobre a proposta atual na base Mobile.
-                listInfoProposta = objTransacoes.informacoesProposta();
+                listInfoProposta = objTransacoes.fillInformacoesProposta();
 
                 //carrega um obj Proposta com a atual proposta na base mobile 
                 //e com o item top 1 da proposta que ainda não esteja separado.
-                proposta = objTransacoes.carregaPropostaTop1Item();
+                proposta = objTransacoes.fillPropostaTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
                 proposta.totalItensPecasProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
+
+                //Set os valores para os atributos auxiliares.
+                this.fillAuxiliares(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade);
 
                 //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
                 this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
@@ -151,8 +167,6 @@ namespace TitaniumColector.Forms
             }
 
         }
-
-
 
         ////CARREGA AS INFORMAÇÔES PARA O FORMULÁRIO
 
@@ -186,7 +200,6 @@ namespace TitaniumColector.Forms
             {
                 this.ListInformacoesProposta = listInfoProposta;
             }
-
         }
 
         /// <summary>
@@ -228,7 +241,6 @@ namespace TitaniumColector.Forms
             tbQuantidade.Text = quantidadeItem;
         }
 
-
         /// <summary>
         /// Preenche os campos do Fomulário.  
         /// Caso o Objeto listInfoPropostas esteja vazio 
@@ -260,6 +272,217 @@ namespace TitaniumColector.Forms
             }
         }
 
+
+        /// <summary>
+        /// Limpa todos os campos que possuem valores manipuláveis.
+        /// </summary>
+        private void clearFormulario() 
+        {
+            
+            foreach( Control ctrl in this.Controls)
+            {   
+                if (ctrl.GetType() == typeof(Panel))
+                {   
+                    //loop nos controles do painel PRINCIPAL
+                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA") 
+                    {
+                        foreach (Control pnFrmCtrl in ctrl.Controls)
+                        {
+                            //realiza um loop nos controles do painel CENTRAL
+                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
+                            {
+                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
+                                {
+                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L")
+                                    {
+                                        pnCentralCtrl.Text = "";
+                                    }
+                                }
+
+                            }
+                            else if  (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L")
+                            {
+
+                                pnFrmCtrl.Text = "";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Limpa os campos com valores manipuláveis podendo selecionar se quer limpar apenas um dos dois paineis no formulário ou os dois.
+        /// </summary>
+        /// <param name="boolPnPrincipal">Limpa apenas o painel Principal (TRUE)</param>
+        /// <param name="boolPnCentral"> limpa apenas o painel central (TRUE)</param>
+        private void clearFormulario(bool boolPnPrincipal,bool boolPnCentral)
+        {
+            //Entra no painel
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl.GetType() == typeof(Panel))
+                {
+                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA")
+                    {
+                        foreach (Control pnFrmCtrl in ctrl.Controls)
+                        {
+
+                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
+                            {
+                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
+                                {
+                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L" && (boolPnCentral == true))
+                                    {
+                                        pnCentralCtrl.Text = "";
+                                    }
+                                }
+
+                            }
+
+                            else if (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L" && (boolPnPrincipal==  true))
+                            {
+
+                                pnFrmCtrl.Text = "";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+    #endregion
+
+    #region "MANUSEIO DE INFORMAÇÔES DA PROPOSTA"
+
+        /// <summary>
+        /// Carrega atributos para auxiliar na tranasação de dados.
+        /// </summary>
+        /// <param name="totalItens">Total de Itens da proposta</param>
+        /// <param name="totalPecas">Total de peças da proposta</param>
+        /// <param name="qtdItens">quantidade do item a ser trabalhado</param>
+        /// <remarks>Esse método deve ser chamado durante o primeira carga o formulário para manter os atributos 
+        /// preechidos e prontos para serem usados durante o processo</remarks>
+        private void fillAuxiliares(Double totalItens,Double totalPecas,Double qtdItens) 
+        {
+            this.AuxQtdTotalItens = totalItens;  
+            this.AuxQtdTotalPecas = totalPecas;  
+            this.AuxQuantidadeItens = qtdItens;
+
+        }
+
+        /// <summary>
+        /// Realiza o decrementos e passa os valores para os Labels 
+        /// dando a visão da alteração ao usuário.
+        /// </summary>
+        /// <param name="qtditens">Total de Itens a ser decrementado</param>
+        /// <param name="qtdPecas">Total de Peças a ser decrementado</param>
+        public void atualizaFormTotalPecasTotalItens(Double qtditens, Double qtdPecas)
+        {
+            if ((this.decrementaQtdTotalItens(qtditens) == true) && (this.decrementaQtdTotalPecas(qtdPecas) == true))
+            {
+                lbQtdItens.Text = AuxQtdTotalItens.ToString() + " Itens";
+                lbQtdPecas.Text = AuxQtdTotalPecas.ToString() + " Pçs";
+            }
+        }
+        /// <summary>
+        /// Decrementa a quantidade do item que está sendo trabalhado e atualiza o formulário 
+        /// para que o usuário vizualize a alteração.
+        /// </summary>
+        /// <param name="qtditens">Qunatidade de itens a ser decrementado.</param>
+        public void atualizaFormQuantidadeItens(Double qtditens)
+        {
+            if ((this.decrementaQuatidadeItem(qtditens) == true))
+            {
+                tbQuantidade.Text = AuxQuantidadeItens.ToString() + " Itens";
+            }
+        }
+
+      
+    #endregion
+
+    #region "MÉTODOS GERAIS"
+
+        /// <summary>
+        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
+        /// </summary>
+        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <returns>Retorna true caso não ocorra erros
+        ///          false se o calculo não ocorrer com esperado.</returns>
+        public Boolean decrementaQtdTotalPecas(double qtd)
+        {
+            try
+            {
+                if (AuxQtdTotalPecas > 0 && (AuxQtdTotalPecas - qtd >= 0))
+                {
+                    AuxQtdTotalPecas -= qtd;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
+        /// </summary>
+        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <returns>Retorna true caso não ocorra erros
+        ///          false se o calculo não ocorrer com esperado.</returns>
+        public Boolean decrementaQtdTotalItens(double qtd)
+        {
+            try
+            {
+                if (AuxQtdTotalItens > 0 && (AuxQtdTotalItens - qtd >= 0))
+                {
+                    AuxQtdTotalItens -= qtd;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        /// <summary>
+        /// Decrementa a quantidade de item do atual item em processamento.
+        /// </summary>
+        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <returns>Retorna true caso não ocorra erros
+        ///          false se o calculo não ocorrer com esperado.</returns>
+        public Boolean decrementaQuatidadeItem(double qtd)
+        {
+            try
+            {
+                if (AuxQuantidadeItens > 0 && (AuxQuantidadeItens - qtd >= 0))
+                {
+                    AuxQuantidadeItens -= qtd;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
     #endregion
 
     #region "GET E SET"
@@ -268,6 +491,26 @@ namespace TitaniumColector.Forms
         {
             get { return listInfoProposta; }
             set { listInfoProposta = value; }
+        }
+
+
+        public Double AuxQtdTotalItens
+        {
+            get { return dblTotalItens; }
+            set { dblTotalItens = value; }
+        }
+
+
+        public Double AuxQtdTotalPecas
+        {
+            get { return dblTotalPecas; }
+            set { dblTotalPecas = value; }
+        }
+
+        public Double AuxQuantidadeItens
+        {
+            get { return dblQuantidade; }
+            set { dblQuantidade = value; }
         }
 
     #endregion
@@ -342,6 +585,11 @@ namespace TitaniumColector.Forms
 
 
     #endregion
+
+        private void menuItem1_Click_1(object sender, EventArgs e)
+        {
+            DialogResult dia = DialogResult;
+        }
 
     }
 }

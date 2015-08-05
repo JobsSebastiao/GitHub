@@ -34,8 +34,9 @@ namespace TitaniumColector
                 InitializeComponent();
                 MainConfig.setMainConfigurations();
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
-                String informacoes = TransacoesDados.criarDataBaseMobile();
-                CeSqlServerConn.createStringConectionCe(informacoes.Substring(1, informacoes.Length -11), informacoes.Substring( informacoes.Length - 9));
+                String strConn = TransacoesDados.criarDataBaseMobile();
+                CeSqlServerConn.createStringConectionCe(strConn.Substring(1, strConn.Length -11), strConn.Substring( strConn.Length - 9));
+                TransacoesDados.criarTabelas();
                 if (SqlServerConn.testConnection() == false)
                 {
                     Application.Exit();
@@ -92,7 +93,7 @@ namespace TitaniumColector
             this.sql01 = sbSql01.ToString();
 
             listUsuario = new List<object>(this.fillArrayListUsuarios(dt, this.sql01));
-            this.preencheComboBoxUsuario(cbUsuario, listUsuario, Usuario.usuarioProperty.NOME, false);
+            this.preencheComboBoxUsuario(cbUsuario, listUsuario,Usuario.usuarioProperty.NOME, false);
 
         }
 

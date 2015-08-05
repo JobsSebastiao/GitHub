@@ -354,11 +354,11 @@ namespace TitaniumColector.SqlServer
                     throw new FileNotFoundException();
                 }
             }
-            catch (FileNotFoundException Fileex) 
+            catch (FileNotFoundException FileEx) 
             {
                 throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Environment.NewLine + 
                                                  "Favor contate o administrador do sistema." + Environment.NewLine + 
-                                                 "Erro :" + Fileex.Message);
+                                                 "Erro :" + FileEx.Message);
 
             }
             catch (Exception ex)

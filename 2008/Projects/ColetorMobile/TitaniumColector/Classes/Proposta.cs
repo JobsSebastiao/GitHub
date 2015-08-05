@@ -256,12 +256,10 @@ namespace TitaniumColector.Classes
         /// Calcula o total de peças e de itens de uma proposta  recebendo os valores como parâmetro.
         /// </summary>
         public void totalItensPecasProposta(Double totItens,Double totPecas)
-        {
+        {    
             this.setTotalItens(totItens);
             this.setTotalPecas(totPecas);
         }
-
-
 
     #endregion 
 
