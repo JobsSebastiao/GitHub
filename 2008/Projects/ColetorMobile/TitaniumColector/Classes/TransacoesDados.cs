@@ -304,8 +304,7 @@ namespace TitaniumColector.Classes
                     {
                         int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao,
-                                                   Convert.ToDouble(dr["qtdITENS"]), Convert.ToDouble(dr["qtdPECAS"]));
+                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao);
 
                     }
 
@@ -327,8 +326,6 @@ namespace TitaniumColector.Classes
 
             return objProposta;
         }
-
-
 
         #endregion 
 
@@ -556,8 +553,7 @@ namespace TitaniumColector.Classes
 
         #endregion 
 
-
-   #region "DELETES"
+        #region "DELETES"
 
 
         public void clearBaseMobile()
@@ -574,9 +570,8 @@ namespace TitaniumColector.Classes
 
 
    #endregion
-
-
-    #region "CRIACAO BASE MOBILE "
+  
+        #region "CRIACAO BASE MOBILE "
 
 
         public static String criarDataBaseMobile()

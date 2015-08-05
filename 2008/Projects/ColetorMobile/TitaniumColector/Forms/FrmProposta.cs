@@ -31,11 +31,13 @@ namespace TitaniumColector.Forms
             this.carregaBaseMobile();
         }
 
-        //carga do formulário
         private void FrmProposta_Load(object sender, System.EventArgs e)
         {
+            //carga do formulário
             this.carregarForm();
         }
+
+
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
@@ -104,24 +106,55 @@ namespace TitaniumColector.Forms
         private void carregarForm()
         {
             objProposta = new Proposta();
-            objProposta = this.fillListInfoProposta();
+            objProposta = this.fillProposta();
         }
 
         /// <summary>
-        ///  Preenche um objeto proposta com todas as informações contidas na base de dados da Proposta de de todos os seus itens.
+        ///  Preenche um objeto proposta com todas as informações contidas na base de dados da Proposta e de todos os seus itens.
         /// </summary>
         /// <returns> Objeto Proposta </returns>
-        private Proposta fillListInfoProposta()
+        private Proposta fillProposta()
         {
-            Proposta objProposta = null;
+            Proposta proposta = null;
+
             objTransacoes = new TransacoesDados();
-            listInfoProposta = objTransacoes.informacoesProposta();
-            objProposta = objTransacoes.carregaProposta();
-            objTransacoes = null;
-            return objProposta;
-            //this.fillCamposForm(objProposta.Numero,objProposta.RazaoCliente,obj);
+
+            try
+            {
+                //Carrega um list com informações gerais sobre a proposta atual na base Mobile.
+                listInfoProposta = objTransacoes.informacoesProposta();
+
+                //carrega um obj Proposta com a atual proposta na base mobile 
+                //e com o item top 1 da proposta que ainda não esteja separado.
+                proposta = objTransacoes.carregaPropostaTop1Item();
+
+                //Set o total de peças e o total de Itens para o objeto proposta
+                proposta.totalItensPecasProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
+
+                //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
+                this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
+                
+                //zera o obj transações 
+                objTransacoes = null;
+
+                //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
+                return proposta;
+            }
+            catch (Exception ex)
+            {
+                StringBuilder sbMsg = new StringBuilder();
+                sbMsg.Append("Problemas durante o processamento de informações sobre a proposta \n");
+                sbMsg.AppendFormat("Error : {0}", ex.Message);
+                sbMsg.Append("Contate o Administrador do sistema.");
+                MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
+                return null;
+            }
+
         }
 
+
+
+        ////CARREGA AS INFORMAÇÔES PARA O FORMULÁRIO
 
         /// <summary>
         /// Carrega os campos do Formulário
@@ -137,7 +170,7 @@ namespace TitaniumColector.Forms
         }
 
         /// <summary>
-        /// Carrega os campos do Formulário.
+        /// Carga parcial do fomulário
         /// Caso o Objeto listInfoPropostas esteja vazio 
         /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
         /// </summary>
@@ -158,7 +191,12 @@ namespace TitaniumColector.Forms
 
         /// <summary>
         /// Carrega parcial os campos do Formulário
+        /// Carga apenas de informações gerais da proposta
         /// </summary>
+        /// <param name="numeroPedido">Número da Proposta</param>
+        /// <param name="nomeCliente">Nome do Cliente</param>
+        /// <param name="qtdPecas">Total de Peças/param>
+        /// <param name="qtdItens">Total de Itens</param>
         private void fillCamposForm(String numeroPedido,String nomeCliente,Double qtdPecas, Double qtdItens)
         {
             lbNumeroPedido.Text = numeroPedido;
@@ -168,22 +206,27 @@ namespace TitaniumColector.Forms
         }
 
         /// <summary>
-        /// Carrega os campos do Formulário
-        /// É nescessário que o objeto listInfoProposta esteja carregado e atualizado pois 
+        /// Carrega os campo do Fomulário de Propostas
         /// </summary>
-        private void fillCamposForm(Int32 numeroPedido, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
+        /// <param name="numeroPedido">Numero da Proposta</param>
+        /// <param name="nomeCliente">Cliente Proposta</param>
+        /// <param name="qtdPecas">Total de peças da porposta</param>
+        /// <param name="qtdItens">Total de itens na proposta</param>
+        /// <param name="partnumber">Partnumber no item a ser manipulado</param>
+        /// <param name="produto">Descrição(NOME) do produto a ser manipulado</param>
+        /// <param name="local">local de armazenagem do produto</param>
+        /// <param name="quantidadeItem">Quantidade de item do produto atual a ser manipulado.</param>
+        private void fillCamposForm(String numeroProposta, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
         {
-            lbNumeroPedido.Text = numeroPedido.ToString();
+            lbNumeroPedido.Text = numeroProposta.ToString();
             lbNomeCliente.Text = nomeCliente;
             lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
-            tbProduto.Text = produto;
+            tbDescricao.Text = produto;
             tbLocal.Text = local;
             tbQuantidade.Text = quantidadeItem;
         }
-
-
 
 
         /// <summary>
@@ -299,7 +342,6 @@ namespace TitaniumColector.Forms
 
 
     #endregion
-
 
     }
 }

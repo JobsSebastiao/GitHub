@@ -85,8 +85,7 @@ namespace TitaniumColector.Classes
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
             this.StatusOrdemSeparacao = statusOrdemSeparacao;
-            this.Totalpecas = totalPecasProposta;
-            this.TotalItens = totalItensProposta;
+            this.totalItensPecasProposta(totalItensProposta, totalPecasProposta);
         }
 
         /// <summary>
@@ -135,6 +134,7 @@ namespace TitaniumColector.Classes
 
     #endregion
 
+    #region  "GETS E SETS"
         public enum statusOrdemSeparacao 
         {
             NAOIMPRESA = 0,
@@ -186,14 +186,84 @@ namespace TitaniumColector.Classes
         public Double TotalItens
         {
             get { return totalItens; }
-            set { totalItens = value; }
         }
 
         public Double Totalpecas
         {
             get { return totalpecas; }
-            set { totalpecas = value; }
         }
+
+
+        /// <summary>
+        /// Total de Itens baseado nos dados do atributo ListObjItemProposta
+        /// </summary>
+        /// 
+        public void setTotalItens()
+        {
+            if (ListObjItemProposta != null)
+            {
+                totalItens = ListObjItemProposta.Count;
+            }
+
+        }
+
+        /// <summary>
+        /// Set a quantidade de itens recebendo um valor double como parâmetro.
+        /// </summary>
+        /// <param name="qtdItens"></param>
+        public void setTotalItens(Double qtdItens)
+        {
+            if (qtdItens > 0)
+            {
+                totalItens = qtdItens;
+            }
+
+        }
+
+        /// <summary>
+        /// Total de Peças baseado nos dados do atributo ListObjItemProposta
+        /// </summary>
+        public void setTotalPecas()
+        {
+            Double totPecas = 0;
+
+            foreach (ProdutoProposta item in ListObjItemProposta)
+            {
+                totPecas += item.Quantidade;
+            }
+
+            totalpecas = totPecas;
+        }
+
+        public void setTotalPecas(Double qtdPecas)
+        {
+            if (qtdPecas > 0)
+            {
+                totalpecas = qtdPecas;
+            }
+        }
+
+        /// <summary>
+        /// Calcula o total de peças e de itens de uma proposta baseado nas informações ListObjItemProposta
+        /// </summary>
+        public void totalItensPecasProposta()
+        {
+            this.setTotalItens();
+            this.setTotalPecas();
+        }
+
+        /// <summary>
+        /// Calcula o total de peças e de itens de uma proposta  recebendo os valores como parâmetro.
+        /// </summary>
+        public void totalItensPecasProposta(Double totItens,Double totPecas)
+        {
+            this.setTotalItens(totItens);
+            this.setTotalPecas(totPecas);
+        }
+
+
+
+    #endregion 
 
 
         /// <summary>
