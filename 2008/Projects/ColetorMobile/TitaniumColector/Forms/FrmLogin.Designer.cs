@@ -177,10 +177,8 @@ namespace TitaniumColector
 
         }
 
-
         private void configControls()
         {
-
 
             this.SuspendLayout();
             this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);

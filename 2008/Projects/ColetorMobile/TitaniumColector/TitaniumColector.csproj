@@ -62,6 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Etiqueta.cs" />
+    <Compile Include="Classes\Exceptions\SqlQueryExceptions.cs" />
     <Compile Include="Classes\TransacoesDados.cs" />
     <Compile Include="Classes\ProdutoProposta.cs" />
     <Compile Include="Classes\Produto.cs" />

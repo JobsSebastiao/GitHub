@@ -26,11 +26,17 @@ Desenvolver métodos para criação d a base mobile;
 	 
 	 
 	 
-	 CREATE TABLE tb0001_Propostas (
-	 codigoPROPOSTA int not null,
-	 numeroPROPOSTA nvarchar(20) not null,dataliberacaoPROPOSTA nvarchar(20) not null,clientePROPOSTA int not null,
-	 razaoclientePROPOSTA nvarchar(200),ordemseparacaoimpressaPROPOSTA smallint,operadorPROPOSTA int 
-	 Primary key codigoPROPOSTA)"
+	CREATE TABLE tb0001_Propostas 
+	(
+		 codigoPROPOSTA int not null,
+		 numeroPROPOSTA nvarchar(20) not null,
+		 dataliberacaoPROPOSTA nvarchar(20) not null,
+		 clientePROPOSTA int not null,
+		 razaoclientePROPOSTA nvarchar(200),
+		 ordemseparacaoimpressaPROPOSTA smallint,
+		 operadorPROPOSTA int 
+		 Primary key codigoPROPOSTA
+	 )
 
 	 
 	 codigoITEMPROPOSTA	int	4	Yes	No	No
@@ -40,6 +46,29 @@ Desenvolver métodos para criação d a base mobile;
 	 codigoprodutoITEMPROPOSTA	int	4	Yes	No	No
 	 lotereservaITEMPROPOSTA	int	4	Yes	No	No
 	 localloteITEMPROPOSTA	int	4	Yes	No	No
+	 
+	 
+	 codigoPRODUTO	int	4	Yes	No	No
+	 ean13PRODUTO	nvarchar	15	Yes	No	No
+	 partnumberPRODUTO	nvarchar	100	Yes	No	No
+	 descricaoPRODUTO	nvarchar	100	Yes	No	No
+	 codigolotePRODUTO	int	4	Yes	No	No
+	 identificacaolotePRODUTO	nvarchar	100	Yes	No	No
+	 codigolocalPRODUTO	int	4	Yes	No	No
+	 nomelocalPRODUTO	nvarchar	100	Yes	No	No
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
 	 
 	 
 	 

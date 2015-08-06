@@ -31,18 +31,22 @@ namespace TitaniumColector
         {
             try
             {
+                //Configurações de criação do form
                 InitializeComponent();
+                //Seta as configurações principais a serem usadas na classe MainConfig
                 MainConfig.setMainConfigurations();
+                //Configura a string de conexão para conexão com o servidor.
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
-                String strConn = TransacoesDados.criarDataBaseMobile();
-                CeSqlServerConn.createStringConectionCe(strConn.Substring(1, strConn.Length -11), strConn.Substring( strConn.Length - 9));
-                TransacoesDados.criarTabelas();
+                //Configura string de conexão E/OU cria a base mobile e todas as suas tabelas.
+                TransacoesDados.configurarBaseMobile();
+                //Testa a conexão com o Servidor
                 if (SqlServerConn.testConnection() == false)
                 {
-                    Application.Exit();
+                    throw new Exception();
                 }
-
+                //Configura Layout
                 this.configControls();
+                //carrega a combo de usuários.
                 this.carregarComboUsuario();
 
             }
@@ -76,8 +80,7 @@ namespace TitaniumColector
 
         }
 
-        //PRINCIPAIS MÉTODOS DO FORMULÁRIO.
-        #region "Métodos Principais"  
+    #region "//PRINCIPAIS MÉTODOS DO FORMULÁRIO"
 
         /// <summary>
         /// Carrega a combo de usuários
@@ -92,7 +95,7 @@ namespace TitaniumColector
             sbSql01.Append(" ORDER BY nomeUSUARIO ");
             this.sql01 = sbSql01.ToString();
 
-            listUsuario = new List<object>(this.fillArrayListUsuarios(dt, this.sql01));
+            listUsuario = new List<object>(this.fillListUsuarios(dt, this.sql01));
             this.preencheComboBoxUsuario(cbUsuario, listUsuario,Usuario.usuarioProperty.NOME, false);
 
         }
@@ -104,7 +107,7 @@ namespace TitaniumColector
         /// <param name="dt">Data table utilizado para armazenar os dados vindos da base de dados.</param>
         /// <param name="sql01">Comando Sql que retorna dados para cada usuário.</param>
         /// <returns></returns>
-        private List<object> fillArrayListUsuarios(DataTable dt, string sql01)
+        private List<object> fillListUsuarios(DataTable dt, string sql01)
         {
             Usuario.statusUsuario status;
 
@@ -295,12 +298,9 @@ namespace TitaniumColector
             }
         }
 
-
         #endregion  
 
-
-        //MÉTODOS COMUNS AO FORMULÁRIO
-        #region 
+    #region "//MÉTODOS COMUNS AO FORMULÁRIO"
 
         //               //
         // CB_USUARIO    //
@@ -319,12 +319,10 @@ namespace TitaniumColector
             this.validarComboUsuario(e);
         }
 
-
         private void cbUsuario_Validate(KeyPressEventArgs e)
         {
             this.validarComboUsuario(new KeyEventArgs(Keys.Enter));
         }
-
 
         private void cbUsuario_GotFocus(object sender, EventArgs e)
         {
@@ -348,7 +346,6 @@ namespace TitaniumColector
             }
         }
 
-
         //               //
         //   TXT_SENHA   //
         //               //
@@ -361,7 +358,6 @@ namespace TitaniumColector
             }
         }
 
-
         //               //
         //  FRM_LOGIN    //
         //               //
@@ -373,7 +369,6 @@ namespace TitaniumColector
             }
         }
 
-
         //               //
         //    BUTTONS    //
         //               //
@@ -382,131 +377,12 @@ namespace TitaniumColector
             this.Logar();
         }
 
-
         private void btSair_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-
-        #endregion 
+    #endregion 
        
-
-        //CONFIGURAÇÂO DOS CONTROLES DURANTE A CARGA DO FORMULARIO
-        #region "Configurações de Controls"
-
-
-        //private void configPictureBox()
-        //{
-        //    this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
-        //    this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
-        //    //Tamanho da Imagem a ser mostrada no Picture Box
-        //    this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 77);
-        //    this.pboxFrmLogin.BackColor = Color.Black;
-        //    this.pboxFrmLogin.Image = ImgLogin.Images[0];
-
-        //}
-
-        //private void configPainel()
-        //{
-        //    this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
-        //    this.panelFrmLogin.BackColor = System.Drawing.SystemColors.ControlLight;
-        //}
-
-
-        //private void configLabel()
-        //{
-        //    // 
-        //    // Label Descrição
-        //    // 
-        //    this.lbDescricao.Font = MainConfig.FontGrandeRegular;
-        //    this.lbDescricao.Size = new System.Drawing.Size(90, 35);
-        //    this.lbDescricao.Text = "Login :";
-        //    this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-        //    sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
-        //    this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - sizeString.Width / 2),
-        //                                                          this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
-
-        //    //
-        //    //Label Usuário
-        //    //
-        //    this.lbUsuario.Font = MainConfig.FontPadraoBold;
-        //    this.lbUsuario.Size = new System.Drawing.Size(90, 35);
-        //    this.lbUsuario.Text = "Usuário :";
-        //    this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-        //    sizeString = MainConfig.sizeStringEmPixel(this.lbUsuario.Text, MainConfig.FontGrandeRegular);
-        //    this.lbUsuario.Location = new System.Drawing.Point((int)(MainConfig.intPositionX + 20),
-        //                                                          this.lbDescricao.Location.Y + 80);
-
-        //    //
-        //    //Label Senha
-        //    //
-        //    this.lbSenha.Font = MainConfig.FontPadraoBold;
-        //    this.lbSenha.Text = "Senha :";
-        //    this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-        //    sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-        //    this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
-        //    this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
-        //                                                           this.lbUsuario.Location.Y + 25);
-
-        //}
-
-        //private void configComboBox()
-        //{
-        //    //
-        //    //ComboBox Usuário
-        //    //
-        //    this.cbUsuario.Font = MainConfig.FontPadraoRegular;
-        //    sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
-        //    this.cbUsuario.Visible = true;
-        //    this.cbUsuario.Size = new System.Drawing.Size(120, 27);
-        //    this.cbUsuario.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + this.lbUsuario.Size.Width),
-        //                                                           this.lbUsuario.Location.Y - 3);
-        //    this.cbUsuario.DropDownStyle = ComboBoxStyle.DropDown;
-
-        //}
-
-        //private void configTextBox()
-        //{
-        //    //
-        //    // TextBox Senha
-        //    //
-        //    this.txtSenha.Font = MainConfig.FontPadraoRegular;
-        //    this.txtSenha.Text = "";
-        //    this.txtSenha.MaxLength = 12;
-        //    this.txtSenha.PasswordChar = MainConfig.PasswordChar;
-        //    this.txtSenha.Visible = true;
-        //    this.txtSenha.Size = new System.Drawing.Size(cbUsuario.Size.Width, 23);
-        //    this.txtSenha.Location = new System.Drawing.Point((int)(this.cbUsuario.Location.X),
-        //                                                            this.lbSenha.Location.Y - 3);
-        //    this.txtSenha.Enabled = false;
-        //}
-
-        //private void configButton()
-        //{
-        //    //
-        //    //Button Login 
-        //    //
-        //    this.btLogin.Font = MainConfig.FontPadraoRegular;
-        //    this.btLogin.Visible = true;
-        //    this.btLogin.Size = new System.Drawing.Size(72, 20);
-        //    this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - btLogin.Size.Width - 3),
-        //                                                            this.lbSenha.Location.Y + 40);
-
-        //    //
-        //    //Button Sair
-        //    //
-        //    this.btSair.Font = MainConfig.FontPadraoRegular;
-        //    this.btSair.Visible = true;
-        //    this.btSair.Size = new System.Drawing.Size(72, 20);
-        //    this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 + 3),
-        //                                                            this.lbSenha.Location.Y + 40);
-
-        //}
-
-
-
-        #endregion
-
     }
 }

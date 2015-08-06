@@ -111,7 +111,6 @@ namespace TitaniumColector.SqlServer
             SqlServerConn.strConnection = "Password=" + Password + ";Persist Security Info=" + Security + ";User ID=" + UserId + ";Initial Catalog=" + Catalog + ";Data Source=" + DataSource;
         }
 
-
         public static SqlConnection openConn()
         {
             conn = new SqlConnection(StringConection);
@@ -127,7 +126,6 @@ namespace TitaniumColector.SqlServer
 
             return conn;
         }
-
 
         /// <summary>
         /// Testa a conexão com o banco de dados SQLSERVER.
@@ -182,7 +180,6 @@ namespace TitaniumColector.SqlServer
 
         }
 
-
         public static void fillDataSet(DataSet ds, string sql01)
         {
 
@@ -201,7 +198,6 @@ namespace TitaniumColector.SqlServer
             }
 
         }
-
 
         public static void fillDataTable(DataTable dt, string sql01)
         {
@@ -235,7 +231,6 @@ namespace TitaniumColector.SqlServer
 
         }
 
-
         public static SqlDataReader fillDataReader(string sql01)
         {
             try
@@ -244,14 +239,12 @@ namespace TitaniumColector.SqlServer
                 SqlDataReader dr = cmd.ExecuteReader();
                 return dr;
             }
-            catch (Exception ex )
+            catch (Exception )
             {
-                MessageBox.Show("Error " + ex.Message);
                 throw;
             }
 
         }
-
 
         public static void execCommandSql(string sql01)
         {
@@ -270,7 +263,6 @@ namespace TitaniumColector.SqlServer
             }
 
         }
-
 
         public static void beginTransaction()
         {
@@ -293,7 +285,6 @@ namespace TitaniumColector.SqlServer
             }
 
         }
-
 
         public static void EndTransaction(ref bool flag)
         {
@@ -381,7 +372,6 @@ namespace TitaniumColector.SqlServer
             string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection,FileUtility.splitType.PONTO_VIRGULA);
             setParametersStringConnection(arrayStrConnection);
         }
-
 
         /// <summary>
         /// Monta a string de conexão a partir de um array contendo os dados nescessários.

@@ -10,6 +10,7 @@ using TitaniumColector.Classes ;
 using TitaniumColector.SqlServer;
 using System.Data.SqlClient;
 using TitaniumColector.Classes.SqlServer;
+using TitaniumColector.Utility;
 
 namespace TitaniumColector.Forms
 {
@@ -17,16 +18,20 @@ namespace TitaniumColector.Forms
     {
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
+        private Etiqueta objEtiqueta;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
         private List<Produto> listaProduto;
         private List<String> listInfoProposta;
+        private List<Etiqueta> listEtiqueta;
+        private Array arrayEtiqueta;
 
         //ATRIBUTOS AUXILIARES
         private Double dblTotalItens;
         private Double dblTotalPecas;
         private Double dblQuantidade;
+        private int intProximoItem;
 
         //Contrutor.
         public FrmProposta()
@@ -45,11 +50,8 @@ namespace TitaniumColector.Forms
 
             this.clearFormulario(true, true);
             this.carregarForm();
-            this.atualizaFormTotalPecasTotalItens(1, 300);
-            this.atualizaFormQuantidadeItens(30);
             Cursor.Current = Cursors.Default;
         }
-
 
         private void menuItem1_Click(object sender, EventArgs e)
         {
@@ -99,7 +101,7 @@ namespace TitaniumColector.Forms
                 StringBuilder sbMsg = new StringBuilder();
                 sbMsg.Append("Ocorreram problemas durante a carga de dados para a Base Mobile \n");
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
-                sbMsg.Append("Contate o Administrador do sistema.");
+                sbMsg.Append("\nContate o Administrador do sistema.");
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
             }
             finally
@@ -107,7 +109,6 @@ namespace TitaniumColector.Forms
                 objTransacoes = null;
                 objProposta = null;
             }
-
 
         }
 
@@ -380,7 +381,7 @@ namespace TitaniumColector.Forms
         /// <param name="qtdPecas">Total de Peças a ser decrementado</param>
         public void atualizaFormTotalPecasTotalItens(Double qtditens, Double qtdPecas)
         {
-            if ((this.decrementaQtdTotalItens(qtditens) == true) && (this.decrementaQtdTotalPecas(qtdPecas) == true))
+            if ( (this.decrementaQtdTotalPecas(qtdPecas) == true) && (this.decrementaQtdTotalItens(qtditens) == true))
             {
                 lbQtdItens.Text = AuxQtdTotalItens.ToString() + " Itens";
                 lbQtdPecas.Text = AuxQtdTotalPecas.ToString() + " Pçs";
@@ -493,13 +494,11 @@ namespace TitaniumColector.Forms
             set { listInfoProposta = value; }
         }
 
-
         public Double AuxQtdTotalItens
         {
             get { return dblTotalItens; }
             set { dblTotalItens = value; }
         }
-
 
         public Double AuxQtdTotalPecas
         {
@@ -586,9 +585,59 @@ namespace TitaniumColector.Forms
 
     #endregion
 
-        private void menuItem1_Click_1(object sender, EventArgs e)
+
+        internal List<Etiqueta> ListEtiqueta
         {
-            DialogResult dia = DialogResult;
+            get { return listEtiqueta; }
+            set { listEtiqueta = value; }
+        }
+
+        public int ProximoItem
+        {
+            get { return intProximoItem; }
+            set { intProximoItem = value; }
+        }
+
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            List<Etiqueta> list = new List<Etiqueta>();
+            Etiqueta objEtiqueta;
+            this.ProximoItem = 0;
+
+            for (int i = 1; i <= 8;i++ )
+            {
+                objEtiqueta = new Etiqueta("7020","Leitor de Código de barras",7895479042575, "LT-10051",Convert.ToInt32("1234" + i), 25);
+                list.Add(objEtiqueta);
+                objEtiqueta = null;
+            }
+
+            this.ListEtiqueta = list;
+        }
+
+        private void menuItem3_Click(object sender, EventArgs e)
+        {
+            proximaEtiqueta();
+        }
+
+        private void proximaEtiqueta() 
+        {
+            if ( this.ProximoItem <= this.ListEtiqueta.Count -1 )
+            {
+                arrayEtiqueta = FileUtility.arrayOfTextFile(listEtiqueta[this.ProximoItem].ToString(), FileUtility.splitType.PIPE);
+                objEtiqueta = new Etiqueta();
+                objEtiqueta = Etiqueta.arrayToEtiqueta(this.arrayEtiqueta);
+                fillCamposProdutoBipado();
+                this.ProximoItem += 1;
+            }
+        }
+
+        private void fillCamposProdutoBipado() 
+        {
+            this.tbProduto.Text  = objEtiqueta.PartnumberEtiqueta.ToString() + " - " + objEtiqueta.DescricaoProdutoEtiqueta.ToString();
+            this.tbLote.Text = objEtiqueta.LoteEtiqueta;
+            this.tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
+            this.AuxQuantidadeItens -= objEtiqueta.QuantidadeEtiqueta;
         }
 
     }

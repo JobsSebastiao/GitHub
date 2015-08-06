@@ -7,6 +7,7 @@ using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.SqlServer;
 using System.Data;
 using System.Data.SqlServerCe;
+using System.Windows.Forms;
 
 namespace TitaniumColector.Classes
 {
@@ -15,7 +16,7 @@ namespace TitaniumColector.Classes
         private String sql01;
         private ProdutoProposta objItemProposta;
         private DataTable dt;
-        private Proposta objProp;
+       // private Proposta objProp;
 
         #region "SELECTS"
 
@@ -64,45 +65,55 @@ namespace TitaniumColector.Classes
 
             List<ProdutoProposta> listItensProposta = new List<ProdutoProposta>();
 
-            StringBuilder query = new StringBuilder();
-            query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
-            query.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD,loteRESERVA,localLOTELOCAL,nomeLOCAL ");
-            query.Append("FROM tb1206_Reservas (NOLOCK) ");
-            query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
-            query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
-            query.Append("INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
-            query.Append("INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
-            query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);     //78527
-            query.Append("AND tipodocRESERVA = 1602 ");
-            query.Append("AND statusITEMPROPOSTA = 3 ");
-            query.Append("AND separadoITEMPROPOSTA = 0  ");
-            query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
-            query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA,localLOTELOCAL,nomeLOCAL ");
-            query.Append("ORDER BY nomeLOCAL ASC");
-            this.sql01 = query.ToString();
-
-            SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
-
-            if ((dr.FieldCount > 0))
+            try
             {
+
+                StringBuilder query = new StringBuilder();
+                query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
+                query.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD,loteRESERVA");
+                query.Append(",COALESCE(localLOTELOCAL,0) AS localLOTELOCAL,COALESCE(nomeLOCAL,'ND') AS nomeLOCAL");
+                query.Append(" FROM tb1206_Reservas (NOLOCK) ");
+                query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
+                query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
+                query.Append("LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
+                query.Append("LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
+                query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);     //78527
+                query.Append("AND tipodocRESERVA = 1602 ");
+                query.Append("AND statusITEMPROPOSTA = 3 ");
+                query.Append("AND separadoITEMPROPOSTA = 0  ");
+                query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
+                query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA,localLOTELOCAL,nomeLOCAL ");
+                query.Append("ORDER BY nomeLOCAL ASC");
+                this.sql01 = query.ToString();
+
+                SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+
                 while ((dr.Read()))
                 {
-                    objItemProposta = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), Convert.ToDouble(dr["QTD"]), ProdutoProposta.statusSeparado.NAOSEPARADO, Convert.ToInt32(dr["loteRESERVA"]),
-                                                     Convert.ToInt32(dr["codigoPRODUTO"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"], (string)(dr["nomePRODUTO"]), Convert.ToInt32(dr["localLOTELOCAL"]), (String)dr["nomeLOCAL"]);
+                    {
+                        objItemProposta = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), Convert.ToDouble(dr["QTD"]), ProdutoProposta.statusSeparado.NAOSEPARADO, Convert.ToInt32(dr["loteRESERVA"]),
+                                 Convert.ToInt32(dr["codigoPRODUTO"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"], (string)(dr["nomePRODUTO"]), Convert.ToInt32(dr["localLOTELOCAL"]), (String)dr["nomeLOCAL"]);
 
 
-                    //Carrega a lista de itens que será retornada ao fim do procedimento.
-                    listItensProposta.Add(objItemProposta);
+                        //Carrega a lista de itens que será retornada ao fim do procedimento.
+                        listItensProposta.Add(objItemProposta);
+
+                    }
+
                 }
+
+                dr.Close();
+
+                SqlServerConn.closeConn();
+
+                return listItensProposta;
+
             }
-
-            dr.Close();
-
-            SqlServerConn.closeConn();
-
-            return listItensProposta;
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
 
         /// <summary>
         /// Preenche um objeto list com objetos da classe Produto 
@@ -111,37 +122,50 @@ namespace TitaniumColector.Classes
         /// <returns></returns>
         public IEnumerable<Produto>  fillListProduto(Int32 codigoProposta) 
         {
-
             Produto objProd = new Produto();
-
             List<Produto> listProduto = new List<Produto>();
 
-            StringBuilder query = new StringBuilder();
-            query.Append("SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigolotePRODUTO,identificacaolotePRODUTO,codigolocalPRODUTO,nomelocalPRODUTO ");
-            query.AppendFormat("FROM dbo.fn0003_informacoesProdutos({0})", codigoProposta);
-            query.Append(" ORDER BY nomelocalPRODUTO ASC ");
 
-            SqlDataReader dr = SqlServerConn.fillDataReader(query.ToString());
-
-            if ((dr.FieldCount > 0))
+            try
             {
+                StringBuilder query = new StringBuilder();
+                query.Append("SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigolotePRODUTO,identificacaolotePRODUTO,codigolocalPRODUTO,nomelocalPRODUTO ");
+                query.AppendFormat("FROM dbo.fn0003_informacoesProdutos({0})", codigoProposta);
+                query.Append(" ORDER BY nomelocalPRODUTO ASC ");
+
+                SqlDataReader dr = SqlServerConn.fillDataReader(query.ToString());
+
                 while ((dr.Read()))
                 {
                     objProd = new Produto(Convert.ToInt32(dr["codigoPRODUTO"]), (String)dr["ean13PRODUTO"], (String)dr["partnumberPRODUTO"],
                                          (String)dr["nomePRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (String)dr["nomelocalPRODUTO"],
                                           Convert.ToInt64(dr["codigolotePRODUTO"]), (String)dr["identificacaolotePRODUTO"]);
 
-
                     //Carrega a lista de itens que será retornada ao fim do procedimento.
                     listProduto.Add(objProd);
                 }
+
+                if (listProduto == null || listProduto.Count == 0) 
+                {
+                    throw new TitaniumColector.Classes.Exceptions.SqlQueryExceptions("Query não retornou valor.");
+                }
+
+                return listProduto;
             }
-
-            dr.Close();
-
-            SqlServerConn.closeConn();
-
-            return listProduto;
+            catch (TitaniumColector.Classes.Exceptions.SqlQueryExceptions queryEx) 
+            {
+                SqlServerConn.closeConn();
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("Não foi possível obter informações sobre a proposta {0}", codigoProposta);
+                sb.Append("\nError :" + queryEx.Message);
+                sb.Append("\nFavor contate o administrador do sistema.");
+                MainConfig.errorMessage(sb.ToString(),"Carga Base Mobile.");
+                return listProduto = null;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -328,7 +352,6 @@ namespace TitaniumColector.Classes
 
         #endregion 
 
-
         public void fillNextItemProposta() 
         {
 
@@ -508,7 +531,6 @@ namespace TitaniumColector.Classes
 
         }
 
-         
         /// <summary>
         /// Efetua o insert na base mobile tb0003_Produtos 
         /// </summary>
@@ -562,14 +584,10 @@ namespace TitaniumColector.Classes
 
         public void clearBaseMobile()
         {
-
-            //Limpa a tabela..
-            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
-            //Limpa a tabela..
-            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
-            //Limpa a tabela..
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0004_Sequencia");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0003_Produtos");
-
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
         }
 
 
@@ -578,12 +596,17 @@ namespace TitaniumColector.Classes
         #region "CRIACAO BASE MOBILE "
 
 
-        public static String criarDataBaseMobile()
+        /// <summary>
+        /// Configura a conexão com a base mobile.
+        /// Caso a base de dados ainda não exista ela será criada
+        /// </summary>
+        public static void configurarBaseMobile()
         {
             //"\\Storage Cardw\\BaseMobile\\EngineMobile.sdf"
             if (System.IO.File.Exists("\\Program Files\\Connections\\EngineMobile.sdf"))
             {
-                return String.Format("{0},{1}", "\\Program Files\\Connections\\EngineMobile.sdf", "tec9TIT16");
+                //Configura a string de conexão com a base mobile.
+                CeSqlServerConn.createStringConectionCe("\\Program Files\\Connections\\EngineMobile.sdf", "tec9TIT16");
             }
             else
             {
@@ -592,17 +615,23 @@ namespace TitaniumColector.Classes
                 String connectionString = string.Format("DataSource=\"{0}\"; Password='{1}'", dataSource, senha);
                 SqlCeEngine SqlEng = new SqlCeEngine(connectionString);
                 SqlEng.CreateDatabase();
-                return String.Format("{0},{1}", dataSource, senha);
+                //Configura a string de conexão com a base mobile.
+                CeSqlServerConn.createStringConectionCe(dataSource,senha);
+                criarTabelas();
             }
-
         }
 
+
+        /// <summary>
+        /// Cria tabelas na base mobile.
+        /// </summary>
+        /// <remarks>A conexão com a base mobile já deve estar configurada.</remarks>
         public static void criarTabelas()
         {
 
             //TABELAS tb0001_Propostas
             StringBuilder sbQuery = new StringBuilder();
-            sbQuery.Append("CREATE TABLE tb0001_Propostas (");
+             sbQuery.Append("CREATE TABLE tb0001_Propostas (");
             sbQuery.Append("codigoPROPOSTA int not null CONSTRAINT PKPropostas Primary key,");
             sbQuery.Append("numeroPROPOSTA nvarchar(20) not null,");
             sbQuery.Append("dataliberacaoPROPOSTA nvarchar(20) not null,");
@@ -622,27 +651,34 @@ namespace TitaniumColector.Classes
             sbQuery.Append("codigoprodutoITEMPROPOSTA int,");
             sbQuery.Append("lotereservaITEMPROPOSTA int,");
             sbQuery.Append("localloteITEMPROPOSTA int,");
-            sbQuery.Append("xmlSequenciaITEMPROPOSTA nvarchar(500),");
-            sbQuery.Append(" CONSTRAINT FKItensProposta FOREIGN KEY (propostaITEMPROPOSTA) REFERENCES tb0001_Propostas(codigoPROPOSTA)     )");
+            sbQuery.Append("xmlSequenciaITEMPROPOSTA nvarchar(500))");
             CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
-           
+
+            //TABELAS tb0003_Produtos
+            sbQuery.Length = 0;
+            sbQuery.Append("CREATE TABLE tb0003_Produtos (");
+            sbQuery.Append("codigoPRODUTO				INT NOT NULL CONSTRAINT PKProdutos PRIMARY KEY ,");
+            sbQuery.Append("ean13PRODUTO				NVARCHAR(15) NOT NULL ,");
+            sbQuery.Append("partnumberPRODUTO			NVARCHAR(100) ,");
+            sbQuery.Append("descricaoPRODUTO			NVARCHAR(100) ,");
+            sbQuery.Append("codigolotePRODUTO			INT,");
+            sbQuery.Append("identificacaolotePRODUTO	NVARCHAR(100) ,");
+            sbQuery.Append("codigolocalPRODUTO			INT , ");
+            sbQuery.Append("nomelocalPRODUTO			NVARCHAR(100) )");
+            CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
+
+            //TABELAS tb0004_SEQUENCIA 
+            sbQuery.Length = 0;
+            sbQuery.Append("CREATE TABLE tb0004_Sequencia (");
+            sbQuery.Append("codigoSEQUENCIA					INT NOT NULL CONSTRAINT PKSequencia PRIMARY KEY,");
+            sbQuery.Append("itempropostaSEQUENCIA			INT not null,");
+            sbQuery.Append("sequenciaSEQUENCIA				INT NOT NULL)");
+            CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
 
         }
 
 
     #endregion
-
-        //SELECT        codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA, statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA
-        //FROM            tb0002_ItensProposta
-
-
-        //UPDATE       tb0002_ItensProposta
-        //SET                codigoITEMPROPOSTA =, propostaITEMPROPOSTA =, quantidadeITEMPROPOSTA =, statusseparadoITEMPROPOSTA =, codigoprodutoITEMPROPOSTA =, lotereservaITEMPROPOSTA =
-
-
-        //
-        //SELECT * from dbo.fn0003_informacoesProdutos(75899) ORDER BY nomelocalPRODUTO ASC
-
 
     }
 }

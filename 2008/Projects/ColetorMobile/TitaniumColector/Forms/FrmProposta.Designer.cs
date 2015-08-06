@@ -34,6 +34,9 @@ namespace TitaniumColector.Forms
             this.components = new System.ComponentModel.Container();
             this.menuPedido = new System.Windows.Forms.MainMenu();
             this.mnuPropostas = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
             this.itemPropostaBindingSource = new System.Windows.Forms.BindingSource(this.components);
@@ -57,7 +60,6 @@ namespace TitaniumColector.Forms
             this.lbQtdPecas = new System.Windows.Forms.Label();
             this.lbNomeCliente = new System.Windows.Forms.Label();
             this.lbNumeroPedido = new System.Windows.Forms.Label();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).BeginInit();
             this.pnlFrmProposta.SuspendLayout();
             this.pnCentral.SuspendLayout();
@@ -72,6 +74,22 @@ namespace TitaniumColector.Forms
             this.mnuPropostas.MenuItems.Add(this.menuItem1);
             this.mnuPropostas.Text = "Opções";
             this.mnuPropostas.Click += new System.EventHandler(this.menuItem1_Click);
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.MenuItems.Add(this.menuItem2);
+            this.menuItem1.MenuItems.Add(this.menuItem3);
+            this.menuItem1.Text = "Testes";
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Text = "Gerar Etiquetas";
+            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Text = "Ler item pedido";
+            this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
             // 
             // lbPedido
             // 
@@ -276,11 +294,6 @@ namespace TitaniumColector.Forms
             this.lbNumeroPedido.Name = "lbNumeroPedido";
             this.lbNumeroPedido.Size = new System.Drawing.Size(136, 23);
             this.lbNumeroPedido.Text = "000001";
-            // 
-            // menuItem1
-            // 
-            this.menuItem1.Text = "Testes";
-            this.menuItem1.Click += new System.EventHandler(this.menuItem1_Click_1);
             // 
             // FrmProposta
             // 
@@ -537,5 +550,7 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.TextBox tbLote;
         private System.Windows.Forms.TextBox tbProduto;
         private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
     }
 }
