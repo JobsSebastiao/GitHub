@@ -15,12 +15,34 @@ namespace TitaniumColector.Classes.Exceptions
         public SqlQueryExceptions(string message)
             : base(message)
         {
+
         }
 
         public SqlQueryExceptions(string message, Exception inner)
             : base(message, inner)
         {
+
         }
 
+    }
+
+    class QuantidadeInvalidaException : Exception 
+    {
+        public QuantidadeInvalidaException()
+        {
+
+        }
+
+        public QuantidadeInvalidaException(string message)
+            : base(message)
+        {
+
+        }
+
+        public QuantidadeInvalidaException(string message, Exception inner)
+            : base(message, inner)
+        {
+
+        }
     }
 }

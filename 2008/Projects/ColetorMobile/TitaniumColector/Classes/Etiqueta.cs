@@ -110,8 +110,8 @@ namespace TitaniumColector.Classes
 
     #endregion
 
-
-        /// <summary>
+    #region "METODOS"
+        ///<summary>
         /// Recebe um array de strings referentes aos atributos do obj Etiqueta.
         /// retorna Um objeto do tipo Etiqueta
         /// </summary>
@@ -151,18 +151,60 @@ namespace TitaniumColector.Classes
             }
             return objEtiqueta;
         }
-
-        //Verifica se já existe um determinado Objeto Etiqueta em um list.
+        
+        /// <summary>
+        /// Verifica se já existe um determinado Objeto Etiqueta em um list.
+        /// </summary>
+        /// <param name="etiqueta">Obj etiqueta que será buscado</param>
+        /// <param name="ListEtiquetas">list do tipo Etiqueta onde derá feita a varredura</param>
+        /// <returns>TRUE(Se o objeto existe na list)
+        ///          FALSE (Se o objeto não existe na list)</returns>
         public static bool validarEtiqueta(Etiqueta etiqueta,List<Etiqueta> listEtiquetas) 
         {
              foreach( Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
              {
                  if(etiqueta.Equals(itemList))
                  {
-                     return false;
+                     return true;
                  }
              }
-             return true;
+             return false;
+        }
+
+        /// <summary>
+        /// Verifica se a Etiqueta já foi lida.
+        /// </summary>
+        /// <returns>FALSE --> se a etiqueta for encontrada na list
+        ///          TRUE --> se a etiqueta ainda não foii lida.
+        /// </returns>
+        public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
+        {
+            //Verifica se o List foi iniciado
+            if (listEtiquetas != null)
+            {
+                if (listEtiquetas.Count == 0)
+                {
+                    return true;
+                }
+                else
+                {
+                    //Verifica se a etiqueta está na lista de etiquetas lidas.
+                    if (validarEtiqueta(objEtiqueta, listEtiquetas))
+                    {
+                        //Caso esteja na lista
+                        return false;
+                    }
+                    else
+                    {
+                        //caso não esteja na lista.
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
 
         public override bool Equals(object obj)
@@ -189,6 +231,7 @@ namespace TitaniumColector.Classes
         {
             return base.GetHashCode();
         }
+    #endregion
 
     }
 }

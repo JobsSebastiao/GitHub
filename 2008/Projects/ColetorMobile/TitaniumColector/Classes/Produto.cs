@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes
 {
-    class Produto
+    internal class Produto
     {
         private Int32 codigoProduto;
         private String ean13;
@@ -16,6 +16,12 @@ namespace TitaniumColector.Classes
         private Int32 codigoLocalProduto;
         private String nomeLocalProduto;
 
+    #region"CONTRUTORES"
+
+        public Produto()
+        {
+
+        }
 
         /// <summary>
         /// Construtor onde alguns atributos não são setados duarante a intancia da classe.
@@ -80,12 +86,7 @@ namespace TitaniumColector.Classes
             }
         }
 
-
-        public Produto()
-        {
-
-        }
-
+    #endregion
 
         public Int32 CodigoProduto
         {
@@ -122,6 +123,7 @@ namespace TitaniumColector.Classes
             get { return identificacaoLoteProduto; }
             set { identificacaoLoteProduto = value; }
         }
+
         public Int32 CodigoLocalLote
         {
           get { return codigoLocalProduto; }
@@ -139,5 +141,6 @@ namespace TitaniumColector.Classes
             return String.Format(" Código : {0} \n Ean13 : {1} \n PartNumber : {2} \n Descricão : {3} \n Código Local : {4} \n NomeLocalLote : {5} \n Código Lote : {6} \n Identificação Lote : {7} ",
                                   this.CodigoProduto,this.Ean13,this.Partnumber,this.Descricao,this.CodigoLocalLote, this.NomeLocalLote,this.CodigoLoteProduto,this.IdentificacaoLoteProduto);
         }
+  
     }
 }

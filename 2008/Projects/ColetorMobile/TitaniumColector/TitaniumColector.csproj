@@ -64,7 +64,8 @@
   <ItemGroup>
     <Compile Include="Classes\Etiqueta.cs" />
     <Compile Include="Classes\Exceptions\SqlQueryExceptions.cs" />
-    <Compile Include="Classes\TransacoesDados.cs" />
+    <Compile Include="Classes\Procedimentos\LiberacaoProposta.cs" />
+    <Compile Include="Classes\Procedimentos\TransacoesDados.cs" />
     <Compile Include="Classes\ProdutoProposta.cs" />
     <Compile Include="Classes\Produto.cs" />
     <Compile Include="Classes\Proposta.cs" />
@@ -114,6 +115,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Diagramas de Classe\ClassDiagram1.cd" />
     <None Include="Properties\DataSources\TitaniumColector.Classes.ItemProposta.datasource" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />

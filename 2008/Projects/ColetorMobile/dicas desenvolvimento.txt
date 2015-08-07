@@ -58,6 +58,8 @@ Desenvolver métodos para criação d a base mobile;
 	 nomelocalPRODUTO	nvarchar	100	Yes	No	No
 	 
 	 
+	 asp ordem de separação.
+	 
 	 
 	 
 	 

@@ -88,7 +88,7 @@ namespace TitaniumColector.Forms
             // 
             // menuItem3
             // 
-            this.menuItem3.Text = "Ler item pedido";
+            this.menuItem3.Text = "Próximo Item";
             this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
             // 
             // lbPedido
@@ -306,7 +306,6 @@ namespace TitaniumColector.Forms
             this.Name = "FrmProposta";
             this.Text = "Proposta";
             this.Load += new System.EventHandler(this.FrmProposta_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmProposta_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.pnlFrmProposta.ResumeLayout(false);
             this.pnCentral.ResumeLayout(false);

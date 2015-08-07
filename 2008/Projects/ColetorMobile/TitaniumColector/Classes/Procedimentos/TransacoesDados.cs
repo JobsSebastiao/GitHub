@@ -16,10 +16,8 @@ namespace TitaniumColector.Classes
         private String sql01;
         private ProdutoProposta objItemProposta;
         private DataTable dt;
-       // private Proposta objProp;
-
+    
         #region "SELECTS"
-
 
         /// <summary>
         /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
@@ -168,7 +166,6 @@ namespace TitaniumColector.Classes
             }
         }
 
-
         private void buscaItensBaseMobile()
         {
             dt = new DataTable();
@@ -180,7 +177,6 @@ namespace TitaniumColector.Classes
             CeSqlServerConn.fillDataTableCe(dt, stb.ToString());
 
         }
-
 
         /// <summary>
         /// Preenche um objeto List com informações sobre a proposta que está sendo trabalhada.
@@ -226,7 +222,6 @@ namespace TitaniumColector.Classes
 
             return list;
         }
-
 
         /// <summary>
         /// Preenche um objeto do tipo Proposta com todas as suas informações inclusive os itens e detalhes sobre os mesmos
@@ -352,10 +347,6 @@ namespace TitaniumColector.Classes
 
         #endregion 
 
-        public void fillNextItemProposta() 
-        {
-
-        }
         #region "INSERTS"
 
 
@@ -603,14 +594,14 @@ namespace TitaniumColector.Classes
         public static void configurarBaseMobile()
         {
             //"\\Storage Cardw\\BaseMobile\\EngineMobile.sdf"
-            if (System.IO.File.Exists("\\Program Files\\Connections\\EngineMobile.sdf"))
+            if (System.IO.File.Exists("\\Program Files\\TitaniumColector\\EngineMobile.sdf"))
             {
                 //Configura a string de conexão com a base mobile.
-                CeSqlServerConn.createStringConectionCe("\\Program Files\\Connections\\EngineMobile.sdf", "tec9TIT16");
+                CeSqlServerConn.createStringConectionCe("\\Program Files\\TitaniumColector\\EngineMobile.sdf", "tec9TIT16");
             }
             else
             {
-                String dataSource = "\\Program Files\\Connections\\EngineMobile.sdf";
+                String dataSource = "\\Program Files\\TitaniumColector\\EngineMobile.sdf";
                 String senha = "tec9TIT16";
                 String connectionString = string.Format("DataSource=\"{0}\"; Password='{1}'", dataSource, senha);
                 SqlCeEngine SqlEng = new SqlCeEngine(connectionString);

@@ -1,38 +1,24 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TitaniumColector.Classes ;
-using TitaniumColector.SqlServer;
-using System.Data.SqlClient;
-using TitaniumColector.Classes.SqlServer;
-using TitaniumColector.Utility;
+using TitaniumColector.Classes;
+using TitaniumColector.Classes.Procedimentos;
 
 namespace TitaniumColector.Forms
 {
     public partial class FrmProposta : Form
     {
+        //OBEJETOS
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
-        private Etiqueta objEtiqueta;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
         private List<Produto> listaProduto;
         private List<String> listInfoProposta;
-        private List<Etiqueta> listEtiqueta;
-        private Array arrayEtiqueta;
-
-        //ATRIBUTOS AUXILIARES
-        private Double dblTotalItens;
-        private Double dblTotalPecas;
-        private Double dblQuantidade;
-        private int intProximoItem;
-
+        
         //Contrutor.
         public FrmProposta()
         {
@@ -47,7 +33,6 @@ namespace TitaniumColector.Forms
         private void FrmProposta_Load(object sender, System.EventArgs e)
         {
             //carga do formulário
-
             this.clearFormulario(true, true);
             this.carregarForm();
             Cursor.Current = Cursors.Default;
@@ -146,7 +131,7 @@ namespace TitaniumColector.Forms
                 proposta.totalItensPecasProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
 
                 //Set os valores para os atributos auxiliares.
-                this.fillAuxiliares(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade);
+                ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade);
 
                 //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
                 this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
@@ -358,22 +343,6 @@ namespace TitaniumColector.Forms
     #region "MANUSEIO DE INFORMAÇÔES DA PROPOSTA"
 
         /// <summary>
-        /// Carrega atributos para auxiliar na tranasação de dados.
-        /// </summary>
-        /// <param name="totalItens">Total de Itens da proposta</param>
-        /// <param name="totalPecas">Total de peças da proposta</param>
-        /// <param name="qtdItens">quantidade do item a ser trabalhado</param>
-        /// <remarks>Esse método deve ser chamado durante o primeira carga o formulário para manter os atributos 
-        /// preechidos e prontos para serem usados durante o processo</remarks>
-        private void fillAuxiliares(Double totalItens,Double totalPecas,Double qtdItens) 
-        {
-            this.AuxQtdTotalItens = totalItens;  
-            this.AuxQtdTotalPecas = totalPecas;  
-            this.AuxQuantidadeItens = qtdItens;
-
-        }
-
-        /// <summary>
         /// Realiza o decrementos e passa os valores para os Labels 
         /// dando a visão da alteração ao usuário.
         /// </summary>
@@ -381,24 +350,25 @@ namespace TitaniumColector.Forms
         /// <param name="qtdPecas">Total de Peças a ser decrementado</param>
         public void atualizaFormTotalPecasTotalItens(Double qtditens, Double qtdPecas)
         {
-            if ( (this.decrementaQtdTotalPecas(qtdPecas) == true) && (this.decrementaQtdTotalItens(qtditens) == true))
-            {
-                lbQtdItens.Text = AuxQtdTotalItens.ToString() + " Itens";
-                lbQtdPecas.Text = AuxQtdTotalPecas.ToString() + " Pçs";
-            }
+            //if ((this.decrementaQtdTotalPecas(qtdPecas) == true) && (this.decrementaQtdTotalItens(qtditens) == true))
+            //{
+            //    lbQtdItens.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
+            //    lbQtdPecas.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " Pçs";
+            //}
         }
+
         /// <summary>
         /// Decrementa a quantidade do item que está sendo trabalhado e atualiza o formulário 
         /// para que o usuário vizualize a alteração.
         /// </summary>
         /// <param name="qtditens">Qunatidade de itens a ser decrementado.</param>
-        public void atualizaFormQuantidadeItens(Double qtditens)
-        {
-            if ((this.decrementaQuatidadeItem(qtditens) == true))
-            {
-                tbQuantidade.Text = AuxQuantidadeItens.ToString() + " Itens";
-            }
-        }
+        //public void atualizaFormQuantidadeItens(Double qtditens)
+        //{
+        //    if ((this.decrementaQuatidadeItem(qtditens) == true))
+        //    {
+        //       // tbQuantidade.Text = AuxQuantidadeItens.ToString() + " Itens";
+        //    }
+        //}
 
       
     #endregion
@@ -411,25 +381,25 @@ namespace TitaniumColector.Forms
         /// <param name="qtd">quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
-        public Boolean decrementaQtdTotalPecas(double qtd)
-        {
-            try
-            {
-                if (AuxQtdTotalPecas > 0 && (AuxQtdTotalPecas - qtd >= 0))
-                {
-                    AuxQtdTotalPecas -= qtd;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public Boolean decrementaQtdTotalPecas(double qtd)
+        //{
+        //    //try
+        //    //{
+        //    //    if (AuxQtdTotalPecas > 0 && (AuxQtdTotalPecas - qtd >= 0))
+        //    //    {
+        //    //        AuxQtdTotalPecas -= qtd;
+        //    //        return true;
+        //    //    }
+        //    //    else
+        //    //    {
+        //    //        return false;
+        //    //    }
+        //    //}
+        //    //catch (Exception)
+        //    //{
+        //    //    throw;
+        //    //}
+        //}
 
         /// <summary>
         /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
@@ -437,25 +407,25 @@ namespace TitaniumColector.Forms
         /// <param name="qtd">quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
-        public Boolean decrementaQtdTotalItens(double qtd)
-        {
-            try
-            {
-                if (AuxQtdTotalItens > 0 && (AuxQtdTotalItens - qtd >= 0))
-                {
-                    AuxQtdTotalItens -= qtd;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public Boolean decrementaQtdTotalItens(double qtd)
+        //{
+        //    try
+        //    {
+        //        if (AuxQtdTotalItens > 0 && (AuxQtdTotalItens - qtd >= 0))
+        //        {
+        //            AuxQtdTotalItens -= qtd;
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
 
         /// <summary>
@@ -464,25 +434,25 @@ namespace TitaniumColector.Forms
         /// <param name="qtd">quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
-        public Boolean decrementaQuatidadeItem(double qtd)
-        {
-            try
-            {
-                if (AuxQuantidadeItens > 0 && (AuxQuantidadeItens - qtd >= 0))
-                {
-                    AuxQuantidadeItens -= qtd;
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
+        //public Boolean decrementaQuatidadeItem(double qtd)
+        //{
+        //    try
+        //    {
+        //        if (AuxQuantidadeItens > 0 && (AuxQuantidadeItens - qtd >= 0))
+        //        {
+        //            AuxQuantidadeItens -= qtd;
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
 
     #endregion
 
@@ -494,27 +464,29 @@ namespace TitaniumColector.Forms
             set { listInfoProposta = value; }
         }
 
-        public Double AuxQtdTotalItens
-        {
-            get { return dblTotalItens; }
-            set { dblTotalItens = value; }
-        }
-
-        public Double AuxQtdTotalPecas
-        {
-            get { return dblTotalPecas; }
-            set { dblTotalPecas = value; }
-        }
-
-        public Double AuxQuantidadeItens
-        {
-            get { return dblQuantidade; }
-            set { dblQuantidade = value; }
-        }
-
     #endregion
 
-    #region   "NAO UTILIZADOS"
+
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            ProcedimentosLiberacao.gerarEtiquetas();
+        }
+
+        private void menuItem3_Click(object sender, EventArgs e)
+        {
+
+            ProcedimentosLiberacao.lerEtiqueta(objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+            if (ProcedimentosLiberacao.QtdPecasItem == 0)
+            {
+                MessageBox.Show("Next Item!!!"); ;
+            }
+        }
+
+
+
+
+        #region   "NAO UTILIZADOS"
 
         /// <summary>
         /// Atualiza o grid a partir de uma List que refência a classe ItemProposta.
@@ -576,69 +548,8 @@ namespace TitaniumColector.Forms
 
         }
 
-        private void FrmProposta_KeyDown(object sender, KeyEventArgs e)
-        {
-            //string = "EAN=789123654587|LOTE=LT-01|SEQ=023654|QTD=5"
-        }
-
-
-
-    #endregion
-
-
-        internal List<Etiqueta> ListEtiqueta
-        {
-            get { return listEtiqueta; }
-            set { listEtiqueta = value; }
-        }
-
-        public int ProximoItem
-        {
-            get { return intProximoItem; }
-            set { intProximoItem = value; }
-        }
-
-
-        private void menuItem2_Click(object sender, EventArgs e)
-        {
-            List<Etiqueta> list = new List<Etiqueta>();
-            Etiqueta objEtiqueta;
-            this.ProximoItem = 0;
-
-            for (int i = 1; i <= 8;i++ )
-            {
-                objEtiqueta = new Etiqueta("7020","Leitor de Código de barras",7895479042575, "LT-10051",Convert.ToInt32("1234" + i), 25);
-                list.Add(objEtiqueta);
-                objEtiqueta = null;
-            }
-
-            this.ListEtiqueta = list;
-        }
-
-        private void menuItem3_Click(object sender, EventArgs e)
-        {
-            proximaEtiqueta();
-        }
-
-        private void proximaEtiqueta() 
-        {
-            if ( this.ProximoItem <= this.ListEtiqueta.Count -1 )
-            {
-                arrayEtiqueta = FileUtility.arrayOfTextFile(listEtiqueta[this.ProximoItem].ToString(), FileUtility.splitType.PIPE);
-                objEtiqueta = new Etiqueta();
-                objEtiqueta = Etiqueta.arrayToEtiqueta(this.arrayEtiqueta);
-                fillCamposProdutoBipado();
-                this.ProximoItem += 1;
-            }
-        }
-
-        private void fillCamposProdutoBipado() 
-        {
-            this.tbProduto.Text  = objEtiqueta.PartnumberEtiqueta.ToString() + " - " + objEtiqueta.DescricaoProdutoEtiqueta.ToString();
-            this.tbLote.Text = objEtiqueta.LoteEtiqueta;
-            this.tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
-            this.AuxQuantidadeItens -= objEtiqueta.QuantidadeEtiqueta;
-        }
+   
+        #endregion
 
     }
 }
