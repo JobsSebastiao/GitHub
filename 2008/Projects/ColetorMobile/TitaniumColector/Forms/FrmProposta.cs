@@ -258,86 +258,6 @@ namespace TitaniumColector.Forms
             }
         }
 
-
-        /// <summary>
-        /// Limpa todos os campos que possuem valores manipuláveis.
-        /// </summary>
-        private void clearFormulario() 
-        {
-            
-            foreach( Control ctrl in this.Controls)
-            {   
-                if (ctrl.GetType() == typeof(Panel))
-                {   
-                    //loop nos controles do painel PRINCIPAL
-                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA") 
-                    {
-                        foreach (Control pnFrmCtrl in ctrl.Controls)
-                        {
-                            //realiza um loop nos controles do painel CENTRAL
-                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
-                            {
-                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
-                                {
-                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L")
-                                    {
-                                        pnCentralCtrl.Text = "";
-                                    }
-                                }
-
-                            }
-                            else if  (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L")
-                            {
-
-                                pnFrmCtrl.Text = "";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Limpa os campos com valores manipuláveis podendo selecionar se quer limpar apenas um dos dois paineis no formulário ou os dois.
-        /// </summary>
-        /// <param name="boolPnPrincipal">Limpa apenas o painel Principal (TRUE)</param>
-        /// <param name="boolPnCentral"> limpa apenas o painel central (TRUE)</param>
-        private void clearFormulario(bool boolPnPrincipal,bool boolPnCentral)
-        {
-            //Entra no painel
-            foreach (Control ctrl in this.Controls)
-            {
-                if (ctrl.GetType() == typeof(Panel))
-                {
-                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA")
-                    {
-                        foreach (Control pnFrmCtrl in ctrl.Controls)
-                        {
-
-                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
-                            {
-                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
-                                {
-                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L" && (boolPnCentral == true))
-                                    {
-                                        pnCentralCtrl.Text = "";
-                                    }
-                                }
-
-                            }
-
-                            else if (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L" && (boolPnPrincipal==  true))
-                            {
-
-                                pnFrmCtrl.Text = "";
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-
     #endregion
 
     #region "MANUSEIO DE INFORMAÇÔES DA PROPOSTA"
@@ -376,59 +296,6 @@ namespace TitaniumColector.Forms
     #region "MÉTODOS GERAIS"
 
         /// <summary>
-        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
-        /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
-        /// <returns>Retorna true caso não ocorra erros
-        ///          false se o calculo não ocorrer com esperado.</returns>
-        //public Boolean decrementaQtdTotalPecas(double qtd)
-        //{
-        //    //try
-        //    //{
-        //    //    if (AuxQtdTotalPecas > 0 && (AuxQtdTotalPecas - qtd >= 0))
-        //    //    {
-        //    //        AuxQtdTotalPecas -= qtd;
-        //    //        return true;
-        //    //    }
-        //    //    else
-        //    //    {
-        //    //        return false;
-        //    //    }
-        //    //}
-        //    //catch (Exception)
-        //    //{
-        //    //    throw;
-        //    //}
-        //}
-
-        /// <summary>
-        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
-        /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
-        /// <returns>Retorna true caso não ocorra erros
-        ///          false se o calculo não ocorrer com esperado.</returns>
-        //public Boolean decrementaQtdTotalItens(double qtd)
-        //{
-        //    try
-        //    {
-        //        if (AuxQtdTotalItens > 0 && (AuxQtdTotalItens - qtd >= 0))
-        //        {
-        //            AuxQtdTotalItens -= qtd;
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
-
-        /// <summary>
         /// Decrementa a quantidade de item do atual item em processamento.
         /// </summary>
         /// <param name="qtd">quantidade a ser diminuida</param>
@@ -453,6 +320,93 @@ namespace TitaniumColector.Forms
         //        throw;
         //    }
         //}
+
+        /// <summary>
+        /// Limpa todos os campos que possuem valores manipuláveis.
+        /// </summary>
+        private void clearFormulario()
+        {
+
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl.GetType() == typeof(Panel))
+                {
+                    //loop nos controles do painel PRINCIPAL
+                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA")
+                    {
+                        foreach (Control pnFrmCtrl in ctrl.Controls)
+                        {
+                            //realiza um loop nos controles do painel CENTRAL
+                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
+                            {
+                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
+                                {
+                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L")
+                                    {
+                                        pnCentralCtrl.Text = "";
+                                    }
+                                }
+
+                            }
+                            else if (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L")
+                            {
+
+                                pnFrmCtrl.Text = "";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Limpa os campos com valores manipuláveis podendo selecionar se quer limpar apenas um dos dois paineis no formulário ou os dois.
+        /// </summary>
+        /// <param name="boolPnPrincipal">Limpa apenas o painel Principal (TRUE)</param>
+        /// <param name="boolPnCentral"> limpa apenas o painel central (TRUE)</param>
+        private void clearFormulario(bool boolPnPrincipal, bool boolPnCentral)
+        {
+            //Entra no painel
+            foreach (Control ctrl in this.Controls)
+            {
+                if (ctrl.GetType() == typeof(Panel))
+                {
+                    if (ctrl.Name.ToString().ToUpper() == "PNLFRMPROPOSTA")
+                    {
+                        foreach (Control pnFrmCtrl in ctrl.Controls)
+                        {
+
+                            if (pnFrmCtrl.Name.ToString().ToUpper() == "PNCENTRAL")
+                            {
+                                foreach (Control pnCentralCtrl in pnFrmCtrl.Controls)
+                                {
+                                    if (pnCentralCtrl.Tag.ToString() != "" && pnCentralCtrl.Tag.ToString().ToUpper() == "L" && (boolPnCentral == true))
+                                    {
+                                        pnCentralCtrl.Text = "";
+                                    }
+                                }
+
+                            }
+
+                            else if (pnFrmCtrl.Tag.ToString() != "" && pnFrmCtrl.Tag.ToString().ToUpper() == "L" && (boolPnPrincipal == true))
+                            {
+
+                                pnFrmCtrl.Text = "";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void clearParaProximoItem()
+        {
+            this.clearFormulario(false, true);
+            this.tbProduto.Text = "";
+            this.tbLote.Text = "";
+            this.tbSequencia.Text = "";
+            this.tbMensagem.Text = "";
+        }
 
     #endregion
 
@@ -479,8 +433,13 @@ namespace TitaniumColector.Forms
 
             if (ProcedimentosLiberacao.QtdPecasItem == 0)
             {
-                MessageBox.Show("Next Item!!!"); ;
+                this.clearParaProximoItem();
+                ProcedimentosLiberacao.decrementaQtdTotalItens(1,this.lbQtdItens);
+                ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade,this.lbQtdPecas);
+                MessageBox.Show("Next Item!!!");    
+                //objProposta.
             }
+
         }
 
 

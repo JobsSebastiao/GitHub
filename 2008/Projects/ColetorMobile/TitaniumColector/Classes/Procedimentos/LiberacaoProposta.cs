@@ -19,6 +19,12 @@ namespace TitaniumColector.Classes.Procedimentos
         private static List<Etiqueta> listEtiquetas;
         private static Array arrayStringToEtiqueta;
 
+        /// <summary>
+        /// Carrega as a serem trabalhadas durante o procedimento de liiberção dos itens da proposta.
+        /// </summary>
+        /// <param name="tItens">Total de Itens da Proposta</param>
+        /// <param name="tPecas">Total de peças na Proposta</param>
+        /// <param name="pecasItens">quantidade de pecas do item a ser trabalhado.</param>
         public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens)
         {
             TotalItens = tItens;
@@ -29,6 +35,9 @@ namespace TitaniumColector.Classes.Procedimentos
             ListEtiquetasGeradas = null;
             arrayStringToEtiqueta = null;
         }
+
+
+    #region "GETS E SETS"
 
         public static Double TotalPecas
         {
@@ -89,6 +98,7 @@ namespace TitaniumColector.Classes.Procedimentos
             set { ProcedimentosLiberacao.arrayStringToEtiqueta = value; }
         }
 
+    #endregion
 
         /// <summary>
         /// Verifica se a Etiqueta já foi lida.
@@ -162,7 +172,7 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-         /// <summary>
+        /// <summary>
          /// Gera etiquetas para testes.
          /// </summary>
         public static void gerarEtiquetas()
@@ -219,6 +229,8 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
+
+
         public static void efetuaLeituraEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tbLote,TextBox tbSequencia,TextBox tbQuantidade,
                                                  TextBox tbMensagem,Etiqueta objEtiqueta)
         {
@@ -264,12 +276,10 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 
                 throw;
-            }
-
-            
+            }   
         }
 
-         /// <summary>
+        /// <summary>
          /// Verifica se  Produto trabalhado e Produto Etiqueta são os mesmos.
          /// </summary>
          /// <param name="propostaProduto">Obj Produto que será verificado </param>
@@ -289,7 +299,7 @@ namespace TitaniumColector.Classes.Procedimentos
             return false;
         }
 
-         /// <summary>
+        /// <summary>
          /// Adiciona uma atiqueta a List Etiquetas Lidas.
          /// </summary>
          /// <param name="etiquetaLida"></param>
@@ -306,6 +316,66 @@ namespace TitaniumColector.Classes.Procedimentos
             EtiquetasLidas.Clear();
             EtiquetasLidas = null;
             EtiquetasLidas = new List<Etiqueta>();
+        }
+
+        public static void proximoItem() 
+        {
+
+        }
+
+         ///<summary>
+         ///Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
+         ///</summary>
+         ///<param name="qtd">quantidade a ser diminuida</param>
+         ///<returns>Retorna true caso não ocorra erros
+         ///         false se o calculo não ocorrer com esperado.</returns>
+        public static  Boolean decrementaQtdTotalPecas(double qtd,Label lb)
+        {
+            try
+            {
+                if (ProcedimentosLiberacao.TotalPecas > 0 && (ProcedimentosLiberacao.TotalPecas - qtd >= 0))
+                {
+                    ProcedimentosLiberacao.TotalPecas -= qtd;
+                    lb.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " pçs";
+                    return true;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                throw new QuantidadeInvalidaException();
+            }
+        }
+
+
+        /// <summary>
+        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
+        /// </summary>
+        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <returns>Retorna true caso não ocorra erros
+        ///          false se o calculo não ocorrer com esperado.</returns>
+        public static Boolean decrementaQtdTotalItens(double qtd,Label lb )
+        {
+            try
+            {
+                if (ProcedimentosLiberacao.TotalItens > 0 && (ProcedimentosLiberacao.TotalItens - qtd >= 0))
+                {
+                    ProcedimentosLiberacao.TotalItens -= qtd;
+                    lb.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
+                    return true;
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            catch (Exception)
+            {
+                throw new QuantidadeInvalidaException();
+            }
         }
 
     }

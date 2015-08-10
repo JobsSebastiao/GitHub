@@ -12,8 +12,39 @@ namespace TitaniumColector.Classes
         private double quantidade;
         private statusSeparado isSeparado;
         private Int32 lotereservaItemProposta;
-
+        
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
+
+
+    #region "CONTRUTORES"
+ 
+        public ProdutoProposta()
+        {
+
+        }
+
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,
+            Int32 codigoProduto, String ean13, String partnumber, String descricao)
+            : base(codigoProduto, ean13, partnumber, descricao)
+        {
+            this.CodigoItemProposta = codigoItemProposta;
+            this.PropostaItemProposta = propostaItemProposta;
+            this.Quantidade = quantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = loteReservaItemProposta;
+        }
+
+
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,
+         Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, String nomeLocalLote, Int32 codigoLoteProduto, String identificacaoLoteProduto)
+        : base(codigoProduto, ean13, partnumber, nomeProduto, nomeLocalLote, codigoLoteProduto, identificacaoLoteProduto)
+        {
+            this.CodigoItemProposta = codigoItemProposta;
+            this.PropostaItemProposta = propostaItemProposta;
+            this.Quantidade = quantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = loteReservaItemProposta;
+        }
 
         /// <summary>
         /// Sem informações de LOTE
@@ -40,17 +71,6 @@ namespace TitaniumColector.Classes
             this.LotereservaItemProposta = loteReservaItemProposta;
         }
 
-        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,Int32 loteReservaItemProposta,
-                               Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, Int32 codigoLocalLote, String nomeLocalLote,Int32 codigoLoteProduto,String identificacaoLoteProduto)
-                             : base(codigoProduto, ean13, partnumber, nomeProduto, codigoLocalLote, nomeLocalLote, codigoLoteProduto, identificacaoLoteProduto)
-        {
-            this.CodigoItemProposta = codigoItemProposta;
-            this.PropostaItemProposta = propostaItemProposta;
-            this.Quantidade = quantidade;
-            this.StatusSeparado = isSeparado;
-            this.LotereservaItemProposta = loteReservaItemProposta;
-        }
-
         public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,object objProduto)
             : base(objProduto)
         {
@@ -62,10 +82,9 @@ namespace TitaniumColector.Classes
         }
 
 
-        public ProdutoProposta()
-        {
+    #endregion
 
-        }
+    #region"GETS E SETS"
 
         public int CodigoItemProposta
         {
@@ -98,6 +117,7 @@ namespace TitaniumColector.Classes
             set { lotereservaItemProposta = value; }
         }
 
+    #endregion
 
         /// <summary>
         /// Altera o statusSeparado do Produto entre SEPARADO e NAOSEPARADO

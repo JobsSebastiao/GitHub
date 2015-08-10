@@ -11,6 +11,7 @@ using System.Collections;
 using TitaniumColector.Utility;
 using System.IO;
 using Microsoft.VisualBasic;
+using TitaniumColector.Classes.Exceptions;
 
 
 namespace TitaniumColector.SqlServer
@@ -239,11 +240,10 @@ namespace TitaniumColector.SqlServer
                 SqlDataReader dr = cmd.ExecuteReader();
                 return dr;
             }
-            catch (Exception )
+            catch (Exception)
             {
-                throw;
+                throw new SqlQueryExceptions("Provável erro de Sintaxe.");
             }
-
         }
 
         public static void execCommandSql(string sql01)

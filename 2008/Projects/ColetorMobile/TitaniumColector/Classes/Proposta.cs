@@ -9,9 +9,9 @@ namespace TitaniumColector.Classes
     class Proposta
     {
         private Int64 codigo;
-        private string numero;
-        private string dataLiberacao;
-        private string razaoCliente;
+        private String numero;
+        private String dataLiberacao;
+        private String razaoCliente;
         private int codigoCliente;
         private Double totalItens;
         private Double totalpecas;
@@ -135,6 +135,7 @@ namespace TitaniumColector.Classes
     #endregion
 
     #region  "GETS E SETS"
+
         public enum statusOrdemSeparacao 
         {
             NAOIMPRESA = 0,
@@ -311,5 +312,7 @@ namespace TitaniumColector.Classes
                    "\n StatusOrdemSeparação : " + StatusOrdemSeparacao +
                    "\n Quantidade de Itens : " + ListObjItemProposta.Count();
         }
+
+      //  public void se
     }
 }

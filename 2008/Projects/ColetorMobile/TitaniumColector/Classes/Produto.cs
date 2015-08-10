@@ -16,10 +16,20 @@ namespace TitaniumColector.Classes
         private Int32 codigoLocalProduto;
         private String nomeLocalProduto;
 
+
     #region"CONTRUTORES"
 
         public Produto()
         {
+
+        }
+
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao) 
+        {
+            this.CodigoProduto = codigo;
+            this.Ean13 = ean13;
+            this.Partnumber = partnumber;
+            this.Descricao = descricao;
 
         }
 
@@ -54,17 +64,15 @@ namespace TitaniumColector.Classes
         /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
         /// <param name="codLoteProd">Código do lote do produto</param>
         /// <param name="identificacaoLoteProd">Identificação do Lote do produto</param>
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, Int32 codigoLocalLote, String nomeLocalLote,Int64 codLoteProd,String identificacaoLoteProd)
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote,Int64 codLoteProd,String identificacaoLoteProd)
         {
             CodigoProduto = codigo;
             Ean13 = ean13;
             Partnumber = partnumber;
             Descricao = descricao;
-            CodigoLocalLote = codigoLocalLote;
             NomeLocalLote = nomeLocalLote;
             CodigoLoteProduto = codLoteProd;
             IdentificacaoLoteProduto = identificacaoLoteProd;
-
         }
 
         /// <summary>

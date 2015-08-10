@@ -96,6 +96,7 @@ namespace TitaniumColector
             this.sql01 = sbSql01.ToString();
 
             listUsuario = new List<object>(this.fillListUsuarios(dt, this.sql01));
+
             this.preencheComboBoxUsuario(cbUsuario, listUsuario,Usuario.usuarioProperty.NOME, false);
 
         }
@@ -180,6 +181,7 @@ namespace TitaniumColector
                 cb.DisplayMember = displayName;
                 cb.ValueMember = columnName;
                 cb.SelectedItem = null;
+
             }
             else 
             {

@@ -298,7 +298,7 @@ public class FileUtility
         try
         {
             string[] arrayFile = null;
-            char  splitCarac = (char)defineSplitType(splitCaracter);
+             char  splitCarac = (char)defineSplitType(splitCaracter);
             arrayFile = strFile.Split(splitCarac);
             return arrayFile;
         }

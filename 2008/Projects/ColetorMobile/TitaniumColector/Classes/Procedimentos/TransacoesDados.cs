@@ -8,6 +8,7 @@ using TitaniumColector.Classes.SqlServer;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Windows.Forms;
+using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Classes
 {
@@ -69,19 +70,18 @@ namespace TitaniumColector.Classes
                 StringBuilder query = new StringBuilder();
                 query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
                 query.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD,loteRESERVA");
-                query.Append(",COALESCE(localLOTELOCAL,0) AS localLOTELOCAL,COALESCE(nomeLOCAL,'ND') AS nomeLOCAL");
                 query.Append(" FROM tb1206_Reservas (NOLOCK) ");
                 query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
                 query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
                 query.Append("LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
                 query.Append("LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
-                query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);     //78527
+                query.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);   
                 query.Append("AND tipodocRESERVA = 1602 ");
                 query.Append("AND statusITEMPROPOSTA = 3 ");
                 query.Append("AND separadoITEMPROPOSTA = 0  ");
                 query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
-                query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA,localLOTELOCAL,nomeLOCAL ");
-                query.Append("ORDER BY nomeLOCAL ASC");
+                query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA");
+
                 this.sql01 = query.ToString();
 
                 SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
@@ -89,9 +89,15 @@ namespace TitaniumColector.Classes
                 while ((dr.Read()))
                 {
                     {
-                        objItemProposta = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(dr["propostaITEMPROPOSTA"]), Convert.ToDouble(dr["QTD"]), ProdutoProposta.statusSeparado.NAOSEPARADO, Convert.ToInt32(dr["loteRESERVA"]),
-                                 Convert.ToInt32(dr["codigoPRODUTO"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"], (string)(dr["nomePRODUTO"]), Convert.ToInt32(dr["localLOTELOCAL"]), (String)dr["nomeLOCAL"]);
-
+                        objItemProposta = new ProdutoProposta(  Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                                                                Convert.ToInt32(dr["propostaITEMPROPOSTA"]),
+                                                                Convert.ToDouble(dr["QTD"]),
+                                                                ProdutoProposta.statusSeparado.NAOSEPARADO,
+                                                                Convert.ToInt32(dr["loteRESERVA"]),
+                                                                Convert.ToInt32(dr["codigoPRODUTO"]),
+                                                                (string)dr["ean13PRODUTO"],
+                                                                (string)dr["partnumberPRODUTO"],
+                                                                (string)(dr["nomePRODUTO"]));
 
                         //Carrega a lista de itens que será retornada ao fim do procedimento.
                         listItensProposta.Add(objItemProposta);
@@ -127,17 +133,22 @@ namespace TitaniumColector.Classes
             try
             {
                 StringBuilder query = new StringBuilder();
-                query.Append("SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigolotePRODUTO,identificacaolotePRODUTO,codigolocalPRODUTO,nomelocalPRODUTO ");
-                query.AppendFormat("FROM dbo.fn0003_informacoesProdutos({0})", codigoProposta);
-                query.Append(" ORDER BY nomelocalPRODUTO ASC ");
+                query.Append("SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigolotePRODUTO,identificacaolotePRODUTO,dbo.fn1211_LocaisLoteProduto(codigoPRODUTO,codigolotePRODUTO) AS nomelocalPRODUTO");
+                query.AppendFormat(" FROM dbo.fn0003_informacoesProdutos({0})", codigoProposta);
+                query.Append("GROUP BY codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigolotePRODUTO,identificacaolotePRODUTO,dbo.fn1211_LocaisLoteProduto(codigoPRODUTO,codigolotePRODUTO)");
+                query.Append("ORDER BY nomelocalPRODUTO ASC");
 
                 SqlDataReader dr = SqlServerConn.fillDataReader(query.ToString());
 
                 while ((dr.Read()))
                 {
-                    objProd = new Produto(Convert.ToInt32(dr["codigoPRODUTO"]), (String)dr["ean13PRODUTO"], (String)dr["partnumberPRODUTO"],
-                                         (String)dr["nomePRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (String)dr["nomelocalPRODUTO"],
-                                          Convert.ToInt64(dr["codigolotePRODUTO"]), (String)dr["identificacaolotePRODUTO"]);
+                    objProd = new Produto(  Convert.ToInt32(dr["codigoPRODUTO"]),
+                                            (String)dr["ean13PRODUTO"],
+                                            (String)dr["partnumberPRODUTO"],
+                                            (String)dr["nomePRODUTO"],
+                                            (String)dr["nomelocalPRODUTO"],
+                                            Convert.ToInt64(dr["codigolotePRODUTO"]),
+                                            (String)dr["identificacaolotePRODUTO"]);
 
                     //Carrega a lista de itens que será retornada ao fim do procedimento.
                     listProduto.Add(objProd);
@@ -150,7 +161,7 @@ namespace TitaniumColector.Classes
 
                 return listProduto;
             }
-            catch (TitaniumColector.Classes.Exceptions.SqlQueryExceptions queryEx) 
+            catch (SqlQueryExceptions queryEx) 
             {
                 SqlServerConn.closeConn();
                 StringBuilder sb = new StringBuilder();
@@ -266,11 +277,19 @@ namespace TitaniumColector.Classes
                     }
 
                     int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
-                    ProdutoProposta objProdProp = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProposta.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
-                                                                     (ProdutoProposta.statusSeparado)statusSeparadoItem, Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
-                                                                      Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"],
-                                                                     (string)dr["descricaoPRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (string)dr["nomelocalPRODUTO"],
-                                                                      Convert.ToInt32(dr["codigolotePRODUTO"]), (string)dr["identificacaolotePRODUTO"]);
+
+                    ProdutoProposta objProdProp = new ProdutoProposta(  Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(objProposta.Codigo),
+                                                                        Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                                                                        (ProdutoProposta.statusSeparado)statusSeparadoItem,
+                                                                        Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]),
+                                                                        (string)dr["ean13PRODUTO"],
+                                                                        (string)dr["partnumberPRODUTO"],
+                                                                        (string)dr["descricaoPRODUTO"],
+                                                                        (string)dr["nomelocalPRODUTO"],
+                                                                        Convert.ToInt32(dr["codigolotePRODUTO"]),
+                                                                        (string)dr["identificacaolotePRODUTO"]);
 
                     listProd.Add(objProdProp);
                 }
@@ -299,7 +318,7 @@ namespace TitaniumColector.Classes
 
             sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
-            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
             sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
             sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
@@ -307,9 +326,9 @@ namespace TitaniumColector.Classes
             sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
             sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
             sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
-            sbQuery.ToString();
+            sql01 =  sbQuery.ToString();
 
-            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sbQuery.ToString());
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01);
 
             int i = 0;
 
@@ -327,11 +346,19 @@ namespace TitaniumColector.Classes
                     }
 
                     int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
-                    ProdutoProposta objProdProp = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]), Convert.ToInt32(objProposta.Codigo), Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
-                                                                     (ProdutoProposta.statusSeparado)statusSeparadoItem, Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
-                                                                      Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]), (string)dr["ean13PRODUTO"], (string)dr["partnumberPRODUTO"],
-                                                                     (string)dr["descricaoPRODUTO"], Convert.ToInt32(dr["codigolocalPRODUTO"]), (string)dr["nomelocalPRODUTO"],
-                                                                      Convert.ToInt32(dr["codigolotePRODUTO"]), (string)dr["identificacaolotePRODUTO"]);
+                    ProdutoProposta objProdProp = new ProdutoProposta(  Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(objProposta.Codigo),
+                                                                        Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                                                                        (ProdutoProposta.statusSeparado)statusSeparadoItem,
+                                                                        Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]),
+                                                                        (string)dr["ean13PRODUTO"],
+                                                                        (string)dr["partnumberPRODUTO"],
+                                                                        (string)dr["descricaoPRODUTO"],
+                                                                        //Convert.ToInt32(dr["codigolocalPRODUTO"]),
+                                                                        (string)dr["nomelocalPRODUTO"],
+                                                                        Convert.ToInt32(dr["codigolotePRODUTO"]), 
+                                                                        (string)dr["identificacaolotePRODUTO"]);
 
                     listProd.Add(objProdProp);
                 }
@@ -433,15 +460,15 @@ namespace TitaniumColector.Classes
                     StringBuilder query = new StringBuilder();
                     query.Append("INSERT INTO tb0002_ItensProposta");
                     query.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,");
-                    query.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA,localloteITEMPROPOSTA) ");
+                    query.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA) ");
                     query.Append("VALUES (");
                     query.AppendFormat("{0},", item.CodigoItemProposta);
                     query.AppendFormat("{0},", item.PropostaItemProposta);
                     query.AppendFormat("{0},", item.Quantidade);
                     query.AppendFormat("{0},", (int)item.StatusSeparado);
                     query.AppendFormat("{0},", item.CodigoProduto);
-                    query.AppendFormat("{0},", item.LotereservaItemProposta);
-                    query.AppendFormat("{0})", item.CodigoLocalLote);
+                    query.AppendFormat("{0})", item.LotereservaItemProposta);
+                    //query.AppendFormat("{0})", item.CodigoLocalLote);
                     sql01 = query.ToString();
 
                     CeSqlServerConn.execCommandSqlCe(sql01);
@@ -536,7 +563,6 @@ namespace TitaniumColector.Classes
 
                 foreach (var item in listProduto)
                 {
-
                     //Query de insert na Base Mobile
                     StringBuilder query = new StringBuilder();
                     query.Append("INSERT INTO tb0003_Produtos ");
@@ -565,7 +591,6 @@ namespace TitaniumColector.Classes
             {
                 throw;
             }
-
         }
 
         #endregion 
@@ -585,7 +610,6 @@ namespace TitaniumColector.Classes
    #endregion
   
         #region "CRIACAO BASE MOBILE "
-
 
         /// <summary>
         /// Configura a conexão com a base mobile.
@@ -611,7 +635,6 @@ namespace TitaniumColector.Classes
                 criarTabelas();
             }
         }
-
 
         /// <summary>
         /// Cria tabelas na base mobile.
@@ -641,14 +664,13 @@ namespace TitaniumColector.Classes
             sbQuery.Append("statusseparadoITEMPROPOSTA smallint,");
             sbQuery.Append("codigoprodutoITEMPROPOSTA int,");
             sbQuery.Append("lotereservaITEMPROPOSTA int,");
-            sbQuery.Append("localloteITEMPROPOSTA int,");
             sbQuery.Append("xmlSequenciaITEMPROPOSTA nvarchar(500))");
             CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
 
             //TABELAS tb0003_Produtos
             sbQuery.Length = 0;
             sbQuery.Append("CREATE TABLE tb0003_Produtos (");
-            sbQuery.Append("codigoPRODUTO				INT NOT NULL CONSTRAINT PKProdutos PRIMARY KEY ,");
+            sbQuery.Append("codigoPRODUTO				INT NOT NULL ,");
             sbQuery.Append("ean13PRODUTO				NVARCHAR(15) NOT NULL ,");
             sbQuery.Append("partnumberPRODUTO			NVARCHAR(100) ,");
             sbQuery.Append("descricaoPRODUTO			NVARCHAR(100) ,");
@@ -668,8 +690,27 @@ namespace TitaniumColector.Classes
 
         }
 
-
     #endregion
+
+        public static String recuperarLocalEstoqueProduto(int produto,int lote)
+        {
+            string nomesLocais="";
+            StringBuilder sbQuery = new StringBuilder();
+            sbQuery.Append(" SELECT nomeLOCAL ");
+            sbQuery.Append(" FROM tb1205_Lotes ");
+            sbQuery.Append(" INNER JOIN tb1212_Lotes_Locais ON codigoLOTE = loteLOTELOCAL ");
+            sbQuery.Append(" INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
+            sbQuery.AppendFormat(" WHERE produtoLOTE ={0} AND codigoLOTE = {1} ",produto,lote);
+
+            SqlDataReader dr = SqlServerConn.fillDataReader(sbQuery.ToString());
+
+            while ((dr.Read()))
+            {
+                nomesLocais += dr["nomeLOCAL"];
+            }
+            return nomesLocais;
+        }
+
 
     }
 }
