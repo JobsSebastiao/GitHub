@@ -125,7 +125,7 @@ namespace TitaniumColector.Forms
 
                 //carrega um obj Proposta com a atual proposta na base mobile 
                 //e com o item top 1 da proposta que ainda não esteja separado.
-                proposta = objTransacoes.fillPropostaTop1Item();
+                proposta = objTransacoes.fillPropostaWithTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
                 proposta.totalItensPecasProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
@@ -223,7 +223,13 @@ namespace TitaniumColector.Forms
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
             tbDescricao.Text = produto;
+
+            if (local.Contains(','))
+            {
+                tbLocal.Font = MainConfig.FontMediaBold;
+            }
             tbLocal.Text = local;
+
             tbQuantidade.Text = quantidadeItem;
         }
 
@@ -257,6 +263,7 @@ namespace TitaniumColector.Forms
                 this.ListInformacoesProposta = list;
             }
         }
+
 
     #endregion
 
@@ -433,11 +440,19 @@ namespace TitaniumColector.Forms
 
             if (ProcedimentosLiberacao.QtdPecasItem == 0)
             {
+                objTransacoes = new TransacoesDados();
                 this.clearParaProximoItem();
                 ProcedimentosLiberacao.decrementaQtdTotalItens(1,this.lbQtdItens);
                 ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade,this.lbQtdPecas);
-                MessageBox.Show("Next Item!!!");    
-                //objProposta.
+                ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
+                objTransacoes.updateItemProposta(objProposta.ListObjItemProposta[0]);
+                objProposta.setNextItemProposta(objTransacoes.fillTop1ItemProposta());
+                ProcedimentosLiberacao.inicializarProcedimentos(objProposta.ListObjItemProposta[0].Quantidade);
+
+                this.fillCamposForm(objProposta.Numero,objProposta.RazaoCliente,ProcedimentosLiberacao.TotalPecas,
+                     ProcedimentosLiberacao.TotalItens, objProposta.ListObjItemProposta[0].Partnumber, 
+                     objProposta.ListObjItemProposta[0].Descricao, objProposta.ListObjItemProposta[0].NomeLocalLote, 
+                     objProposta.ListObjItemProposta[0].Quantidade.ToString());
             }
 
         }

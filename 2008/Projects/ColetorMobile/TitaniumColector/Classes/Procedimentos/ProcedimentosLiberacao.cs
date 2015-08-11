@@ -30,12 +30,61 @@ namespace TitaniumColector.Classes.Procedimentos
             TotalItens = tItens;
             TotalPecas = tPecas;
             qtdPecasItem = pecasItens;
-            listEtiquetasLidas = new List<Etiqueta>();
+
+            if (ListEtiquetasGeradas != null)
+            {
+                ListEtiquetasGeradas.Clear();
+
+            }
+            else 
+            {
+                listEtiquetasLidas = new List<Etiqueta>();
+            }
+            
             ProximaEtiqueta = 0;
-            ListEtiquetasGeradas = null;
-            arrayStringToEtiqueta = null;
+
+            if(ListEtiquetasGeradas != null)
+            {
+                ListEtiquetasGeradas.Clear();
+            }
+
+            if (arrayStringToEtiqueta != null)
+            {
+                arrayStringToEtiqueta = null;
+            }
         }
 
+         /// <summary>
+         /// Não altera o total de peças e o total de itens atualmente setados.
+         /// </summary>
+         /// <param name="pecasItens">quantidade de peças do item a ser trabalhado.</param>
+        public static void inicializarProcedimentos(Double pecasItens)
+        {
+            TotalItens = TotalItens;
+            TotalPecas = TotalPecas;
+            qtdPecasItem = pecasItens;
+
+            if (listEtiquetasLidas != null)
+            {
+                listEtiquetasLidas.Clear();
+            }
+            else
+            {
+                listEtiquetasLidas = new List<Etiqueta>();
+            }
+
+            ProximaEtiqueta = 0;
+
+            if (ListEtiquetasGeradas != null)
+            {
+                ListEtiquetasGeradas.Clear();
+            }
+
+            if (arrayStringToEtiqueta != null)
+            {
+                arrayStringToEtiqueta = null;
+            }
+        }
 
     #region "GETS E SETS"
 
@@ -229,8 +278,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-
-
         public static void efetuaLeituraEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tbLote,TextBox tbSequencia,TextBox tbQuantidade,
                                                  TextBox tbMensagem,Etiqueta objEtiqueta)
         {
@@ -318,12 +365,7 @@ namespace TitaniumColector.Classes.Procedimentos
             EtiquetasLidas = new List<Etiqueta>();
         }
 
-        public static void proximoItem() 
-        {
-
-        }
-
-         ///<summary>
+        ///<summary>
          ///Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
          ///</summary>
          ///<param name="qtd">quantidade a ser diminuida</param>
@@ -350,7 +392,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-
         /// <summary>
         /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
         /// </summary>
@@ -376,6 +417,20 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 throw new QuantidadeInvalidaException();
             }
+        }
+
+        public static void setStatusProdutoParaSeparado(ProdutoProposta item)
+        {
+
+            if (item.StatusSeparado == ProdutoProposta.statusSeparado.SEPARADO)
+            {
+                return;
+            }
+            else
+            {
+                item.alteraStatusSeparado();
+            }    
+
         }
 
     }

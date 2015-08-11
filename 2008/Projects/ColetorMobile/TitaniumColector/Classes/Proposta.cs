@@ -194,7 +194,6 @@ namespace TitaniumColector.Classes
             get { return totalpecas; }
         }
 
-
         /// <summary>
         /// Total de Itens baseado nos dados do atributo ListObjItemProposta
         /// </summary>
@@ -284,6 +283,16 @@ namespace TitaniumColector.Classes
             }
         }
 
+        /// <summary>
+        /// Limpa a list de itens da proposta e adiciona o item passado como parâmetro.
+        /// </summary>
+        /// <param name="item">Objeto ProdutoProposta</param>
+        public void setNextItemProposta(ProdutoProposta item)
+        {
+            this.ListObjItemProposta.Clear();
+            this.ListObjItemProposta.Add(item);
+        }
+
         public override bool Equals(object obj)
         {
             System.Type type = obj.GetType();
@@ -313,6 +322,5 @@ namespace TitaniumColector.Classes
                    "\n Quantidade de Itens : " + ListObjItemProposta.Count();
         }
 
-      //  public void se
     }
 }

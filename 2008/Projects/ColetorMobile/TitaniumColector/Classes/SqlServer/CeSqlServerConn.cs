@@ -158,12 +158,6 @@ namespace TitaniumColector.Classes.SqlServer
                 closeConnCe();
                 throw;
             }
-            catch (Exception)
-            {
-                closeConnCe();
-                throw;
-            }
-
 	    }
 
 	    public static void beginTransactionCe()

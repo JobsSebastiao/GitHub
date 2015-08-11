@@ -154,7 +154,6 @@ namespace TitaniumColector.Classes
             }
         }
 
-
         public override string ToString()
         {
             return base.ToString() + String.Format("\n Código Item : {0} \n Proposta Item : {1} \n Quantidade : {2} \n Status Separado : {3} \n Lote da Reserva : {4}",

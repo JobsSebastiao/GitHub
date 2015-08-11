@@ -12,13 +12,12 @@ using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Classes
 {
-    class TransacoesDados
+    class  TransacoesDados
     {
-        private String sql01;
+        private static String sql01;
         private ProdutoProposta objItemProposta;
-        private DataTable dt;
     
-        #region "SELECTS"
+    #region "SELECTS"
 
         /// <summary>
         /// Recupera a proposta TOP 1 e devolve um objeto do tipo Proposta com as informações resultantes.
@@ -32,7 +31,7 @@ namespace TitaniumColector.Classes
             sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
             sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
-            this.sql01 = sbSql01.ToString();
+            sql01 = sbSql01.ToString();
             
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
@@ -82,7 +81,7 @@ namespace TitaniumColector.Classes
                 query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
                 query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA");
 
-                this.sql01 = query.ToString();
+                sql01 = query.ToString();
 
                 SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
 
@@ -175,18 +174,6 @@ namespace TitaniumColector.Classes
             {
                 throw;
             }
-        }
-
-        private void buscaItensBaseMobile()
-        {
-            dt = new DataTable();
-
-            StringBuilder stb = new StringBuilder();
-            stb.Append("SELECT codigoITEMPROPOSTA, propostaITEMPROPOSTA, partnumberITEMPROPOSTA, nomeITEMPROPOSTA,");
-            stb.Append("produtopedidoITEMPROPOSTA, quantidadeITEMPROPOSTA, ean13ITEMPROPOSTA,statusseparadoITEMPROPOSTA ");
-            stb.Append(" FROM  tb0011_ItensProposta");
-            CeSqlServerConn.fillDataTableCe(dt, stb.ToString());
-
         }
 
         /// <summary>
@@ -308,7 +295,7 @@ namespace TitaniumColector.Classes
         /// de acordo com o campo Nome Local e o status de separado = 0; (NAOSEPARADO)
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
-        public Proposta fillPropostaTop1Item()
+        public Proposta fillPropostaWithTop1Item()
         {
             Proposta objProposta = null;
 
@@ -316,17 +303,36 @@ namespace TitaniumColector.Classes
 
             StringBuilder sbQuery = new StringBuilder();
 
-            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
-            sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
-            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
-            sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
-            sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
-            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
-            sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
-            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
-            sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
-            sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
-            sql01 =  sbQuery.ToString();
+            //ESTAVA CAUSANDO DUPLICAIDADE DE INTES DA PROPOSTA>
+
+            //sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            //sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
+            //sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
+            //sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
+            //sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
+            //sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
+            //sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
+            //sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
+            //sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
+            //sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
+            //sql01 =  sbQuery.ToString();
+
+            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
+			sbQuery.Append("TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
+			sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,"); 
+			sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
+			sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
+            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP "); 
+            sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA ");
+            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO ");
+            sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0 ");
+            sbQuery.Append(" GROUP BY TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
+			sbQuery.Append("TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
+			sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
+            sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
+			sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
+	        sbQuery.Append(" ORDER BY nomelocalPRODUTO ASC");
+            sql01 = sbQuery.ToString();
 
             SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01);
 
@@ -355,7 +361,6 @@ namespace TitaniumColector.Classes
                                                                         (string)dr["ean13PRODUTO"],
                                                                         (string)dr["partnumberPRODUTO"],
                                                                         (string)dr["descricaoPRODUTO"],
-                                                                        //Convert.ToInt32(dr["codigolocalPRODUTO"]),
                                                                         (string)dr["nomelocalPRODUTO"],
                                                                         Convert.ToInt32(dr["codigolotePRODUTO"]), 
                                                                         (string)dr["identificacaolotePRODUTO"]);
@@ -372,9 +377,59 @@ namespace TitaniumColector.Classes
             return objProposta;
         }
 
-        #endregion 
+        /// <summary>
+        /// Identifica qual o próximo item com status de NAOSEPARADO e o retorna.
+        /// </summary>
+        /// <returns>Objeto ProdutoProposta com o próximo item da sequência da base mobile.</returns>
+        public ProdutoProposta fillTop1ItemProposta()
+        {
 
-        #region "INSERTS"
+            StringBuilder sbQuery = new StringBuilder();
+            ProdutoProposta prod = new ProdutoProposta();
+
+            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
+            sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
+            sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,");
+            sbQuery.Append(" TB_PROD.nomelocalPRODUTO");
+            sbQuery.Append(" FROM   tb0001_Propostas AS TB_PROP ");
+            sbQuery.Append(" INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA");
+            sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO");
+            sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0");
+            sbQuery.Append(" ORDER BY TB_PROD.nomelocalPRODUTO ASC");
+            sql01 = sbQuery.ToString();
+
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01);
+
+            if ((dr != null))
+            {
+                while ((dr.Read()))
+                {
+                    int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
+                    prod = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(dr["codigoPROPOSTA"]),
+                                                                        Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
+                                                                        (ProdutoProposta.statusSeparado)statusSeparadoItem,
+                                                                        Convert.ToInt32(dr["lotereservaITEMPROPOSTA"]),
+                                                                        Convert.ToInt32(dr["codigoprodutoITEMPROPOSTA"]),
+                                                                        (string)dr["ean13PRODUTO"],
+                                                                        (string)dr["partnumberPRODUTO"],
+                                                                        (string)dr["descricaoPRODUTO"],
+                                                                        (string)dr["nomelocalPRODUTO"],
+                                                                        Convert.ToInt32(dr["codigolotePRODUTO"]),
+                                                                        (string)dr["identificacaolotePRODUTO"]);
+                }
+
+            }
+
+
+            return prod;
+        }
+
+
+    #endregion 
+
+    #region "INSERTS"
 
 
         /// <summary>
@@ -390,7 +445,7 @@ namespace TitaniumColector.Classes
             sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
             sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
-            this.sql01 = sbSql01.ToString();
+            sql01 = sbSql01.ToString();
 
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
@@ -595,7 +650,7 @@ namespace TitaniumColector.Classes
 
         #endregion 
 
-        #region "DELETES"
+    #region "DELETES"
 
 
         public void clearBaseMobile()
@@ -608,8 +663,58 @@ namespace TitaniumColector.Classes
 
 
    #endregion
-  
-        #region "CRIACAO BASE MOBILE "
+
+    #region "UPDATES"
+
+        /// <summary>
+        /// Altera o status de separado do item na Base mobile.
+        /// </summary>
+        /// <param name="item">O status será alterado de acordo com o atual statdo so item passado com parâmetro.</param>
+        public void updateItemProposta(ProdutoProposta item) 
+        {
+            try
+            {
+                StringBuilder sbQuery = new StringBuilder();
+                sbQuery.Append(" UPDATE      tb0002_ItensProposta");
+                sbQuery.AppendFormat("  SET   statusseparadoITEMPROPOSTA ={0}", (int)item.StatusSeparado);
+                sbQuery.AppendFormat(" WHERE (tb0002_ItensProposta.codigoITEMPROPOSTA = {0})", item.CodigoItemProposta);
+                sql01 = sbQuery.ToString();
+
+                CeSqlServerConn.execCommandSqlCe(sql01);
+            }
+            catch (SqlCeException)
+            {
+                MessageBox.Show("errror.");
+            }
+
+        }
+
+        /// <summary>
+        /// Altera o status de separado do item na Base mobile.
+        /// </summary>
+        /// <param name="status">Status para qual será atualizado</param>
+        /// <param name="codigoItem">código so item da proposta a ser alterado</param>
+        /// <remarks>  
+        ///             Os status são:
+        ///             ProdutoProposta.statusSeparado.NAOSEPARADO       / 0
+        ///             ProdutoProposta.statusSeparado.SEPARADO          / 1
+        /// </remarks>
+        public void updateItemProposta(ProdutoProposta.statusSeparado status,int codigoItem)
+        {
+            StringBuilder sbQuery = new StringBuilder();
+            sbQuery.Append("UPDATE      tb0002_ItensProposta");
+            sbQuery.AppendFormat("SET   statusseparadoITEMPROPOSTA ={0}", status);
+            sbQuery.AppendFormat("WHERE tb0002_ItensProposta.codigoITEMPROPOSTA = {0})", codigoItem);
+            sql01 = sbQuery.ToString();
+
+            CeSqlServerConn.execCommandSqlCe(sql01);
+        }
+
+
+
+        #endregion
+
+    #region "CRIACAO BASE MOBILE "
 
         /// <summary>
         /// Configura a conexão com a base mobile.
@@ -692,7 +797,7 @@ namespace TitaniumColector.Classes
 
     #endregion
 
-        public static String recuperarLocalEstoqueProduto(int produto,int lote)
+        public String recuperarLocalEstoqueProduto(int produto,int lote)
         {
             string nomesLocais="";
             StringBuilder sbQuery = new StringBuilder();
@@ -710,7 +815,6 @@ namespace TitaniumColector.Classes
             }
             return nomesLocais;
         }
-
 
     }
 }
