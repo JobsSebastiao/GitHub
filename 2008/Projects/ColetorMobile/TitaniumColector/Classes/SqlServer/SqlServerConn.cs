@@ -103,7 +103,6 @@ namespace TitaniumColector.SqlServer
 
         #endregion //Get & Set
 
-
         /// <summary>
         /// Recupera todos aos parâmetros informados e configura a string de conexão.
         /// </summary>
@@ -253,9 +252,9 @@ namespace TitaniumColector.SqlServer
                 SqlCommand cmd = new SqlCommand(sql01, openConn());
                 cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch (SqlException )
             {
-                throw new Exception("Ocorre um problema na conexão com a base de dados." + Environment.NewLine + "Erro : " + ex.Message);
+                throw new SqlQueryExceptions("Error durante acesso a base de dados!!");
             }
             finally
             {

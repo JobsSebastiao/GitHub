@@ -233,7 +233,15 @@ namespace TitaniumColector.Classes.Procedimentos
             list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
             for (int i = 1; i <= 8; i++)
             {
-                objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
+                if (i < 5)
+                {
+                    objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
+                }
+                else 
+                {
+                    objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
+                }
+                
                 list.Add(objEtiqueta);
                 objEtiqueta = null;
             }
@@ -241,7 +249,6 @@ namespace TitaniumColector.Classes.Procedimentos
             list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
             ListEtiquetasGeradas = list;
         }
-
 
         public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tblote,TextBox tbSequencia,TextBox tbQuantidade,TextBox tbMensagem)
         {
@@ -371,14 +378,14 @@ namespace TitaniumColector.Classes.Procedimentos
          ///<param name="qtd">quantidade a ser diminuida</param>
          ///<returns>Retorna true caso não ocorra erros
          ///         false se o calculo não ocorrer com esperado.</returns>
-        public static  Boolean decrementaQtdTotalPecas(double qtd,Label lb)
+        public static  Boolean decrementaQtdTotalPecas(double qtd)
         {
             try
             {
                 if (ProcedimentosLiberacao.TotalPecas > 0 && (ProcedimentosLiberacao.TotalPecas - qtd >= 0))
                 {
                     ProcedimentosLiberacao.TotalPecas -= qtd;
-                    lb.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " pçs";
+                    //lb.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " pçs";
                     return true;
                 }
                 else
@@ -398,14 +405,14 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <param name="qtd">quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
-        public static Boolean decrementaQtdTotalItens(double qtd,Label lb )
+        public static Boolean decrementaQtdTotalItens(double qtd )
         {
             try
             {
                 if (ProcedimentosLiberacao.TotalItens > 0 && (ProcedimentosLiberacao.TotalItens - qtd >= 0))
                 {
                     ProcedimentosLiberacao.TotalItens -= qtd;
-                    lb.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
+                    //lb.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
                     return true;
                 }
                 else

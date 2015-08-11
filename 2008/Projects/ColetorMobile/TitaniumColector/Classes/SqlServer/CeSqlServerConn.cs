@@ -19,9 +19,9 @@ namespace TitaniumColector.Classes.SqlServer
         private static string strConnectionCe;
         private static string strPasswordCe;
 
-	    #region "SqlCE"
+    #region "GETS E SETS "
 
-	    private static string BancoCe {
+        private static string BancoCe {
 		    get { return nomeDataBase; }
 		    set {
 			    if ((!string.IsNullOrEmpty(value))) {
@@ -53,6 +53,12 @@ namespace TitaniumColector.Classes.SqlServer
 		    }
 	    }
 
+#endregion
+
+        /// <summary>
+        /// Cria uma conexão com a base de dados Mobile.
+        /// </summary>
+        /// <returns>Connection</returns>
 	    public static SqlCeConnection openConnCe()
 	    {
 		    try {
@@ -71,9 +77,11 @@ namespace TitaniumColector.Classes.SqlServer
 		    } catch (Exception ex) {
 			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
 		    }
-
 	    }
 
+        /// <summary>
+        /// Fecha a conexão.
+        /// </summary>
 	    public static void closeConnCe()
 	    {
 		    try {
@@ -182,7 +190,6 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    }
 
-	    #endregion
 
     }
 

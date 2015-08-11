@@ -45,6 +45,16 @@ namespace TitaniumColector.Forms
             this.Hide();
         }
 
+        private void menuItem2_Click(object sender, EventArgs e)
+        {
+            ProcedimentosLiberacao.gerarEtiquetas();
+        }
+
+        private void menuItem3_Click(object sender, EventArgs e)
+        {
+            this.liberarItem();
+        }
+
     #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
@@ -187,6 +197,31 @@ namespace TitaniumColector.Forms
                 this.ListInformacoesProposta = listInfoProposta;
             }
         }
+        
+        /// <summary>
+        /// Carrega o form com as informações nescessárias para separação do próximo item.
+        /// </summary>
+        /// <param name="objProposta">ObjProposta já setado com as informações do seu próximo item. ITEM INDEX[0] DA LISTOBJITEMPROPOSTA</param>
+        /// <param name="qtdPecas">quantidade de peças ainda a separar</param>
+        /// <param name="qtdItens">quantidade itens ainda a liberar</param>
+        /// <remarks > O objeto proposta já deve ter sido carregado com o próximo item que será trabalhado pois as informações serão retira
+        ///           retiradas do item de index [0] na ListObjItemProsta
+        /// </remarks>
+        private void fillCamposForm(Proposta objProposta,Double qtdPecas, Double qtdItens)
+        {
+            lbNumeroPedido.Text = objProposta.Numero.ToString();
+            lbNomeCliente.Text = objProposta.RazaoCliente;
+            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
+            lbQtdItens.Text = qtdItens.ToString() + " Itens";
+            tbPartNumber.Text = objProposta.ListObjItemProposta[0].Partnumber;
+            tbDescricao.Text = objProposta.ListObjItemProposta[0].Descricao;
+            if (objProposta.ListObjItemProposta[0].NomeLocalLote.Contains(','))
+            {
+                tbLocal.Font = MainConfig.FontGrandeBold;
+            }
+            tbLocal.Text = objProposta.ListObjItemProposta[0].NomeLocalLote;
+            tbQuantidade.Text = objProposta.ListObjItemProposta[0].Quantidade.ToString();
+        }
 
         /// <summary>
         /// Carrega parcial os campos do Formulário
@@ -204,6 +239,37 @@ namespace TitaniumColector.Forms
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
         }
 
+        /// <summary>
+        /// Preenche os campos do Fomulário.  
+        /// Caso o Objeto listInfoPropostas esteja vazio 
+        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
+        /// </summary>
+        ///<param name="codigoProposta"> Código Proposta</param>
+        /// <param name="numeroPedido">Número Proposta</param>
+        /// <param name="nomeCliente">Nome Cliente</param>
+        /// <param name="qtdPecas">Quantidade de Peças</param>
+        /// <param name="qtdItens">Quantidade de Itens.</param>
+        private void fillCamposForm(String codigoProposta, String numeroPedido, String nomeCliente, String qtdPecas, String qtdItens)
+        {
+            var codigo = codigoProposta;
+            lbNumeroPedido.Text = numeroPedido;
+            lbNomeCliente.Text = nomeCliente;
+            lbQtdPecas.Text = qtdPecas + " Pçs";
+            lbQtdItens.Text = qtdItens + " Itens";
+
+            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0)
+            {
+                List<String> list = new List<String>();
+                list.Add(codigoProposta);
+                list.Add(numeroPedido);
+                list.Add(nomeCliente);
+                list.Add(qtdPecas);
+                list.Add(qtdItens);
+
+                this.ListInformacoesProposta = list;
+            }
+        }
+        
         /// <summary>
         /// Carrega os campo do Fomulário de Propostas
         /// </summary>
@@ -223,10 +289,9 @@ namespace TitaniumColector.Forms
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
             tbDescricao.Text = produto;
-
             if (local.Contains(','))
             {
-                tbLocal.Font = MainConfig.FontMediaBold;
+                tbLocal.Font = MainConfig.FontGrandeBold;
             }
             tbLocal.Text = local;
 
@@ -234,70 +299,63 @@ namespace TitaniumColector.Forms
         }
 
         /// <summary>
-        /// Preenche os campos do Fomulário.  
-        /// Caso o Objeto listInfoPropostas esteja vazio 
-        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
+        /// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
         /// </summary>
-        ///<param name="codigoProposta"> Código Proposta</param>
-        /// <param name="numeroPedido">Número Proposta</param>
-        /// <param name="nomeCliente">Nome Cliente</param>
-        /// <param name="qtdPecas">Quantidade de Peças</param>
-        /// <param name="qtdItens">Quantidade de Itens.</param>
-        private void fillCamposForm(String codigoProposta,String numeroPedido, String nomeCliente, String qtdPecas, String qtdItens)
+        /// 
+        /// <returns>
+        ///          TRUE --> caso exista um próximo item a ser trabalhado
+        ///          FALSE --> caso não exista mais items para serem trabalhados.
+        /// </returns>
+        private bool nextItemProposta()
         {
-            var codigo = codigoProposta;
-            lbNumeroPedido.Text = numeroPedido;
-            lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = qtdPecas + " Pçs";
-            lbQtdItens.Text = qtdItens + " Itens";
+            bool hasItem = false;
 
-            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0) 
+            objTransacoes = new TransacoesDados();
+
+            this.clearParaProximoItem();
+            //processa quantidade de itens
+            ProcedimentosLiberacao.decrementaQtdTotalItens(1);
+            //processa qunatidade de peças
+            ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
+            //seta status para separado
+            ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
+            //grava informações do item na base de dados mobile
+            objTransacoes.updateItemProposta(objProposta.ListObjItemProposta[0]);
+
+            //carrega próximo item
+            if (ProcedimentosLiberacao.TotalItens > 0)
             {
-                List<String> list = new List<String>();
-                list.Add(codigoProposta);
-                list.Add(numeroPedido);
-                list.Add(nomeCliente);
-                list.Add(qtdPecas);
-                list.Add(qtdItens);
-
-                this.ListInformacoesProposta = list;
+                if (objTransacoes.fillTop1ItemProposta() != null) 
+                {
+                    hasItem = true;
+                    objProposta.setNextItemProposta(objTransacoes.fillTop1ItemProposta());
+                }
+                else 
+                {
+                    hasItem = false;
+                }
             }
+            else
+            {
+                hasItem = false;
+            }
+
+            if (hasItem)
+            {
+                //seta parametros para iniciar leitura do próximo item
+                ProcedimentosLiberacao.inicializarProcedimentos(objProposta.ListObjItemProposta[0].Quantidade);
+                //recarrega o form com as informações do próximo item.
+                this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
+            }
+            else 
+            {
+                this.clearFormulario(true, true);
+            }
+
+            return hasItem;
         }
 
 
-    #endregion
-
-    #region "MANUSEIO DE INFORMAÇÔES DA PROPOSTA"
-
-        /// <summary>
-        /// Realiza o decrementos e passa os valores para os Labels 
-        /// dando a visão da alteração ao usuário.
-        /// </summary>
-        /// <param name="qtditens">Total de Itens a ser decrementado</param>
-        /// <param name="qtdPecas">Total de Peças a ser decrementado</param>
-        public void atualizaFormTotalPecasTotalItens(Double qtditens, Double qtdPecas)
-        {
-            //if ((this.decrementaQtdTotalPecas(qtdPecas) == true) && (this.decrementaQtdTotalItens(qtditens) == true))
-            //{
-            //    lbQtdItens.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
-            //    lbQtdPecas.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " Pçs";
-            //}
-        }
-
-        /// <summary>
-        /// Decrementa a quantidade do item que está sendo trabalhado e atualiza o formulário 
-        /// para que o usuário vizualize a alteração.
-        /// </summary>
-        /// <param name="qtditens">Qunatidade de itens a ser decrementado.</param>
-        //public void atualizaFormQuantidadeItens(Double qtditens)
-        //{
-        //    if ((this.decrementaQuatidadeItem(qtditens) == true))
-        //    {
-        //       // tbQuantidade.Text = AuxQuantidadeItens.ToString() + " Itens";
-        //    }
-        //}
-
-      
     #endregion
 
     #region "MÉTODOS GERAIS"
@@ -415,6 +473,20 @@ namespace TitaniumColector.Forms
             this.tbMensagem.Text = "";
         }
 
+        private void liberarItem() 
+        {
+            ProcedimentosLiberacao.lerEtiqueta(objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+            if (ProcedimentosLiberacao.QtdPecasItem == 0)
+            {
+                if (!this.nextItemProposta())
+                {
+                    MessageBox.Show("PRÒXIMA PROPOSTA.");
+                }
+
+            }
+        }
+
     #endregion
 
     #region "GET E SET"
@@ -427,40 +499,7 @@ namespace TitaniumColector.Forms
 
     #endregion
 
-
-        private void menuItem2_Click(object sender, EventArgs e)
-        {
-            ProcedimentosLiberacao.gerarEtiquetas();
-        }
-
-        private void menuItem3_Click(object sender, EventArgs e)
-        {
-
-            ProcedimentosLiberacao.lerEtiqueta(objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
-
-            if (ProcedimentosLiberacao.QtdPecasItem == 0)
-            {
-                objTransacoes = new TransacoesDados();
-                this.clearParaProximoItem();
-                ProcedimentosLiberacao.decrementaQtdTotalItens(1,this.lbQtdItens);
-                ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade,this.lbQtdPecas);
-                ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
-                objTransacoes.updateItemProposta(objProposta.ListObjItemProposta[0]);
-                objProposta.setNextItemProposta(objTransacoes.fillTop1ItemProposta());
-                ProcedimentosLiberacao.inicializarProcedimentos(objProposta.ListObjItemProposta[0].Quantidade);
-
-                this.fillCamposForm(objProposta.Numero,objProposta.RazaoCliente,ProcedimentosLiberacao.TotalPecas,
-                     ProcedimentosLiberacao.TotalItens, objProposta.ListObjItemProposta[0].Partnumber, 
-                     objProposta.ListObjItemProposta[0].Descricao, objProposta.ListObjItemProposta[0].NomeLocalLote, 
-                     objProposta.ListObjItemProposta[0].Quantidade.ToString());
-            }
-
-        }
-
-
-
-
-        #region   "NAO UTILIZADOS"
+    #region   "NAO UTILIZADOS"
 
         /// <summary>
         /// Atualiza o grid a partir de uma List que refência a classe ItemProposta.
@@ -522,7 +561,6 @@ namespace TitaniumColector.Forms
 
         }
 
-   
         #endregion
 
     }

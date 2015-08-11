@@ -5,7 +5,6 @@ namespace TitaniumColector.Classes
 {
     class Usuario
     {
-
         private int intCodigo;
         private int intPasta;
         private string strNome;

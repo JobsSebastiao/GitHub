@@ -291,7 +291,7 @@ namespace TitaniumColector.Classes
         }
 
         /// <summary>
-        /// Preenche um objeto do tipo Proposta com todas as suas informações e com o itemTop um da base de dados
+        /// Preenche um objeto do tipo Proposta com todas as suas informações e com o item Top 1 da base de dados MOBILE
         /// de acordo com o campo Nome Local e o status de separado = 0; (NAOSEPARADO)
         /// </summary>
         /// <returns>Objeto do tipo Proposta</returns>
@@ -372,7 +372,7 @@ namespace TitaniumColector.Classes
 
             }
 
-            SqlServerConn.closeConn();
+            CeSqlServerConn.closeConnCe();
 
             return objProposta;
         }
@@ -380,12 +380,16 @@ namespace TitaniumColector.Classes
         /// <summary>
         /// Identifica qual o próximo item com status de NAOSEPARADO e o retorna.
         /// </summary>
+        /// 
         /// <returns>Objeto ProdutoProposta com o próximo item da sequência da base mobile.</returns>
+        /// 
+        /// <remarks>
+        ///       Caso a query não retorne valores da base mobile o método retorna um valor NULL
+        /// </remarks>
         public ProdutoProposta fillTop1ItemProposta()
         {
-
+            Object obj=null;
             StringBuilder sbQuery = new StringBuilder();
-            ProdutoProposta prod = new ProdutoProposta();
 
             sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
@@ -406,7 +410,7 @@ namespace TitaniumColector.Classes
                 while ((dr.Read()))
                 {
                     int statusSeparadoItem = Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]);
-                    prod = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                    ProdutoProposta produto = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
                                                                         Convert.ToInt32(dr["codigoPROPOSTA"]),
                                                                         Convert.ToDouble(dr["quantidadeITEMPROPOSTA"]),
                                                                         (ProdutoProposta.statusSeparado)statusSeparadoItem,
@@ -418,12 +422,26 @@ namespace TitaniumColector.Classes
                                                                         (string)dr["nomelocalPRODUTO"],
                                                                         Convert.ToInt32(dr["codigolotePRODUTO"]),
                                                                         (string)dr["identificacaolotePRODUTO"]);
+                    obj = produto;
+
                 }
 
+                
             }
 
+            //fecha a conexão
+            CeSqlServerConn.closeConnCe();
 
-            return prod;
+            if (obj != null)
+            {
+                return (ProdutoProposta)obj;
+            }
+            else 
+            {
+                return null;
+            }
+
+            
         }
 
 

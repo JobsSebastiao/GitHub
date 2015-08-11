@@ -272,7 +272,6 @@ namespace TitaniumColector
                     {
                         MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(objUsuario, Usuario.statusLogin.LOGADO);
                         this.cbUsuario.Text = "";
-                        cbUsuario.Text = cbUsuario.Items[0];
                         this.txtSenha.Text = "";
                         FrmAcao frmAcao = new FrmAcao();
                         frmAcao.Show();

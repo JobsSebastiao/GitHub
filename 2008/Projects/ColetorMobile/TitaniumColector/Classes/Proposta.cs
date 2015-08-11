@@ -15,7 +15,7 @@ namespace TitaniumColector.Classes
         private int codigoCliente;
         private Double totalItens;
         private Double totalpecas;
-        private statusOrdemSeparacao ordemSeparacao;
+        //private statusOrdemSeparacao ordemSeparacao;
         private List<ProdutoProposta> listItemProposta;
 
 
@@ -160,11 +160,11 @@ namespace TitaniumColector.Classes
             set { dataLiberacao = value; }
         }
 
-        public statusOrdemSeparacao StatusOrdemSeparacao
-        {
-            get{ return ordemSeparacao; }
-            set { ordemSeparacao = value; }
-        }
+        //public statusOrdemSeparacao StatusOrdemSeparacao
+        //{
+        //    get{ return ordemSeparacao; }
+        //    set { ordemSeparacao = value; }
+        //}
 
         public int CodigoCliente
         {
