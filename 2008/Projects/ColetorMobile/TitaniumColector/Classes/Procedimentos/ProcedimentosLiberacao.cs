@@ -14,6 +14,7 @@ namespace TitaniumColector.Classes.Procedimentos
         private static Double totalItens;
         private static Double totalPecas;
         private static Double qtdPecasItem;
+        private static Int32 qtdVolumes;
         private static Int32 proximaEtiqueta;
         private static List<Etiqueta> listEtiquetasLidas;
         private static List<Etiqueta> listEtiquetas;
@@ -54,6 +55,34 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
+        public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens,Int32 qtdVolumes)
+        {
+            TotalItens = tItens;
+            TotalPecas = tPecas;
+            qtdPecasItem = pecasItens;
+
+            if (ListEtiquetasGeradas != null)
+            {
+                ListEtiquetasGeradas.Clear();
+
+            }
+            else
+            {
+                listEtiquetasLidas = new List<Etiqueta>();
+            }
+
+            ProximaEtiqueta = 0;
+
+            if (ListEtiquetasGeradas != null)
+            {
+                ListEtiquetasGeradas.Clear();
+            }
+
+            if (arrayStringToEtiqueta != null)
+            {
+                arrayStringToEtiqueta = null;
+            }
+        }
          /// <summary>
          /// Não altera o total de peças e o total de itens atualmente setados.
          /// </summary>
@@ -98,6 +127,12 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             get { return qtdPecasItem; }
  
+        }
+
+        public static Int32 QtdVolumes
+        {
+            get { return ProcedimentosLiberacao.qtdVolumes; }
+            set { ProcedimentosLiberacao.qtdVolumes = value; }
         }
 
         public static Double subtrairQtdPecasItem(Double value)
@@ -300,7 +335,7 @@ namespace TitaniumColector.Classes.Procedimentos
                             tbLote.Text = objEtiqueta.LoteEtiqueta;
                             tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
                             tbQuantidade.Text = (subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)).ToString();
-
+                            objEtiqueta.VolumeEtiqueta++;
                             addToListEtiquetasLidas(objEtiqueta);
                             ProximaEtiqueta += 1;
                         }
@@ -385,7 +420,6 @@ namespace TitaniumColector.Classes.Procedimentos
                 if (ProcedimentosLiberacao.TotalPecas > 0 && (ProcedimentosLiberacao.TotalPecas - qtd >= 0))
                 {
                     ProcedimentosLiberacao.TotalPecas -= qtd;
-                    //lb.Text = ProcedimentosLiberacao.TotalPecas.ToString() + " pçs";
                     return true;
                 }
                 else
@@ -412,7 +446,6 @@ namespace TitaniumColector.Classes.Procedimentos
                 if (ProcedimentosLiberacao.TotalItens > 0 && (ProcedimentosLiberacao.TotalItens - qtd >= 0))
                 {
                     ProcedimentosLiberacao.TotalItens -= qtd;
-                    //lb.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
                     return true;
                 }
                 else

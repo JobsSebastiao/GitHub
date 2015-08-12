@@ -29,7 +29,7 @@ namespace TitaniumColector.Classes
 
             StringBuilder sbSql01 = new StringBuilder();
             sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
+            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
             sql01 = sbSql01.ToString();
             
@@ -41,7 +41,7 @@ namespace TitaniumColector.Classes
                 while ((dr.Read()))
                 {
                     objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"],(Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"]);
+                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
 
                 }
             }
@@ -195,10 +195,10 @@ namespace TitaniumColector.Classes
             StringBuilder sbQuery = new StringBuilder();
             sbQuery.Append("SELECT PROP.codigoPROPOSTA AS CodProp, PROP.numeroPROPOSTA as NumProp, PROP.razaoclientePROPOSTA AS nomeCLIENTE, ");
             sbQuery.Append("SUM(ITEMPROP.quantidadeITEMPROPOSTA) AS qtdPECAS, ");
-            sbQuery.Append("COUNT(*) AS qtdITENS ");
+            sbQuery.Append("COUNT(*) AS qtdITENS,PROP.volumesPROPOSTA AS qtdVOLUMES ");
             sbQuery.Append("FROM tb0001_Propostas AS PROP ");        
             sbQuery.Append("INNER JOIN tb0002_ItensProposta AS ITEMPROP ON PROP.codigoPROPOSTA = ITEMPROP.propostaITEMPROPOSTA ");
-            sbQuery.Append("GROUP BY PROP.codigoPROPOSTA, PROP.numeroPROPOSTA, PROP.razaoclientePROPOSTA ");
+            sbQuery.Append("GROUP BY PROP.codigoPROPOSTA, PROP.numeroPROPOSTA, PROP.razaoclientePROPOSTA,PROP.volumesPROPOSTA");
             sbQuery.ToString();
 
              SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sbQuery.ToString());
@@ -212,6 +212,7 @@ namespace TitaniumColector.Classes
                     list.Add(dr["nomeCLIENTE"].ToString());
                     list.Add(dr["qtdPECAS"].ToString());
                     list.Add(dr["qtdITENS"].ToString());
+                    list.Add(dr["qtdVOLUMES"].ToString());
 
                 }
             }
@@ -233,7 +234,7 @@ namespace TitaniumColector.Classes
 
             StringBuilder sbQuery = new StringBuilder();
 
-            sbQuery.Append(" SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            sbQuery.Append(" SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.volumesPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
@@ -259,7 +260,7 @@ namespace TitaniumColector.Classes
                     {
                         int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao);
+                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
 
                     }
 
@@ -318,7 +319,7 @@ namespace TitaniumColector.Classes
             //sql01 =  sbQuery.ToString();
 
             sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
-			sbQuery.Append("TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
+			sbQuery.Append("TB_PROP.volumesPROPOSTA,"); 
 			sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,"); 
 			sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
 			sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
@@ -327,7 +328,7 @@ namespace TitaniumColector.Classes
             sbQuery.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO ");
             sbQuery.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0 ");
             sbQuery.Append(" GROUP BY TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
-			sbQuery.Append("TB_PROP.ordemseparacaoimpressaPROPOSTA,"); 
+			sbQuery.Append("TB_PROP.volumesPROPOSTA,"); 
 			sbQuery.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sbQuery.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,"); 
 			sbQuery.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
@@ -345,9 +346,8 @@ namespace TitaniumColector.Classes
                     i++;
                     if (i == 1)
                     {
-                        int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], (Proposta.statusOrdemSeparacao)statusOrdemSeparacao);
+                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
 
                     }
 
@@ -391,7 +391,7 @@ namespace TitaniumColector.Classes
             Object obj=null;
             StringBuilder sbQuery = new StringBuilder();
 
-            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
+            sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sbQuery.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sbQuery.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,");
@@ -461,7 +461,7 @@ namespace TitaniumColector.Classes
 
             StringBuilder sbSql01 = new StringBuilder();
             sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,ordemseparacaoimpressaPROPOSTA");
+            sbSql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
             sql01 = sbSql01.ToString();
 
@@ -474,7 +474,9 @@ namespace TitaniumColector.Classes
                 {
                    
                     this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], (int)(Proposta.statusOrdemSeparacao)dr["ordemseparacaoimpressaPROPOSTA"], MainConfig.CodigoUsuarioLogado);
+                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"],
+                                             Convert.ToInt32(dr["volumesPROPOSTA"]),
+                                             MainConfig.CodigoUsuarioLogado);
 
                 }
             }
@@ -494,24 +496,27 @@ namespace TitaniumColector.Classes
         /// <param name="ordemseparacaoimpresaProposta">Status 0 ou 1</param>
         /// <param name="usuarioLogado">Usuário logado</param>
         public void insertProposta(Int64 codigoProposta, string numeroProposta, string dataliberacaoProposta, Int32 clienteProposta,
-                                    string razaoEmpreza, int ordemseparacaoimpresaProposta, int usuarioLogado)
+                                    string razaoEmpresa,int volumesProposta, int usuarioLogado)
         {
 
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
 
             //Query de insert na Base Mobile
             StringBuilder query = new StringBuilder();
-            query.Append("Insert INTO tb0001_Propostas VALUES (");
+            query.Append("Insert INTO tb0001_Propostas");
+            query.Append("(codigoPROPOSTA,numeroPROPOSTA,dataliberacaoPROPOSTA,clientePROPOSTA,razaoclientePROPOSTA,volumesPROPOSTA,operadorPROPOSTA)");
+            query.Append(" VALUES (");
             query.AppendFormat("{0},", codigoProposta);
             query.AppendFormat("\'{0}\',", numeroProposta);
             query.AppendFormat("\'{0}\',", dataliberacaoProposta);
             query.AppendFormat("{0},", clienteProposta);
-            query.AppendFormat("\'{0}\',", razaoEmpreza);
-            query.AppendFormat("{0},", ordemseparacaoimpresaProposta);
+            query.AppendFormat("\'{0}\',", razaoEmpresa);
+            query.AppendFormat("{0},",volumesProposta);
             query.AppendFormat("{0})", usuarioLogado);
             sql01 = query.ToString();
 
             CeSqlServerConn.execCommandSqlCe(sql01);
+
         }
 
         /// <summary>
@@ -541,7 +546,6 @@ namespace TitaniumColector.Classes
                     query.AppendFormat("{0},", (int)item.StatusSeparado);
                     query.AppendFormat("{0},", item.CodigoProduto);
                     query.AppendFormat("{0})", item.LotereservaItemProposta);
-                    //query.AppendFormat("{0})", item.CodigoLocalLote);
                     sql01 = query.ToString();
 
                     CeSqlServerConn.execCommandSqlCe(sql01);
@@ -666,6 +670,41 @@ namespace TitaniumColector.Classes
             }
         }
 
+        public void insertSequencia(List<Etiqueta> listEtiquetas) 
+        {
+            try
+            {
+                //Limpa a tabela..
+                CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0004_Etiquetas");
+
+                foreach (var item in listEtiquetas)
+                {
+                    //INSERT BASE MOBILE
+                    StringBuilder query = new StringBuilder();
+                    query.Append(" INSERT INTO tb0004_Etiquetas ");
+                    query.Append("(itempropostaETIQUETA, volumeETIQUETA, quantidadeETIQUETA, sequenciaETIQUETA)");
+                    query.Append("VALUES (");
+                    query.AppendFormat("{0},", item.Ean13Etiqueta);
+                    query.AppendFormat("\'{0}\',", item.VolumeEtiqueta);
+                    query.AppendFormat("\'{0}\',", item.QuantidadeEtiqueta);
+                    query.AppendFormat("\'{0}\')", item.SequenciaEtiqueta);
+                    sql01 = query.ToString();
+
+                    CeSqlServerConn.execCommandSqlCe(sql01);
+                }
+
+            }
+            catch (SqlException sqlEx)
+            {
+                System.Windows.Forms.MessageBox.Show("Erro durante a carga de dados na base Mobile tb0004_Etiquetas.\n Erro : " + sqlEx.Message);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         #endregion 
 
     #region "DELETES"
@@ -673,7 +712,7 @@ namespace TitaniumColector.Classes
 
         public void clearBaseMobile()
         {
-            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0004_Sequencia");
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0004_Etiquetas");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0003_Produtos");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
@@ -758,7 +797,7 @@ namespace TitaniumColector.Classes
                 criarTabelas();
             }
         }
-
+ 
         /// <summary>
         /// Cria tabelas na base mobile.
         /// </summary>
@@ -774,7 +813,7 @@ namespace TitaniumColector.Classes
             sbQuery.Append("dataliberacaoPROPOSTA nvarchar(20) not null,");
             sbQuery.Append("clientePROPOSTA int not null,");
             sbQuery.Append("razaoclientePROPOSTA nvarchar(200),");
-            sbQuery.Append("ordemseparacaoimpressaPROPOSTA smallint,");
+            sbQuery.Append("volumesPROPOSTA smallint,");
             sbQuery.Append("operadorPROPOSTA int) ");
             CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
 
@@ -803,12 +842,14 @@ namespace TitaniumColector.Classes
             sbQuery.Append("nomelocalPRODUTO			NVARCHAR(100) )");
             CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
 
-            //TABELAS tb0004_SEQUENCIA 
+            //TABELAS tb0004_ETIQUETA
             sbQuery.Length = 0;
-            sbQuery.Append("CREATE TABLE tb0004_Sequencia (");
-            sbQuery.Append("codigoSEQUENCIA					INT NOT NULL CONSTRAINT PKSequencia PRIMARY KEY,");
-            sbQuery.Append("itempropostaSEQUENCIA			INT not null,");
-            sbQuery.Append("sequenciaSEQUENCIA				INT NOT NULL)");
+            sbQuery.Append("CREATE TABLE tb0004_Etiquetas (");
+            sbQuery.Append("codigoETIQUETA				    INT IDENTITY(1,1) NOT NULL CONSTRAINT PKSequencia PRIMARY KEY,");
+            sbQuery.Append("itempropostaETIQUETA			INT NOT NULL,");
+            sbQuery.Append("volumeETIQUETA	      			INT NOT NULL,");
+            sbQuery.Append("quantidadeETIQUETA	      		REAL NOT NULL,");
+            sbQuery.Append("sequenciaETIQUETA    			INT NOT NULL)");
             CeSqlServerConn.execCommandSqlCe(sbQuery.ToString());
 
         }

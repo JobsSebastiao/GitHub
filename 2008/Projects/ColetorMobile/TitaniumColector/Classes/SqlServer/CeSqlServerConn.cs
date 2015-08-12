@@ -161,10 +161,10 @@ namespace TitaniumColector.Classes.SqlServer
                 cmd.ExecuteNonQuery();
                 closeConnCe();
             }
-            catch (SqlCeException)
+            catch (Exception e )
             {
                 closeConnCe();
-                throw;
+                throw e as SqlCeException;
             }
 	    }
 

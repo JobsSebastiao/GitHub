@@ -77,7 +77,10 @@ namespace TitaniumColector.Forms
                 objProposta = objTransacoes.fillTop1PropostaServidor();
 
                 //Realiza o Insert na Base Mobile
-                objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao, objProposta.CodigoCliente, objProposta.RazaoCliente, (int)objProposta.StatusOrdemSeparacao, MainConfig.CodigoUsuarioLogado);
+                objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao,
+                                             objProposta.CodigoCliente, objProposta.RazaoCliente,
+                                             objProposta.Volumes,
+                                              MainConfig.CodigoUsuarioLogado);
 
                 //Recupera List com itens da proposta
                 this.listaProdutoProposta = objTransacoes.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
@@ -85,7 +88,7 @@ namespace TitaniumColector.Forms
                 //Insert na Base Mobile tabela tb0002_ItensProsposta
                 objTransacoes.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
 
-                //Recupera informações sobre os produtos esistentes na proposta
+                //Recupera informações sobre os produtos existentes na proposta
                 this.listaProduto = objTransacoes.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
 
                 //Insert na base Mobile tabela tb0003_Produtos
@@ -138,10 +141,10 @@ namespace TitaniumColector.Forms
                 proposta = objTransacoes.fillPropostaWithTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
-                proposta.totalItensPecasProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
+                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), Convert.ToInt32(listInfoProposta[5]));
 
                 //Set os valores para os atributos auxiliares.
-                ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade);
+                ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
 
                 //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
                 this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
@@ -309,7 +312,6 @@ namespace TitaniumColector.Forms
         private bool nextItemProposta()
         {
             bool hasItem = false;
-
             objTransacoes = new TransacoesDados();
 
             this.clearParaProximoItem();
@@ -321,14 +323,18 @@ namespace TitaniumColector.Forms
             ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
             //grava informações do item na base de dados mobile
             objTransacoes.updateItemProposta(objProposta.ListObjItemProposta[0]);
+            objTransacoes.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
 
             //carrega próximo item
             if (ProcedimentosLiberacao.TotalItens > 0)
             {
-                if (objTransacoes.fillTop1ItemProposta() != null) 
+                ProdutoProposta prod = objTransacoes.fillTop1ItemProposta();
+
+                if (prod != null) 
                 {
                     hasItem = true;
-                    objProposta.setNextItemProposta(objTransacoes.fillTop1ItemProposta());
+
+                    objProposta.setNextItemProposta(prod);
                 }
                 else 
                 {

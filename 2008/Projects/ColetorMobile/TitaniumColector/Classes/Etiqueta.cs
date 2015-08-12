@@ -13,6 +13,7 @@ namespace TitaniumColector.Classes
         private String lote;
         private Int32 sequencia;
         private Double quantidade;
+        private Int32 volumeEtiqueta;
 
     #region "CONTRUTORES"
         public Etiqueta() { }
@@ -105,6 +106,12 @@ namespace TitaniumColector.Classes
         {
             get { return descricaoProduto; }
             set { descricaoProduto = value; }
+        }
+
+        public Int32 VolumeEtiqueta
+        {
+            get { return volumeEtiqueta; }
+            set { volumeEtiqueta = value; }
         }
 
 
@@ -231,6 +238,7 @@ namespace TitaniumColector.Classes
         {
             return base.GetHashCode();
         }
+
     #endregion
 
     }

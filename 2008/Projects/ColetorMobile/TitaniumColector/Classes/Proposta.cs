@@ -15,12 +15,11 @@ namespace TitaniumColector.Classes
         private int codigoCliente;
         private Double totalItens;
         private Double totalpecas;
-        //private statusOrdemSeparacao ordemSeparacao;
+        private Int32 qtdVolumesProposta;
         private List<ProdutoProposta> listItemProposta;
 
 
-
-    #region "CONTRUTORES" 
+    #region "CONSTRUCTORS" 
 
         public Proposta() 
         { }
@@ -54,14 +53,14 @@ namespace TitaniumColector.Classes
         /// <param name="razaoCliente">Razão cliente Proposta</param>
         /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
         public Proposta(Int64 codigoProposta,string numeroProposta,string dataLiberacaoProposta,int codigoCliente,
-                        string razaoCliente,statusOrdemSeparacao statusOrdemSeparacao)
+                        string razaoCliente,Int32 qtdVolumes)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
             this.DataLiberacao = dataLiberacaoProposta;
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
-            this.StatusOrdemSeparacao = statusOrdemSeparacao;
+            this.Volumes = qtdVolumes;
         }
 
 
@@ -77,15 +76,15 @@ namespace TitaniumColector.Classes
         /// <param name="totalItensProposta">Total de itens na Proposta</param>
         /// <param name="totalPecasProposta">Total de Pecas na Proposta</param>
         public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
-                        string razaoCliente, statusOrdemSeparacao statusOrdemSeparacao,Double totalItensProposta,Double totalPecasProposta)
+                        string razaoCliente, Int32  qtdVolumes,Double totalItensProposta,Double totalPecasProposta)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
             this.DataLiberacao = dataLiberacaoProposta;
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
-            this.StatusOrdemSeparacao = statusOrdemSeparacao;
-            this.totalItensPecasProposta(totalItensProposta, totalPecasProposta);
+            //this.Volumes = QtdVolumes;
+            this.setTotalValoresProposta(totalItensProposta, totalPecasProposta,qtdVolumes);
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace TitaniumColector.Classes
                 this.DataLiberacao = ((Proposta)obj).DataLiberacao;
                 this.CodigoCliente = ((Proposta)obj).CodigoCliente;
                 this.RazaoCliente = ((Proposta)obj).RazaoCliente;
-                this.StatusOrdemSeparacao = ((Proposta)obj).StatusOrdemSeparacao;
+                this.Volumes = ((Proposta)obj).Volumes;
                 this.ListObjItemProposta = listItens;
             }
 
@@ -120,14 +119,14 @@ namespace TitaniumColector.Classes
         /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
         /// <param name="listItemProposta">List de objetos do tipo ProdutoProposta</param>
         public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
-                string razaoCliente, statusOrdemSeparacao statusOrdemSeparacao,List<ProdutoProposta> listItemProposta)
+                string razaoCliente, Int32 qtdVolumes,List<ProdutoProposta> listItemProposta)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
             this.DataLiberacao = dataLiberacaoProposta;
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
-            this.StatusOrdemSeparacao = statusOrdemSeparacao;
+            this.Volumes = qtdVolumesProposta;
             this.ListObjItemProposta = listItemProposta;
 
         } 
@@ -160,11 +159,11 @@ namespace TitaniumColector.Classes
             set { dataLiberacao = value; }
         }
 
-        //public statusOrdemSeparacao StatusOrdemSeparacao
-        //{
-        //    get{ return ordemSeparacao; }
-        //    set { ordemSeparacao = value; }
-        //}
+        public Int32  Volumes
+        {
+            get { return qtdVolumesProposta; }
+            set { qtdVolumesProposta = value; }
+        }
 
         public int CodigoCliente
         {
@@ -255,33 +254,16 @@ namespace TitaniumColector.Classes
         /// <summary>
         /// Calcula o total de peças e de itens de uma proposta  recebendo os valores como parâmetro.
         /// </summary>
-        public void totalItensPecasProposta(Double totItens,Double totPecas)
+        public void setTotalValoresProposta(Double totItens,Double totPecas,int volumes)
         {    
             this.setTotalItens(totItens);
             this.setTotalPecas(totPecas);
+            this.Volumes = volumes;
         }
 
     #endregion 
 
-
-        /// <summary>
-        /// Altera o status da Ordem de separação Entre Impressa e não Impressa.
-        /// </summary>
-        /// <param name="proposta"></param>
-        public void atualizaStatusOrdemSeparacao(Proposta proposta) 
-        {
-            if (proposta.GetType() == typeof(Proposta)) 
-            {
-                if (proposta.StatusOrdemSeparacao == statusOrdemSeparacao.NAOIMPRESA)
-                {
-                    proposta.StatusOrdemSeparacao = statusOrdemSeparacao.IMPRESA;
-                }
-                else 
-                {
-                    proposta.StatusOrdemSeparacao = statusOrdemSeparacao.NAOIMPRESA;
-                }
-            }
-        }
+    #region"GENERAL METHODS"
 
         /// <summary>
         /// Limpa a list de itens da proposta e adiciona o item passado como parâmetro.
@@ -318,9 +300,24 @@ namespace TitaniumColector.Classes
                    "\n Data Liberação : " + DataLiberacao +
                    "\n Código Cliente : " + CodigoCliente +
                    "\n Razao Cliente : " + RazaoCliente +
-                   "\n StatusOrdemSeparação : " + StatusOrdemSeparacao +
+                   "\n numeroVolumes : " + Volumes +
                    "\n Quantidade de Itens : " + ListObjItemProposta.Count();
         }
+
+        public void decrementaVolume()
+        {
+            if((this.Volumes >0) && this.Volumes - 1 >= 0)
+            {
+                this.Volumes--;
+            }
+        }
+
+        public void incrementaVolume()
+        {
+           this.Volumes++;
+        }
+
+    #endregion
 
     }
 }
