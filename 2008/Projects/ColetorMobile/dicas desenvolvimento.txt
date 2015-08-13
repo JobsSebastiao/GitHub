@@ -1,65 +1,172 @@
-///
-///
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write(posicaoNumeroTriangulo("adfasf"));
+        }
 
-Desenvolver métodos para criação d a base mobile;
+        public static int posicaoNumeroTriangulo(String palavra) 
+        {
+            ///array com lista de números triângulo
+            int[] numsTriangulo = numerosTriangulo();
 
-	
-	
-	 SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, 
-	 TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA, TB_ITEMPROPOP.codigoITEMPROPOSTA, 
-	 TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA, TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA, TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, 
-	 TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO, TB_PROD.nomelocalPRODUTO 
-	 FROM   tb0001_Propostas AS TB_PROP  
-	 INNER JOIN tb0002_ItensProposta AS TB_ITEMPROPOP ON TB_PROP.codigoPROPOSTA = TB_ITEMPROPOP.propostaITEMPROPOSTA 
-	 INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO 
-	 WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0 
-	 ORDER BY TB_PROD.nomelocalPRODUTO ASC
+            if (numsTriangulo.Contains( valorTexto(palavra)))
+            {
+                return Array.IndexOf(numsTriangulo, valorTexto(palavra)) + 1;
+            }
+            else
+            {
+                return -1;
+            }
 
-	 
-	 codigoPROPOSTA	int	4	No	No	Yes
-	 numeroPROPOSTA	nvarchar	20	Yes	No	No
-	 dataliberacaoPROPOSTA	nvarchar	20	Yes	No	No
-	 clientePROPOSTA	int	4	Yes	No	No
-	 razaoclientePROPOSTA	nvarchar	100	Yes	No	No
-	 ordemseparacaoimpressaPROPOSTA	smallint	2	Yes NO	No
-	 operadorPROPOSTA	int	4	Yes	No	No
-	 
-	 
-	 
-	CREATE TABLE tb0001_Propostas 
-	(
-		 codigoPROPOSTA int not null,
-		 numeroPROPOSTA nvarchar(20) not null,
-		 dataliberacaoPROPOSTA nvarchar(20) not null,
-		 clientePROPOSTA int not null,
-		 razaoclientePROPOSTA nvarchar(200),
-		 ordemseparacaoimpressaPROPOSTA smallint,
-		 operadorPROPOSTA int 
-		 Primary key codigoPROPOSTA
-	 )
+        }
+        /// <summary>
+        /// Gera um array preenchido com uma sequência de números Triângulo
+        /// </summary>
+        /// <returns></returns>
+        public static int[] numerosTriangulo()
+        {    
+            int[] numsTriangulo = null;
 
-	 
-	 codigoITEMPROPOSTA	int	4	Yes	No	No
-	 propostaITEMPROPOSTA	int	4	Yes	No	No
-	 quantidadeITEMPROPOSTA	real	4	Yes	No	No
-	 statusseparadoITEMPROPOSTA	smallint	2	Yes	No	No
-	 codigoprodutoITEMPROPOSTA	int	4	Yes	No	No
-	 lotereservaITEMPROPOSTA	int	4	Yes	No	No
-	 localloteITEMPROPOSTA	int	4	Yes	No	No
-	 
-	 
-	 codigoPRODUTO	int	4	Yes	No	No
-	 ean13PRODUTO	nvarchar	15	Yes	No	No
-	 partnumberPRODUTO	nvarchar	100	Yes	No	No
-	 descricaoPRODUTO	nvarchar	100	Yes	No	No
-	 codigolotePRODUTO	int	4	Yes	No	No
-	 identificacaolotePRODUTO	nvarchar	100	Yes	No	No
-	 codigolocalPRODUTO	int	4	Yes	No	No
-	 nomelocalPRODUTO	nvarchar	100	Yes	No	No
-	 
-	 
-	 asp ordem de separação.
-	 
+            String nums = "";
+
+            for (int i = 1; i < 50; i++ )
+            {
+                nums += (i * (i + 1) / 2).ToString() + ",";
+            }
+
+            string retirarUltimaVirgula = nums.Substring(0,nums.Length-1);
+
+            string[] numsArray = nums.Split(',');
+
+            numsTriangulo = new int[numsArray.Length-1];
+
+            for (int i = 0; i < numsArray.Length-1;i++ )
+            {
+
+                numsTriangulo[i] =Convert.ToInt32(numsArray[i]);
+            }
+
+            return numsTriangulo;
+
+        }
+
+        /// <summary>
+        /// Caucula o valor para o texto informado.
+        /// </summary>
+        /// <param name="texto"></param>
+        /// <returns></returns>
+        public static int valorTexto(String texto)
+        {
+            int sum = 0;
+
+            char letra = ' ';
+
+            for (int i = 0; i < texto.Length; i++ )
+            {
+                //captura cada letra
+               letra = Convert.ToChar(texto.Substring(i,1).ToUpper().ToString());
+                //retirna o seu valor e realiza a soma 
+                sum += Convert.ToInt32(retornaValorLetra(letra));
+            }
+
+            return sum;
+        }
+
+        public static int retornaValorLetra(char letra)
+        {
+
+            switch (letra)
+            {
+                case 'A':
+                    return Convert.ToInt32(LETTERS.A);
+                case 'B':
+                    return Convert.ToInt32(LETTERS.B);
+                case 'C':
+                    return Convert.ToInt32(LETTERS.C);
+                case 'D':
+                    return Convert.ToInt32(LETTERS.D);
+                case 'E':
+                    return Convert.ToInt32(LETTERS.E);
+                case 'F':
+                    return Convert.ToInt32(LETTERS.F);
+                case 'G':
+                    return Convert.ToInt32(LETTERS.G);
+                case 'H':
+                    return Convert.ToInt32(LETTERS.H);
+                case 'I':
+                    return Convert.ToInt32(LETTERS.I);
+                case 'J':
+                    return Convert.ToInt32(LETTERS.J);
+                case 'K':
+                    return Convert.ToInt32(LETTERS.K);
+                case 'L':
+                    return Convert.ToInt32(LETTERS.L);
+                case 'M':
+                    return Convert.ToInt32(LETTERS.M);
+                case 'N':
+                    return Convert.ToInt32(LETTERS.N);
+                case 'O':
+                    return Convert.ToInt32(LETTERS.O);
+                case 'P':
+                    return Convert.ToInt32(LETTERS.P);
+                case 'Q':
+                    return Convert.ToInt32(LETTERS.Q);
+                case 'R':
+                    return Convert.ToInt32(LETTERS.R);
+                case 'S':
+                    return Convert.ToInt32(LETTERS.S);
+                case 'T':
+                    return Convert.ToInt32(LETTERS.T);
+                case 'U':
+                    return Convert.ToInt32(LETTERS.U);
+                case 'V':
+                    return Convert.ToInt32(LETTERS.V);
+                case 'W':
+                    return Convert.ToInt32(LETTERS.W);
+                case 'X':
+                    return Convert.ToInt32(LETTERS.X);
+                case 'Y':
+                    return Convert.ToInt32(LETTERS.Y);
+                case 'Z':
+                    return Convert.ToInt32(LETTERS.Z);
+                default:
+                    return 0;
+            }
+        }
+
+        enum LETTERS
+        {
+        A=1,
+        B=2,
+        C=3,
+        D=4,
+        E=5,
+        F=6,
+        G=7,
+        H=8,
+        I=9,
+        J=10,
+        K=11,
+        L=12,
+        M=13,
+        N=14,
+        O=15,
+        P=16,
+        Q=17,
+        R=18,
+        S=19,
+        T=20,
+        U=21,
+        V=22,
+        W=23,
+        X=24,
+        Y=25,
+        Z=26
+
+        }
+    }
+}
 	 
 	 
 	 
