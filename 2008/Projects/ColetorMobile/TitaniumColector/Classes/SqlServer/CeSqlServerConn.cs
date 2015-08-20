@@ -5,13 +5,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Data.SqlServerCe;
-using System.Windows.Forms;
+using System.Windows.Forms; 
 
 namespace TitaniumColector.Classes.SqlServer
 {
     static class CeSqlServerConn
     {
-
 
 	    private static SqlCeConnection sqlCeConn = new SqlCeConnection();
         private static SqlCeTransaction transacaoCe;
@@ -56,6 +55,7 @@ namespace TitaniumColector.Classes.SqlServer
 #endregion
 
         /// <summary>
+        /// 
         /// Cria uma conexão com a base de dados Mobile.
         /// </summary>
         /// <returns>Connection</returns>
@@ -146,7 +146,7 @@ namespace TitaniumColector.Classes.SqlServer
                 SqlCeDataReader dr = cmd.ExecuteReader();
                 return dr;
             }
-            catch (SqlCeException)
+            catch (Exception)
             {
                 throw;
             }		   

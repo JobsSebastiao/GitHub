@@ -1,0 +1,10 @@
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ColetorMobileTecware.frmLogin.resources
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ColetorMobileTecware.Properties.Resources.resources
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ColetorMobileTecware.csproj.GenerateResource.Cache
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Debug\ColetorMobileTecware.exe
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Debug\ColetorMobileTecware.pdb
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Debug\System.Data.SqlClient.dll
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Debug\System.Data.SqlServerCe.dll
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ColetorMobileTecware.exe
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Debug\ColetorMobileTecware.pdb
