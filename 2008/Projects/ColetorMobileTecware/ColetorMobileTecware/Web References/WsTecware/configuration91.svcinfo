@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WsColetorSoap" contract="WsTecware.WsColetorSoap" bindingType="basicHttpBinding" address="http://tecwarebr.dyndns.org/WsTecware/WsColetor.asmx" bindingConfiguration="WsColetorSoap">
+    <endpoint name="WsColetorSoap" contract="WsTecware.WsColetorSoap" bindingType="basicHttpBinding" address="http://tecwarebr.dyndns.org:8080/WsTecware/WsColetor.asmx" bindingConfiguration="WsColetorSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://tecwarebr.dyndns.org/WsTecware/WsColetor.asmx</serializedValue>
+          <serializedValue>http://tecwarebr.dyndns.org:8080/WsTecware/WsColetor.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />
