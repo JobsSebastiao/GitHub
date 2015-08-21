@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="Assinador_Gnre_GnreConfigUF_GnreConfigUF" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:9081/gnre-ws/services/GnreConfigUF</Value>
+    </Setting>
+    <Setting Name="Assinador_Gnre_br_gov_pe_gnre_www_GnreLoteRecepcao" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:9081/gnre-ws/services/GnreLoteRecepcao</Value>
+    </Setting>
+    <Setting Name="Assinador_Gnre_br_gov_pe_gnre_www_GnreResultadoLote" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:9081/gnre-ws/services/GnreResultadoLote</Value>
+    </Setting>
+    <Setting Name="Assinador_Gnre_GnreConfigUF_h_GnreConfigUF" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://www.gnre-h.pe.gov.br/gnreWS/services/GnreConfigUF</Value>
+    </Setting>
+    <Setting Name="Assinador_Gnre_GnreResultadoLote_h_GnreResultadoLote" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://www.gnre-h.pe.gov.br/gnreWS/services/GnreResultadoLote</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

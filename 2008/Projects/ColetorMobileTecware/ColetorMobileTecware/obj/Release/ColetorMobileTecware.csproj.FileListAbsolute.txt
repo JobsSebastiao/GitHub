@@ -1,0 +1,10 @@
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Release\ColetorMobileTecware.exe
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Release\ColetorMobileTecware.pdb
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ResolveAssemblyReference.cache
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ColetorMobileTecware.frmLogin.resources
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ColetorMobileTecware.Properties.Resources.resources
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ColetorMobileTecware.csproj.GenerateResource.Cache
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ColetorMobileTecware.exe
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\obj\Release\ColetorMobileTecware.pdb
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Release\System.Data.SqlClient.dll
+C:\Users\sebastiao.martins\Documents\VisualStudio\GitHub\2008\Projects\ColetorMobileTecware\ColetorMobileTecware\bin\Release\System.Data.SqlServerCe.dll

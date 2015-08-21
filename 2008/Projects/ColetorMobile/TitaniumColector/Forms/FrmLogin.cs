@@ -40,10 +40,14 @@ namespace TitaniumColector
                 //Configura string de conexão E/OU cria a base mobile e todas as suas tabelas.
                 TransacoesDados.configurarBaseMobile();
                 //Testa a conexão com o Servidor
-                if (SqlServerConn.testConnection() == false)
-                {
-                    throw new Exception();
-                }
+
+
+                //if (SqlServerConn.testConnection() == false)
+                //{
+                   // throw new Exception();
+                //}
+
+
                 //Configura Layout
                 this.configControls();
                 //carrega a combo de usuários.

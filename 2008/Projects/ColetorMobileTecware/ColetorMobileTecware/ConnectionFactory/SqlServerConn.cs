@@ -4,21 +4,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
 using System.Data;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Collections;
-using TitaniumColector.Utility;
-using System.IO;
-using Microsoft.VisualBasic;
-using TitaniumColector.Classes.Exceptions;
 
-
-namespace TitaniumColector.SqlServer
+namespace ColetorMobileTecware.ConnectionFactory
 {
     static class SqlServerConn
     {
-        private static SqlConnection  conn = null;
+        private static SqlConnection conn = null;
         private static SqlTransaction transaction = null;
         private static string strPassword;
         private static string strUserId;
@@ -64,7 +55,7 @@ namespace TitaniumColector.SqlServer
             {
                 if ((!string.IsNullOrEmpty(value)))
                 {
-                    strUserId =  value.Trim();
+                    strUserId = value.Trim();
                 }
             }
         }
@@ -106,9 +97,17 @@ namespace TitaniumColector.SqlServer
         /// <summary>
         /// Recupera todos aos parâmetros informados e configura a string de conexão.
         /// </summary>
-        private static void makeStrConnection()
+        public static void makeStrConnection()
         {
             SqlServerConn.strConnection = "Password=" + Password + ";Persist Security Info=" + Security + ";User ID=" + UserId + ";Initial Catalog=" + Catalog + ";Data Source=" + DataSource;
+        }
+
+        /// <summary>
+        /// Recupera todos aos parâmetros informados e configura a string de conexão.
+        /// </summary>
+        public static void makeStrConnection(bool sim)
+        {
+            SqlServerConn.strConnection = "Password=" + "tec9TIT16" + ";Persist Security Info=" + "false" + ";User ID=" + "sa" + ";Initial Catalog=" + "TESTE3" + ";Data Source=" + "rainha7.ddns.com.br";
         }
 
         public static SqlConnection openConn()
@@ -132,7 +131,7 @@ namespace TitaniumColector.SqlServer
         /// </summary>
         /// <returns>True caso a conexão esteja OK.</returns>
         /// <exception cref="System.SqlException">Caso não seja possível se comunicar com o banco de dados.</exception>
-        public static bool testConnection() 
+        public static bool testConnection()
         {
             bool result = false;
 
@@ -143,7 +142,7 @@ namespace TitaniumColector.SqlServer
                     result = true;
                 }
 
-                if (result == true) 
+                if (result == true)
                 {
                     closeConn();
 
@@ -156,12 +155,12 @@ namespace TitaniumColector.SqlServer
 
                 return result;
             }
-            catch(SqlException) 
+            catch (SqlException)
             {
                 conn = null;
                 throw;
             }
-            
+
         }
 
         public static void closeConn()
@@ -175,7 +174,7 @@ namespace TitaniumColector.SqlServer
             }
             catch (Exception ex)
             {
-                throw new Exception("Ocorre um problema na conexão com a base de dados." +  "Erro : " + ex.Message);
+                throw new Exception("Ocorre um problema na conexão com a base de dados." + "Erro : " + ex.Message);
             }
 
         }
@@ -211,7 +210,7 @@ namespace TitaniumColector.SqlServer
             {
                 if ((sqlEx.Number == 11))
                 {
-                    throw new Exception("Não foi possível se comunicar com a base de dados devido problemas com a rede." + Environment.NewLine  + "Erro : " + sqlEx.Message + Environment.NewLine + "Number:" + sqlEx.Number);
+                    throw new Exception("Não foi possível se comunicar com a base de dados devido problemas com a rede." + Environment.NewLine + "Erro : " + sqlEx.Message + Environment.NewLine + "Number:" + sqlEx.Number);
                 }
                 else
                 {
@@ -241,7 +240,8 @@ namespace TitaniumColector.SqlServer
             }
             catch (Exception ex)
             {
-                throw new SqlQueryExceptions("Erro:" + ex.Message);
+                string text= ex.Message;
+                return null;
             }
         }
 
@@ -252,9 +252,9 @@ namespace TitaniumColector.SqlServer
                 SqlCommand cmd = new SqlCommand(sql01, openConn());
                 cmd.ExecuteNonQuery();
             }
-            catch (SqlException )
+            catch (SqlException)
             {
-                throw new SqlQueryExceptions("Error durante acesso a base de dados!!");
+                throw new Exception("Error durante acesso a base de dados!!");
             }
             finally
             {
@@ -271,7 +271,7 @@ namespace TitaniumColector.SqlServer
             {
                 if ((conn.State == ConnectionState.Open))
                 {
-                    transaction= conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                    transaction = conn.BeginTransaction(IsolationLevel.ReadCommitted);
                 }
             }
             catch (Exception ex)
@@ -305,19 +305,19 @@ namespace TitaniumColector.SqlServer
         /// <returns>Uma string contendo o texto existente no arquivo.</returns>
         /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
         /// </remarks>
-        public static string readFileStrConnection(string fileName) 
-        {
-            string pathAplicativo = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
+        //public static string readFileStrConnection(string fileName)
+        //{
+        //    string pathAplicativo = System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase);
 
-            if (File.Exists(pathAplicativo + fileName))
-            {
-                FileUtility fU = new FileUtility(pathAplicativo, fileName);
-                List<string> fileStrConn = new List<string>(fU.readTextFile());
-                string strConnection= fileStrConn[0];
-                return strConnection;
-            }
-            return null;
-        }
+        //    if (File.Exists(pathAplicativo + fileName))
+        //    {
+        //        FileUtility fU = new FileUtility(pathAplicativo, fileName);
+        //        List<string> fileStrConn = new List<string>(fU.readTextFile());
+        //        string strConnection = fileStrConn[0];
+        //        return strConnection;
+        //    }
+        //    return null;
+        //}
 
         /// <summary>
         ///  Lê um arquivo de texto que esteja no path informado no parâmetro mobilePath, e que tenha o nome especificado no parâmetro fileName
@@ -328,49 +328,49 @@ namespace TitaniumColector.SqlServer
         /// <returns> Uma string contendo o texto existente no arquivo.</returns>
         /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
         /// </remarks>
-        public static string readFileStrConnection(string mobilePath,string fileName)
-        {
-            try
-            {
-                FileUtility fU = new FileUtility(mobilePath, fileName);
-                
-                if (File.Exists(fU.getFullPath()))
-                {
-                    List<string> fileStrConn = new List<string>(fU.readTextFile());
-                    return fileStrConn[0];
-                }
-                else
-                {
-                    throw new FileNotFoundException();
-                }
-            }
-            catch (FileNotFoundException FileEx) 
-            {
-                throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Environment.NewLine + 
-                                                 "Favor contate o administrador do sistema." + Environment.NewLine + 
-                                                 "Erro :" + FileEx.Message);
+        //public static string readFileStrConnection(string mobilePath, string fileName)
+        //{
+        //    try
+        //    {
+        //        FileUtility fU = new FileUtility(mobilePath, fileName);
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Problemas durante a configuração da string de conexão." + Environment.NewLine + 
-                                    "Favor contate o administrador do sistema." + Environment.NewLine + 
-                                    "Erro :" + ex.Message);
-            }
+        //        if (File.Exists(fU.getFullPath()))
+        //        {
+        //            List<string> fileStrConn = new List<string>(fU.readTextFile());
+        //            return fileStrConn[0];
+        //        }
+        //        else
+        //        {
+        //            throw new FileNotFoundException();
+        //        }
+        //    }
+        //    catch (FileNotFoundException FileEx)
+        //    {
+        //        throw new FileNotFoundException("Problemas durante a configuração da string de conexão." + Environment.NewLine +
+        //                                         "Favor contate o administrador do sistema." + Environment.NewLine +
+        //                                         "Erro :" + FileEx.Message);
 
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Problemas durante a configuração da string de conexão." + Environment.NewLine +
+        //                            "Favor contate o administrador do sistema." + Environment.NewLine +
+        //                            "Erro :" + ex.Message);
+        //    }
+
+        //}
 
         /// <summary>
         /// Realiza o processo de configuração da string de conexão.
         /// </summary>
         /// <param name="mobilePath">Path do dispositivo onde está armazenado o arquivo de texto contendo a string de conexão.</param>
         /// <param name="fileName">Nome do arquivo de texto onde está armazenado a string de Conexão.</param>
-        public static void configuraStrConnection(string mobilePath,string fileName) 
-        {
-            string strConnection = readFileStrConnection(mobilePath,fileName);
-            string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection,FileUtility.splitType.PONTO_VIRGULA);
-            setParametersStringConnection(arrayStrConnection);
-        }
+        //public static void configuraStrConnection(string mobilePath, string fileName)
+        //{
+        //    string strConnection = readFileStrConnection(mobilePath, fileName);
+        //    string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection, FileUtility.splitType.PONTO_VIRGULA);
+        //    setParametersStringConnection(arrayStrConnection);
+        //}
 
         /// <summary>
         /// Monta a string de conexão a partir de um array contendo os dados nescessários.
@@ -415,8 +415,8 @@ namespace TitaniumColector.SqlServer
                     DataSource = item.Substring(item.IndexOf("=", 0) + 1);
                 }
             }
-	        //'Monta a string de conexão
-	        makeStrConnection();
+            //'Monta a string de conexão
+            makeStrConnection();
 
         }
 
@@ -432,13 +432,13 @@ namespace TitaniumColector.SqlServer
         /// <remarks></remarks>
         public static void setParametersStringConnection(string strPassword, string strUserID, string strInitialCatalog, string strDataSource, string booSecurity)
         {
-	        //'Monta a string de conexão
-	        Password= strPassword;
-	        UserId = strUserID;
-	        Catalog = strCatalog;
-	        DataSource = strDataSource;
-	        Security = booSecurity;
-	        makeStrConnection();
+            //'Monta a string de conexão
+            Password = strPassword;
+            UserId = strUserID;
+            Catalog = strCatalog;
+            DataSource = strDataSource;
+            Security = booSecurity;
+            makeStrConnection();
 
         }
     }  

@@ -4,22 +4,20 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DEA8317C-BAFB-4C24-8122-FFA686155EC3}</ProjectGuid>
+    <ProjectGuid>{54DAEB1F-7BBC-4611-8BBD-1A863549C3F7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TitaniumColector</RootNamespace>
-    <AssemblyName>TitaniumColector</AssemblyName>
+    <RootNamespace>ColetorMobileTecware</RootNamespace>
+    <AssemblyName>ColetorMobileTecware</AssemblyName>
     <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PlatformFamilyName>WindowsCE</PlatformFamilyName>
     <PlatformID>E2BECB1F-8C8C-41ba-B736-9BE7D946A398</PlatformID>
-    <OSVersion>5.0</OSVersion>
-    <DeployDirSuffix>TitaniumColector</DeployDirSuffix>
+    <OSVersion>5.00</OSVersion>
+    <DeployDirSuffix>ColetorMobileTecware</DeployDirSuffix>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
-    <StartupObject>
-    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,68 +45,41 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.WindowsCE.Forms" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlClient, Version=3.0.3600.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Microsoft SQL Server Compact Edition\v3.5\Devices\Client\System.Data.SqlClient.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SqlServerCe, Version=3.5.0.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL">
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Microsoft SQL Server Compact Edition\v3.5\Devices\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Etiqueta.cs" />
-    <Compile Include="Classes\Exceptions\SqlQueryExceptions.cs" />
-    <Compile Include="Classes\Procedimentos\ProcedimentosLiberacao.cs" />
-    <Compile Include="Classes\Procedimentos\TransacoesDados.cs" />
-    <Compile Include="Classes\ProdutoProposta.cs" />
-    <Compile Include="Classes\Produto.cs" />
-    <Compile Include="Classes\Proposta.cs" />
-    <Compile Include="Classes\SqlServer\CeSqlServerConn.cs" />
-    <Compile Include="Classes\Usuario.cs" />
-    <Compile Include="Forms\FrmAcao.cs">
+    <Compile Include="ConnectionFactory\CeSqlServerConn.cs" />
+    <Compile Include="ConnectionFactory\SqlServerConn.cs" />
+    <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FrmAcao.Designer.cs">
-      <DependentUpon>FrmAcao.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FrmLogin.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmLogin.Designer.cs">
+    <Compile Include="FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\SqlServer\SqlServerConn.cs" />
-    <Compile Include="Classes\Utility\FileUtility.cs" />
-    <Compile Include="Classes\Utility\MainConfig.cs" />
-    <Compile Include="Forms\FrmProposta.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FrmProposta.Designer.cs">
-      <DependentUpon>FrmProposta.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Modelo\Produto.cs" />
+    <Compile Include="Modelo\ProdutoProposta.cs" />
+    <Compile Include="Modelo\Proposta.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\FrmAcao.resx">
-      <DependentUpon>FrmAcao.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmLogin.resx">
+    <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FrmProposta.resx">
-      <DependentUpon>FrmProposta.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -121,8 +92,32 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Diagramas de Classe\ClassDiagram1.cd" />
-    <None Include="Properties\DataSources\TitaniumColector.Classes.ItemProposta.datasource" />
+    <WebReferences Include="Web References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="Web References\WsTecware\WsColetor.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferenceUrl Include="http://tecwarebr.dyndns.org:8080/WsTecware/WsColetor.asmx">
+      <UrlBehavior>Static</UrlBehavior>
+      <RelPath>Web References\WsTecware\</RelPath>
+      <UpdateFromURL>http://tecwarebr.dyndns.org:8080/WsTecware/WsColetor.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>
+      </CachedAppSettingsObjectName>
+      <CachedSettingsPropName>
+      </CachedSettingsPropName>
+    </WebReferenceUrl>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web References\WsTecware\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+    </None>
+    <None Include="Web References\WsTecware\WsColetor.disco" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

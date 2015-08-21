@@ -10,7 +10,7 @@ namespace TitaniumColector.Forms
 {
     public partial class FrmProposta : Form
     {
-        //OBEJETOS
+        //OBJETOS
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
 
