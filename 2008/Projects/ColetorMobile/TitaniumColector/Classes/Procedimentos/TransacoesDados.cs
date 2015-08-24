@@ -28,9 +28,10 @@ namespace TitaniumColector.Classes
             Proposta objProposta = new Proposta();
 
             StringBuilder sbSql01 = new StringBuilder();
-            sbSql01.Append("SELECT codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
+            sbSql01.Append("SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
             sbSql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA");
             sbSql01.Append(" FROM vwMobile_tb1601_Proposta ");
+            sbSql01.Append(" ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC ");
             sql01 = sbSql01.ToString();
             
 
@@ -39,6 +40,7 @@ namespace TitaniumColector.Classes
             if ((dr.FieldCount > 0))
             {
                 while ((dr.Read()))
+                
                 {
                     objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
                                              Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
@@ -304,7 +306,7 @@ namespace TitaniumColector.Classes
 
             StringBuilder sbQuery = new StringBuilder();
 
-            //ESTAVA CAUSANDO DUPLICAIDADE DE INTES DA PROPOSTA>
+            //ESTAVA CAUSANDO DUPLICIDADE DE ITENS DA PROPOSTA>
 
             //sbQuery.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.ordemseparacaoimpressaPROPOSTA,");
             //sbQuery.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");

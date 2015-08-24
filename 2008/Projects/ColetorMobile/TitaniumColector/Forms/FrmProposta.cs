@@ -13,6 +13,7 @@ namespace TitaniumColector.Forms
         //OBJETOS
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
+        private String inputTexte;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
@@ -568,6 +569,17 @@ namespace TitaniumColector.Forms
         }
 
         #endregion
+
+        private void FrmProposta_KeyDown(object sender, KeyEventArgs e)
+        {
+            String texte = sender.ToString();
+            String teste = e.ToString();
+        }
+
+        private void FrmProposta_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            inputTexte += e.KeyChar.ToString();
+        }
 
     }
 }
