@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Classes;
 using TitaniumColector.Classes.Procedimentos;
+using System.Globalization;
 
 namespace TitaniumColector.Forms
 {
@@ -13,7 +14,7 @@ namespace TitaniumColector.Forms
         //OBJETOS
         private Proposta objProposta;
         private TransacoesDados objTransacoes;
-        private String inputTexte;
+        private String inputText;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
@@ -54,6 +55,27 @@ namespace TitaniumColector.Forms
         private void menuItem3_Click(object sender, EventArgs e)
         {
             this.liberarItem();
+        }
+
+        /// <summary>
+        /// Recebe o valor de input durante a leitura do dispositivo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmProposta_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(13))
+            {
+                if (ProcedimentosLiberacao.validaInputValueEtiqueta(inputText))
+                {
+                    this.liberarItem(inputText);
+                    inputText = string.Empty;
+                }
+            }
+            else
+            {
+                inputText += e.KeyChar.ToString();
+            }
         }
 
     #endregion
@@ -287,9 +309,22 @@ namespace TitaniumColector.Forms
         /// <param name="quantidadeItem">Quantidade de item do produto atual a ser manipulado.</param>
         private void fillCamposForm(String numeroProposta, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
         {
+                    
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+
             lbNumeroPedido.Text = numeroProposta.ToString();
             lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
+            lbQtdPecas.Text = this.intOrDecimal(qtdPecas.ToString());
+
+            //if (qtdPecas % 1 == 0)
+            //{
+            //    lbQtdPecas.Text = String.Format(culture, "{0:0} Pçs", qtdPecas);
+            //}
+            //else 
+            //{
+            //    lbQtdPecas.Text = String.Format(culture, "{0:0.00} Pçs", qtdPecas);
+            //}
+            
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
             tbDescricao.Text = produto;
@@ -299,8 +334,13 @@ namespace TitaniumColector.Forms
             }
             tbLocal.Text = local;
 
-            tbQuantidade.Text = quantidadeItem;
+            tbQuantidade.Text = this.intOrDecimal(quantidadeItem);
+
+            //tbQuantidade.Text = String.Format(culture, "{0:0.000}", Convert.ToDouble(quantidadeItem));
+
+            //this.intOrDecimal(quantidadeItem);
         }
+        
 
         /// <summary>
         /// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
@@ -366,32 +406,6 @@ namespace TitaniumColector.Forms
     #endregion
 
     #region "MÉTODOS GERAIS"
-
-        /// <summary>
-        /// Decrementa a quantidade de item do atual item em processamento.
-        /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
-        /// <returns>Retorna true caso não ocorra erros
-        ///          false se o calculo não ocorrer com esperado.</returns>
-        //public Boolean decrementaQuatidadeItem(double qtd)
-        //{
-        //    try
-        //    {
-        //        if (AuxQuantidadeItens > 0 && (AuxQuantidadeItens - qtd >= 0))
-        //        {
-        //            AuxQuantidadeItens -= qtd;
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         /// <summary>
         /// Limpa todos os campos que possuem valores manipuláveis.
@@ -471,6 +485,9 @@ namespace TitaniumColector.Forms
             }
         }
 
+        /// <summary>
+        /// Limpar formulário para preencher informações de um próximo item.
+        /// </summary>
         private void clearParaProximoItem()
         {
             this.clearFormulario(false, true);
@@ -492,6 +509,53 @@ namespace TitaniumColector.Forms
                 }
 
             }
+        }
+
+        private void liberarItem(String inputText)
+        {
+            ProcedimentosLiberacao.lerEtiqueta(inputText,objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+            if (ProcedimentosLiberacao.QtdPecasItem == 0)
+            {
+                if (!this.nextItemProposta())
+                {
+                    MessageBox.Show("PRÒXIMA PROPOSTA.");
+                }
+
+            }
+        }
+
+        private String intOrDecimal(String value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+
+            if (Convert.ToDouble(value) % 1 == 0)
+            {
+                value = String.Format(culture, "{0:0} Pçs", value);
+            }
+            else
+            {
+                value = String.Format(culture, "{0:0.00} Pçs", value);
+            }
+            return value;
+        }
+
+        private String intOrDecimal(int value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+            String retorno = "";
+            if (Convert.ToDouble(value)% 1 == 0)
+            {
+                retorno = String.Format(culture, "{0:0} Pçs", value);
+            }
+            else
+            {
+                retorno = String.Format(culture, "{0:0.00} Pçs", value);
+            }
+
+            return retorno;
         }
 
     #endregion
@@ -570,16 +634,6 @@ namespace TitaniumColector.Forms
 
         #endregion
 
-        private void FrmProposta_KeyDown(object sender, KeyEventArgs e)
-        {
-            String texte = sender.ToString();
-            String teste = e.ToString();
-        }
-
-        private void FrmProposta_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            inputTexte += e.KeyChar.ToString();
-        }
-
     }
+
 }

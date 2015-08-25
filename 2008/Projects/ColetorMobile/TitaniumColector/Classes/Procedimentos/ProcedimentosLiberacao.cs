@@ -285,6 +285,15 @@ namespace TitaniumColector.Classes.Procedimentos
             ListEtiquetasGeradas = list;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="produto"></param>
+        /// <param name="tbProduto"></param>
+        /// <param name="tblote"></param>
+        /// <param name="tbSequencia"></param>
+        /// <param name="tbQuantidade"></param>
+        /// <param name="tbMensagem"></param>
         public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tblote,TextBox tbSequencia,TextBox tbQuantidade,TextBox tbMensagem)
         {
             tbMensagem.Text = "";
@@ -301,6 +310,16 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 tbMensagem.Text = "Próximo Item.";
             }
+        }
+
+        public static void lerEtiqueta(String inputValue,ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
+        {
+            tbMensagem.Text = "";
+
+            ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
+            Etiqueta objEtiqueta = new Etiqueta();
+            objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
 
         public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem, Array arrayEtiqueta)
@@ -471,6 +490,61 @@ namespace TitaniumColector.Classes.Procedimentos
                 item.alteraStatusSeparado();
             }    
 
+        }
+
+         /// <summary>
+         /// Verifica o formato da string bate com o formato esperado para a etiqueta.
+         /// </summary>
+         /// <param name="inputValue">String a ser verificada.</param>
+         /// <returns>True caso seja válido do contrário retorna false.</returns>
+        public static bool validaInputValueEtiqueta(String inputValue)
+        {
+            bool resposta = false;
+            if (inputValue.Contains("PNUMBER:"))
+            {
+                if (inputValue.Contains("DESCRICAO:"))
+                {
+                    if (inputValue.Contains("EAN13:"))
+                    {
+                        if (inputValue.Contains("LOTE:"))
+                        {
+                            if (inputValue.Contains("SEQ:"))
+                            {
+                                if (inputValue.Contains("QTD:"))
+                                {
+                                    resposta = true;
+                                }
+                                else
+                                {
+                                    resposta = false;
+                                }
+                            }
+                            else
+                            {
+                                resposta = false;
+                            }
+                        }
+                        else
+                        {
+                            resposta = false;
+                        }
+                    }
+                    else
+                    {
+                        resposta = false;
+                    }
+                }
+                else
+                {
+                    resposta = false;
+                }
+            }
+            else
+            {
+                resposta = false;
+            }
+
+            return resposta;
         }
 
     }

@@ -43,7 +43,6 @@ namespace TitaniumColector.Forms
             this.dgProposta = new System.Windows.Forms.DataGrid();
             this.lbItemProposta = new System.Windows.Forms.Label();
             this.pnlFrmProposta = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.lbProduto = new System.Windows.Forms.Label();
             this.lbLote = new System.Windows.Forms.Label();
             this.lbSequencia = new System.Windows.Forms.Label();
@@ -129,7 +128,6 @@ namespace TitaniumColector.Forms
             // 
             // pnlFrmProposta
             // 
-            this.pnlFrmProposta.Controls.Add(this.textBox1);
             this.pnlFrmProposta.Controls.Add(this.lbProduto);
             this.pnlFrmProposta.Controls.Add(this.lbLote);
             this.pnlFrmProposta.Controls.Add(this.lbSequencia);
@@ -151,13 +149,6 @@ namespace TitaniumColector.Forms
             this.pnlFrmProposta.Location = new System.Drawing.Point(0, 0);
             this.pnlFrmProposta.Name = "pnlFrmProposta";
             this.pnlFrmProposta.Size = new System.Drawing.Size(325, 455);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(13, 416);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(297, 23);
-            this.textBox1.TabIndex = 23;
             // 
             // lbProduto
             // 
@@ -317,7 +308,6 @@ namespace TitaniumColector.Forms
             this.Text = "Proposta";
             this.Load += new System.EventHandler(this.FrmProposta_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmProposta_KeyPress);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmProposta_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.pnlFrmProposta.ResumeLayout(false);
             this.pnCentral.ResumeLayout(false);
@@ -529,12 +519,6 @@ namespace TitaniumColector.Forms
             this.tbMensagem.BackColor = System.Drawing.SystemColors.Window;
             this.tbMensagem.Tag = "L";
 
-
-            this.textBox1.Location = new System.Drawing.Point(tbMensagem.Location.X,tbMensagem.Location.Y+tbMensagem.Size.Height);
-            this.textBox1.Tag = "L";
-            // txtCliente  https://social.msdn.microsoft.com/Forums/pt-BR/9a347425-6c37-4b44-a642-060eb0046d6d/coletor-motorola-mc3090
-            //https://atgsupportcentral.motorolasolutions.com/content/emb/docs/ReleaseNotes/Release%20Notes%20-%20EMDK-M-020205-UP1.htm
-                         
         }
 
         #endregion
@@ -566,6 +550,5 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }

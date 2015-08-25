@@ -17,13 +17,13 @@ namespace TitaniumColector.Classes
 
 
     #region "CONTRUTORES"
- 
+
         public ProdutoProposta()
         {
 
         }
 
-        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado,
             Int32 codigoProduto, String ean13, String partnumber, String descricao)
             : base(codigoProduto, ean13, partnumber, descricao)
         {
@@ -31,7 +31,7 @@ namespace TitaniumColector.Classes
             this.PropostaItemProposta = propostaItemProposta;
             this.Quantidade = quantidade;
             this.StatusSeparado = isSeparado;
-            this.LotereservaItemProposta = loteReservaItemProposta;
+            this.LotereservaItemProposta = 0;
         }
 
         public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,

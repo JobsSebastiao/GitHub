@@ -70,7 +70,7 @@ namespace TitaniumColector.Classes
 
                 StringBuilder query = new StringBuilder();
                 query.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
-                query.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD,loteRESERVA");
+                query.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD");
                 query.Append(" FROM tb1206_Reservas (NOLOCK) ");
                 query.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
                 query.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
@@ -81,7 +81,7 @@ namespace TitaniumColector.Classes
                 query.Append("AND statusITEMPROPOSTA = 3 ");
                 query.Append("AND separadoITEMPROPOSTA = 0  ");
                 query.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
-                query.Append("nomePRODUTO,partnumberPRODUTO,loteRESERVA");
+                query.Append("nomePRODUTO,partnumberPRODUTO");
 
                 sql01 = query.ToString();
 
@@ -94,7 +94,6 @@ namespace TitaniumColector.Classes
                                                                 Convert.ToInt32(dr["propostaITEMPROPOSTA"]),
                                                                 Convert.ToDouble(dr["QTD"]),
                                                                 ProdutoProposta.statusSeparado.NAOSEPARADO,
-                                                                Convert.ToInt32(dr["loteRESERVA"]),
                                                                 Convert.ToInt32(dr["codigoPRODUTO"]),
                                                                 (string)dr["ean13PRODUTO"],
                                                                 (string)dr["partnumberPRODUTO"],
@@ -684,7 +683,7 @@ namespace TitaniumColector.Classes
                     //INSERT BASE MOBILE
                     StringBuilder query = new StringBuilder();
                     query.Append(" INSERT INTO tb0004_Etiquetas ");
-                    query.Append("(itempropostaETIQUETA, volumeETIQUETA, quantidadeETIQUETA, sequenciaETIQUETA)");
+                    query.Append("(eanitempropostaETIQUETA, volumeETIQUETA, quantidadeETIQUETA, sequenciaETIQUETA)");
                     query.Append("VALUES (");
                     query.AppendFormat("{0},", item.Ean13Etiqueta);
                     query.AppendFormat("\'{0}\',", item.VolumeEtiqueta);
@@ -848,7 +847,7 @@ namespace TitaniumColector.Classes
             sbQuery.Length = 0;
             sbQuery.Append("CREATE TABLE tb0004_Etiquetas (");
             sbQuery.Append("codigoETIQUETA				    INT IDENTITY(1,1) NOT NULL CONSTRAINT PKSequencia PRIMARY KEY,");
-            sbQuery.Append("itempropostaETIQUETA			INT NOT NULL,");
+            sbQuery.Append("eanitempropostaETIQUETA			NVARCHAR(20) NOT NULL,");
             sbQuery.Append("volumeETIQUETA	      			INT NOT NULL,");
             sbQuery.Append("quantidadeETIQUETA	      		REAL NOT NULL,");
             sbQuery.Append("sequenciaETIQUETA    			INT NOT NULL)");
