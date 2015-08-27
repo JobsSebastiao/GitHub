@@ -258,7 +258,7 @@ namespace TitaniumColector.Classes
         {    
             this.setTotalItens(totItens);
             this.setTotalPecas(totPecas);
-            this.Volumes = volumes;
+            this.Volumes = (volumes>0)?  volumes : 1 ;
         }
 
     #endregion 

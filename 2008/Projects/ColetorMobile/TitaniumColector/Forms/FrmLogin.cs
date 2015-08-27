@@ -31,6 +31,9 @@ namespace TitaniumColector
         {
             try
             {
+
+               // Etiqueta.gerarXmlItensEtiquetas(new List<object>(1));
+
                 //Configurações de criação do form
                 InitializeComponent();
                 //Seta as configurações principais a serem usadas na classe MainConfig
@@ -38,16 +41,8 @@ namespace TitaniumColector
                 //Configura a string de conexão para conexão com o servidor.
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
                 //Configura string de conexão E/OU cria a base mobile e todas as suas tabelas.
-                TransacoesDados.configurarBaseMobile();
-                //Testa a conexão com o Servidor
-
-
-                //if (SqlServerConn.testConnection() == false)
-                //{
-                   // throw new Exception();
-                //}
-
-
+                BaseMobile.configurarBaseMobile();
+               
                 //Configura Layout
                 this.configControls();
                 //carrega a combo de usuários.

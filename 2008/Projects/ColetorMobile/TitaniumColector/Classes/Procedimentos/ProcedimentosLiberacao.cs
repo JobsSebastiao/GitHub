@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Utility;
 using TitaniumColector.Classes.Exceptions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
@@ -60,6 +62,7 @@ namespace TitaniumColector.Classes.Procedimentos
             TotalItens = tItens;
             TotalPecas = tPecas;
             qtdPecasItem = pecasItens;
+            QtdVolumes = qtdVolumes;
 
             if (ListEtiquetasGeradas != null)
             {
@@ -83,11 +86,12 @@ namespace TitaniumColector.Classes.Procedimentos
                 arrayStringToEtiqueta = null;
             }
         }
-         /// <summary>
+
+        /// <summary>
          /// Não altera o total de peças e o total de itens atualmente setados.
          /// </summary>
          /// <param name="pecasItens">quantidade de peças do item a ser trabalhado.</param>
-        public static void inicializarProcedimentos(Double pecasItens)
+        public static void inicializarProcedimentosProximoItem(Double pecasItens)
         {
             TotalItens = TotalItens;
             TotalPecas = TotalPecas;
@@ -354,9 +358,8 @@ namespace TitaniumColector.Classes.Procedimentos
                             tbLote.Text = objEtiqueta.LoteEtiqueta;
                             tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
                             tbQuantidade.Text = (subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)).ToString();
-                            objEtiqueta.VolumeEtiqueta++;
+                            objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.qtdVolumes;
                             addToListEtiquetasLidas(objEtiqueta);
-                            ProximaEtiqueta += 1;
                         }
                     }
                     else
@@ -547,5 +550,22 @@ namespace TitaniumColector.Classes.Procedimentos
             return resposta;
         }
 
+        public static String decrementaVolume() 
+        {
+            if (QtdVolumes > 1)
+            {
+                String teste = QtdVolumes.ToString();
+                --QtdVolumes;
+                return QtdVolumes.ToString();
+            }
+            return "Qtd Volumes não pode ser menor que 1.";
+        }
+
+        public static String incrementaVolume() 
+        {
+            String teste = QtdVolumes.ToString();
+            ++QtdVolumes;
+            return QtdVolumes.ToString();
+        }
     }
 }
