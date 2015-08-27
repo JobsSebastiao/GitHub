@@ -5,6 +5,9 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Classes;
 using TitaniumColector.Classes.Procedimentos;
+using System.Globalization;
+using TitaniumColector.Classes.Dao;
+using System.Data.SqlServerCe;
 
 namespace TitaniumColector.Forms
 {
@@ -12,8 +15,13 @@ namespace TitaniumColector.Forms
     {
         //OBJETOS
         private Proposta objProposta;
-        private TransacoesDados objTransacoes;
-        private String inputTexte;
+        private BaseMobile objTransacoes;
+        private String inputText;
+        private DaoEtiqueta daoEtiqueta;
+
+        private DaoItemProposta daoItemProposta;
+        private DaoProposta daoProposta;
+        private DaoProduto daoProduto;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
@@ -27,7 +35,6 @@ namespace TitaniumColector.Forms
             configControls();
             this.carregaBaseMobile();
         }
-
 
     #region "EVENTOS"
 
@@ -56,6 +63,51 @@ namespace TitaniumColector.Forms
             this.liberarItem();
         }
 
+        private void btDecrementaVol_Click(object sender, System.EventArgs e)
+        {
+            String valor = ProcedimentosLiberacao.decrementaVolume();
+            if (valor.Contains("Qtd"))
+            {
+                tbMensagem.Text = valor;
+                
+            }
+            else 
+            {
+                lbQtdVolumes.Text = valor;
+                tbMensagem.Text = "";
+            }
+
+            this.Focus();
+        }
+
+        private void btIncrementaVol_Click(object sender, System.EventArgs e)
+        {
+            lbQtdVolumes.Text = ProcedimentosLiberacao.incrementaVolume();
+            this.Focus();
+            tbMensagem.Text = "";
+        }
+
+        /// <summary>
+        /// Recebe o valor de input durante a leitura do dispositivo.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmProposta_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == Convert.ToChar(13))
+            {
+                if (ProcedimentosLiberacao.validaInputValueEtiqueta(inputText))
+                {
+                    this.liberarItem(inputText);
+                    inputText = string.Empty;
+                }
+            }
+            else
+            {
+                inputText += e.KeyChar.ToString();
+            }
+        }
+
     #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
@@ -66,8 +118,12 @@ namespace TitaniumColector.Forms
         private void carregaBaseMobile()
         {
 
-            objTransacoes = new TransacoesDados();
+            objTransacoes = new BaseMobile();
             objProposta = new Proposta();
+            daoItemProposta = new DaoItemProposta();
+            daoProposta = new DaoProposta();
+            daoProduto = new DaoProduto();
+
 
             try
             {
@@ -75,25 +131,27 @@ namespace TitaniumColector.Forms
                 objTransacoes.clearBaseMobile();
 
                 //Carrega um objeto Proposta
-                objProposta = objTransacoes.fillTop1PropostaServidor();
+                objProposta = daoProposta.fillTop1PropostaServidor();
 
                 //Realiza o Insert na Base Mobile
-                objTransacoes.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao,
+                daoProposta.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao,
                                              objProposta.CodigoCliente, objProposta.RazaoCliente,
                                              objProposta.Volumes,
                                               MainConfig.CodigoUsuarioLogado);
 
                 //Recupera List com itens da proposta
-                this.listaProdutoProposta = objTransacoes.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
+                this.listaProdutoProposta = daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
 
                 //Insert na Base Mobile tabela tb0002_ItensProsposta
-                objTransacoes.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
+                daoItemProposta.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
 
                 //Recupera informações sobre os produtos existentes na proposta
-                this.listaProduto = objTransacoes.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
+                this.listaProduto = daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
 
                 //Insert na base Mobile tabela tb0003_Produtos
-                objTransacoes.insertProduto(listaProduto.ToList<Produto>());
+                daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
+
+
             }
             catch (Exception ex)
             {
@@ -107,6 +165,9 @@ namespace TitaniumColector.Forms
             {
                 objTransacoes = null;
                 objProposta = null;
+                daoProposta = null;
+                daoProduto = null;
+                daoItemProposta = null;
             }
 
         }
@@ -129,20 +190,20 @@ namespace TitaniumColector.Forms
         private Proposta fillProposta()
         {
             Proposta proposta = null;
-
-            objTransacoes = new TransacoesDados();
+            objTransacoes = new BaseMobile();
+            daoProposta = new DaoProposta();
 
             try
             {
                 //Carrega um list com informações gerais sobre a proposta atual na base Mobile.
-                listInfoProposta = objTransacoes.fillInformacoesProposta();
+                listInfoProposta = daoProposta.fillInformacoesProposta();
 
                 //carrega um obj Proposta com a atual proposta na base mobile 
                 //e com o item top 1 da proposta que ainda não esteja separado.
-                proposta = objTransacoes.fillPropostaWithTop1Item();
+                proposta = daoProposta.fillPropostaWithTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
-                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), Convert.ToInt32(listInfoProposta[5]));
+                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]),Convert.ToInt32(listInfoProposta[5]));
 
                 //Set os valores para os atributos auxiliares.
                 ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
@@ -152,6 +213,7 @@ namespace TitaniumColector.Forms
                 
                 //zera o obj transações 
                 objTransacoes = null;
+                objProposta = null;
 
                 //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
                 return proposta;
@@ -287,9 +349,13 @@ namespace TitaniumColector.Forms
         /// <param name="quantidadeItem">Quantidade de item do produto atual a ser manipulado.</param>
         private void fillCamposForm(String numeroProposta, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
         {
+                    
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+
             lbNumeroPedido.Text = numeroProposta.ToString();
             lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
+            lbQtdPecas.Text = this.intOrDecimal(qtdPecas.ToString());
+            lbQtdVolumes.Text = ProcedimentosLiberacao.QtdVolumes.ToString();     
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
             tbDescricao.Text = produto;
@@ -299,9 +365,10 @@ namespace TitaniumColector.Forms
             }
             tbLocal.Text = local;
 
-            tbQuantidade.Text = quantidadeItem;
-        }
+            tbQuantidade.Text = this.intOrDecimal(quantidadeItem);
 
+        }
+        
         /// <summary>
         /// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
         /// </summary>
@@ -313,85 +380,86 @@ namespace TitaniumColector.Forms
         private bool nextItemProposta()
         {
             bool hasItem = false;
-            objTransacoes = new TransacoesDados();
+            daoItemProposta = new DaoItemProposta();
+            daoEtiqueta = new DaoEtiqueta();
+            objTransacoes = new BaseMobile();
 
-            this.clearParaProximoItem();
-            //processa quantidade de itens
-            ProcedimentosLiberacao.decrementaQtdTotalItens(1);
-            //processa qunatidade de peças
-            ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
-            //seta status para separado
-            ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
-            //grava informações do item na base de dados mobile
-            objTransacoes.updateItemProposta(objProposta.ListObjItemProposta[0]);
-            objTransacoes.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
-
-            //carrega próximo item
-            if (ProcedimentosLiberacao.TotalItens > 0)
+            try
             {
-                ProdutoProposta prod = objTransacoes.fillTop1ItemProposta();
+                this.clearParaProximoItem();
+                //processa quantidade de itens
+                ProcedimentosLiberacao.decrementaQtdTotalItens(1);
+                //processa qunatidade de peças
+                ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
+                //seta status para separado
+                ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
 
-                if (prod != null) 
+                //grava informações do item na base de dados mobile
+                daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
+
+                //ESTE TRECHO TALVES ESTEJA SENDO DESNECESSÀRIO.
+                //ANALIZAR MELHOR Action SUA UTILIZACAO 
+                daoEtiqueta.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
+
+                //inseri informações das etiquetas referente ao produto liberado em formato Xml
+                daoItemProposta.updateXmlItemProposta(Etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+
+                //carrega próximo item
+                if (ProcedimentosLiberacao.TotalItens > 0)
                 {
-                    hasItem = true;
+                    ProdutoProposta prod = daoItemProposta.fillTop1ItemProposta();
 
-                    objProposta.setNextItemProposta(prod);
+
+                    if (prod != null)
+                    {
+                        hasItem = true;
+
+                        objProposta.setNextItemProposta(prod);
+                    }
+                    else
+                    {
+                        hasItem = false;
+                    }
                 }
-                else 
+                else
                 {
                     hasItem = false;
                 }
-            }
-            else
-            {
-                hasItem = false;
-            }
 
-            if (hasItem)
-            {
-                //seta parametros para iniciar leitura do próximo item
-                ProcedimentosLiberacao.inicializarProcedimentos(objProposta.ListObjItemProposta[0].Quantidade);
-                //recarrega o form com as informações do próximo item.
-                this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
+                if (hasItem)
+                {
+                    //seta parametros para iniciar leitura do próximo item
+                    ProcedimentosLiberacao.inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
+                    //recarrega o form com as informações do próximo item.
+                    this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
+                }
+                else
+                {
+                    this.clearFormulario(true, true);
+                }
+
             }
-            else 
+            catch (SqlCeException Ex)
             {
-                this.clearFormulario(true, true);
+                MessageBox.Show(Ex.Message);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                daoEtiqueta = null;
+                daoItemProposta = null;
             }
 
             return hasItem;
-        }
 
+        }
 
     #endregion
 
     #region "MÉTODOS GERAIS"
-
-        /// <summary>
-        /// Decrementa a quantidade de item do atual item em processamento.
-        /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
-        /// <returns>Retorna true caso não ocorra erros
-        ///          false se o calculo não ocorrer com esperado.</returns>
-        //public Boolean decrementaQuatidadeItem(double qtd)
-        //{
-        //    try
-        //    {
-        //        if (AuxQuantidadeItens > 0 && (AuxQuantidadeItens - qtd >= 0))
-        //        {
-        //            AuxQuantidadeItens -= qtd;
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         /// <summary>
         /// Limpa todos os campos que possuem valores manipuláveis.
@@ -471,6 +539,9 @@ namespace TitaniumColector.Forms
             }
         }
 
+        /// <summary>
+        /// Limpar formulário para preencher informações de um próximo item.
+        /// </summary>
         private void clearParaProximoItem()
         {
             this.clearFormulario(false, true);
@@ -489,9 +560,60 @@ namespace TitaniumColector.Forms
                 if (!this.nextItemProposta())
                 {
                     MessageBox.Show("PRÒXIMA PROPOSTA.");
+                    this.Dispose();
+                    this.Close();
                 }
 
             }
+        }
+
+        private void liberarItem(String inputText)
+        {
+            ProcedimentosLiberacao.lerEtiqueta(inputText,objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+            if (ProcedimentosLiberacao.QtdPecasItem == 0)
+            {
+                if (!this.nextItemProposta())
+                {
+                    MessageBox.Show("PRÒXIMA PROPOSTA.");
+                    this.Dispose();
+                    this.Close();
+                }
+
+            }
+        }
+
+        private String intOrDecimal(String value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+
+            if (Convert.ToDouble(value) % 1 == 0)
+            {
+                value = String.Format(culture, "{0:0} Pçs", value);
+            }
+            else
+            {
+                value = String.Format(culture, "{0:0.00} Pçs", value);
+            }
+            return value;
+        }
+
+        private String intOrDecimal(int value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+            String retorno = "";
+            if (Convert.ToDouble(value)% 1 == 0)
+            {
+                retorno = String.Format(culture, "{0:0} Pçs", value);
+            }
+            else
+            {
+                retorno = String.Format(culture, "{0:0.00} Pçs", value);
+            }
+
+            return retorno;
         }
 
     #endregion
@@ -570,16 +692,6 @@ namespace TitaniumColector.Forms
 
         #endregion
 
-        private void FrmProposta_KeyDown(object sender, KeyEventArgs e)
-        {
-            String texte = sender.ToString();
-            String teste = e.ToString();
-        }
-
-        private void FrmProposta_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            inputTexte += e.KeyChar.ToString();
-        }
-
     }
+
 }

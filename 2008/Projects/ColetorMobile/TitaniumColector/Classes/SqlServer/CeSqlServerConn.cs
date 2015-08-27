@@ -113,10 +113,12 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    public static void fillDataSetCe(DataSet ds, string sql01)
 	    {
-		    try {
+		    try 
+            {
 			    SqlCeDataAdapter da = new SqlCeDataAdapter(sql01, sqlCeConn);
 			    da.Fill(ds);
-		    } catch (Exception ex) {
+		    } catch (Exception ex) 
+            {
 			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
 		    }
 
@@ -124,17 +126,15 @@ namespace TitaniumColector.Classes.SqlServer
 
         public static void fillDataTableCe(DataTable dt, string sql01)
 	    {
-		    try {
+		    try 
+            {
                 SqlCeDataAdapter da = new SqlCeDataAdapter(sql01, openConnCe());
 			    da.Fill(dt);
 		    }
-            catch (SqlCeException)
+            catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
             }
-            catch (Exception ex) {
-			   MessageBox.Show("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
-		    }
 
 	    }
 
@@ -170,27 +170,30 @@ namespace TitaniumColector.Classes.SqlServer
 
 	    public static void beginTransactionCe()
 	    {
-		    try {
-			    if ((sqlCeConn.State == ConnectionState.Open)) {
+		    try 
+            {
+			    if ((sqlCeConn.State == ConnectionState.Open)) 
+                {
 				    transacaoCe = sqlCeConn.BeginTransaction(IsolationLevel.ReadCommitted);
 			    }
-		    } catch (Exception ex) {
+		    } 
+            catch (Exception ex) 
+            {
 			    throw new Exception("Ocorre um problema na conexão com a base de dados." + Constants.vbCrLf + "Erro : " + ex.Message);
 		    }
-
 	    }
 
 	    public static  void EndTransactionCe(ref bool flag)
 	    {
-		    if (flag == false) {
+		    if (flag == false) 
+            {
 			    transacaoCe.Commit();
-		    } else {
+		    } 
+            else 
+            {
 			    transacaoCe.Rollback();
 		    }
-
 	    }
-
-
     }
 
 }

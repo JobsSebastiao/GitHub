@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace TitaniumColector.Classes
 {
@@ -92,8 +93,14 @@ namespace TitaniumColector.Classes
 
         public Double QuantidadeEtiqueta
         {
-            get { return quantidade; }
-            set { quantidade = value; }
+            get 
+            {
+                return quantidade; 
+            }
+            set 
+            { 
+                quantidade = value; 
+            }
         }
 
         public string PartnumberEtiqueta
@@ -212,6 +219,65 @@ namespace TitaniumColector.Classes
             {
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Monta Xml para detalhar as estiquetas equivalentes ao item passado como parâmetro
+        /// </summary>
+        /// <param name="listaEtiquetas">Lista de Etiquetas dos item que foi separado</param>
+        /// <returns>String no formato de Xml</returns>
+        /// <remarks> Na forma em que etá o código abaixo o trabalho é feito em uma lista que contém informações de apenas um item liberado
+        ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
+        ///           criação de outro método mais  apropriado.
+        /// </remarks>
+        public static String gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
+        {
+            String result = "";
+            try
+            {
+                System.IO.StringWriter str = new System.IO.StringWriter();
+
+                //Variável que irá receber o Xml na forma de String.
+                XmlTextWriter writer = new XmlTextWriter(str);
+
+                //inicia o documento xml
+                writer.WriteStartDocument();
+
+                //define a indentação do arquivo
+                writer.Formatting = Formatting.Indented;
+
+                //escreve o elemento raiz
+                writer.WriteStartElement("Item");
+                //escrever o atributo para o Elemento Raiz Item
+                writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
+
+                foreach (var item in listaEtiquetas)
+                {
+                    //Elemento Raiz Seq
+                    writer.WriteStartElement("Seq");
+                    //Escreve atributos para o Elemento Raiz Seq.
+                    writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
+                    //Escreve elemento entre a tag Seq
+                    writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
+                    writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
+                    //Encerra o elemento Seq
+                    writer.WriteEndElement();
+                }
+
+                //Encerra o elemento Item
+                writer.WriteEndDocument();
+
+                // O resultado é uma string.
+               return result = str.ToString();
+
+               // System.Windows.Forms.MessageBox.Show(result);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
         public override bool Equals(object obj)

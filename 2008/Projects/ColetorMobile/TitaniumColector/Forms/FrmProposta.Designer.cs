@@ -31,7 +31,6 @@ namespace TitaniumColector.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.menuPedido = new System.Windows.Forms.MainMenu();
             this.mnuPropostas = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
@@ -39,15 +38,19 @@ namespace TitaniumColector.Forms
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
-            this.itemPropostaBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.dgProposta = new System.Windows.Forms.DataGrid();
             this.lbItemProposta = new System.Windows.Forms.Label();
-            this.pnlFrmProposta = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.lbProduto = new System.Windows.Forms.Label();
             this.lbLote = new System.Windows.Forms.Label();
             this.lbSequencia = new System.Windows.Forms.Label();
             this.lbMensagem = new System.Windows.Forms.Label();
+            this.lbQtdItens = new System.Windows.Forms.Label();
+            this.lbQtdPecas = new System.Windows.Forms.Label();
+            this.lbNomeCliente = new System.Windows.Forms.Label();
+            this.lbNumeroPedido = new System.Windows.Forms.Label();
+            this.lbVolumes = new System.Windows.Forms.Label();
+            this.lbQtdVolumes = new System.Windows.Forms.Label();
+            this.pnlFrmProposta = new System.Windows.Forms.Panel();
+            this.dgProposta = new System.Windows.Forms.DataGrid();
             this.tbMensagem = new System.Windows.Forms.TextBox();
             this.tbSequencia = new System.Windows.Forms.TextBox();
             this.tbLote = new System.Windows.Forms.TextBox();
@@ -57,11 +60,8 @@ namespace TitaniumColector.Forms
             this.tbLocal = new System.Windows.Forms.TextBox();
             this.tbDescricao = new System.Windows.Forms.TextBox();
             this.tbPartNumber = new System.Windows.Forms.TextBox();
-            this.lbQtdItens = new System.Windows.Forms.Label();
-            this.lbQtdPecas = new System.Windows.Forms.Label();
-            this.lbNomeCliente = new System.Windows.Forms.Label();
-            this.lbNumeroPedido = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).BeginInit();
+            this.btDecrementaVol = new System.Windows.Forms.Button();
+            this.btIncrementaVol = new System.Windows.Forms.Button();
             this.pnlFrmProposta.SuspendLayout();
             this.pnCentral.SuspendLayout();
             this.SuspendLayout();
@@ -106,14 +106,9 @@ namespace TitaniumColector.Forms
             this.lbCliente.Size = new System.Drawing.Size(70, 23);
             this.lbCliente.Text = "Cliente :";
             // 
-            // itemPropostaBindingSource
-            // 
-            this.itemPropostaBindingSource.DataSource = typeof(TitaniumColector.Classes.ProdutoProposta);
-            // 
             // dgProposta
             // 
             this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dgProposta.DataSource = this.itemPropostaBindingSource;
             this.dgProposta.Location = new System.Drawing.Point(3, 90);
             this.dgProposta.Name = "dgProposta";
             this.dgProposta.Size = new System.Drawing.Size(41, 37);
@@ -126,10 +121,39 @@ namespace TitaniumColector.Forms
             this.lbItemProposta.Size = new System.Drawing.Size(83, 17);
             this.lbItemProposta.Text = "Itens Proposta";
             this.lbItemProposta.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+
+            //
+            //LbVolumes
+            // 
+            this.lbVolumes.Tag = "N";
+            this.lbVolumes.Text = "Volumes";
+            this.lbVolumes.Name = "lbVolumes";
+
+            //
+            //LbVolumes
+            // 
+            this.lbQtdVolumes.Tag = "N";
+            this.lbQtdVolumes.Text = "1";
+            this.lbQtdVolumes.Name = "lbQtdVolumes";
+
+            //
+            //BtIncremetaVol
+            //
+            this.btIncrementaVol.Tag = "N";
+            this.btIncrementaVol.Text = " + ";
+            this.btIncrementaVol.Name = "btIncrementaVol";
+            this.btDecrementaVol.Click += new System.EventHandler(btDecrementaVol_Click);
+            //
+            //BtDecremetaVol
+            //
+            this.btDecrementaVol.Tag = "N";
+            this.btDecrementaVol.Text = " - ";
+            this.btDecrementaVol.Name = "btDecrementaVol";
+            this.btIncrementaVol.Click += new System.EventHandler(btIncrementaVol_Click);
+            //
             // 
             // pnlFrmProposta
             // 
-            this.pnlFrmProposta.Controls.Add(this.textBox1);
             this.pnlFrmProposta.Controls.Add(this.lbProduto);
             this.pnlFrmProposta.Controls.Add(this.lbLote);
             this.pnlFrmProposta.Controls.Add(this.lbSequencia);
@@ -147,17 +171,14 @@ namespace TitaniumColector.Forms
             this.pnlFrmProposta.Controls.Add(this.lbItemProposta);
             this.pnlFrmProposta.Controls.Add(this.lbPedido);
             this.pnlFrmProposta.Controls.Add(this.lbCliente);
+            this.pnlFrmProposta.Controls.Add(this.lbVolumes);
+            this.pnlFrmProposta.Controls.Add(this.lbQtdVolumes);
+            this.pnlFrmProposta.Controls.Add(this.btIncrementaVol);
+            this.pnlFrmProposta.Controls.Add(this.btDecrementaVol);
             this.pnlFrmProposta.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlFrmProposta.Location = new System.Drawing.Point(0, 0);
             this.pnlFrmProposta.Name = "pnlFrmProposta";
             this.pnlFrmProposta.Size = new System.Drawing.Size(325, 455);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(13, 416);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(297, 23);
-            this.textBox1.TabIndex = 23;
             // 
             // lbProduto
             // 
@@ -317,8 +338,6 @@ namespace TitaniumColector.Forms
             this.Text = "Proposta";
             this.Load += new System.EventHandler(this.FrmProposta_Load);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmProposta_KeyPress);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmProposta_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.itemPropostaBindingSource)).EndInit();
             this.pnlFrmProposta.ResumeLayout(false);
             this.pnCentral.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -338,18 +357,18 @@ namespace TitaniumColector.Forms
             this.lbPedido.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
             this.lbPedido.Location = new System.Drawing.Point(MainConfig.intPositionX + 2, MainConfig.intPositionY );
             this.lbPedido.Tag = "N";
-             
+            //
             // lbNumeroPedido
-
+            //
             this.lbNumeroPedido.Font = MainConfig.FontPadraoBold;
             this.lbNumeroPedido.Text = "000000001";
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbPedido.Text, MainConfig.FontPadraoBold);
             this.lbNumeroPedido.Size = new System.Drawing.Size(78, 23);
             this.lbNumeroPedido.Location = new System.Drawing.Point(lbPedido.Location.X + lbPedido.Size.Width + 1, lbPedido.Location.Y - 2);
             this.lbNumeroPedido.Tag = "L";
-
+            //
             // lbQtdItens
-
+            //
             this.lbQtdItens.Text = "1000_Itens";
             this.lbQtdItens.TextAlign = ContentAlignment.TopRight;
             this.lbQtdItens.Font = MainConfig.FontPadraoItalicBold;
@@ -359,18 +378,18 @@ namespace TitaniumColector.Forms
             this.lbQtdItens.Size = new System.Drawing.Size((int)fontStringSize.Width + 7  , (int)fontStringSize.Height);
             this.lbQtdItens.Location = new System.Drawing.Point(MainConfig.ScreenSize.Width - this.lbQtdItens.Width - 10, lbNumeroPedido.Location.Y);
             this.lbQtdItens.Tag= "L";
-
+            //
             // lbCliente
-
+            //
             this.lbCliente.Text = "Cliente:";
             this.lbCliente.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbCliente.Text, MainConfig.FontPequenaBold);
             this.lbCliente.Size = new System.Drawing.Size((int)fontStringSize.Width, (int)fontStringSize.Height);
             this.lbCliente.Location = new System.Drawing.Point(this.lbPedido.Location.X , this.lbPedido.Location.Y + lbPedido.Size.Height + 6);
             this.lbCliente.Tag = "N";
-           
+            //
             // lbQtdPeças
-
+            //
             this.lbQtdPecas.Text = "100000_Pçs";
             this.lbQtdPecas.TextAlign = ContentAlignment.TopRight;
             this.lbQtdPecas.Font = MainConfig.FontPadraoItalicBold;
@@ -380,18 +399,18 @@ namespace TitaniumColector.Forms
             this.lbQtdPecas.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
             this.lbQtdPecas.Location = new System.Drawing.Point(lbQtdItens.Location.X, lbQtdItens.Location.Y  + lbQtdPecas.Size.Height + 3);
             this.lbQtdPecas.Tag = "L";
-
+            //
             // lbNomeCliente
-
+            //
             this.lbNomeCliente.Text = "Nome cliente prosposta";
             this.lbNomeCliente.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbNomeCliente.Text, MainConfig.FontPequenaBold);
             this.lbNomeCliente.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - lbCliente.Size.Width - lbQtdPecas.Size.Width - 13, (int)fontStringSize.Height);
             this.lbNomeCliente.Location = new System.Drawing.Point(this.lbCliente.Location.X + lbCliente.Size.Width + 1, lbCliente.Location.Y);
             this.lbNomeCliente.Tag = "L";
-           
+            //
             // lbItemProposta
-
+            //
             this.lbItemProposta.Font = MainConfig.FontPequenaBold;
             this.lbItemProposta.Text = "Itens_Pedido";
             this.lbItemProposta.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -400,9 +419,9 @@ namespace TitaniumColector.Forms
             this.lbItemProposta.Location = new System.Drawing.Point(MainConfig.ScreenSize.Width / 2 - lbItemProposta.Size.Width / 2, lbCliente.Location.Y + lbCliente.Size.Height + 5);
             this.lbItemProposta.Visible = false;
             this.lbItemProposta.Tag = "N";
-
+            //
             // dgProposta
-
+            //
             this.dgProposta.Font = MainConfig.FontPequenaRegular;
             string str = this.ClientRectangle.Bottom + "\n" + this.ClientSize.Height + "\n" + this.ClientSize.Width + "\n" + MainConfig.ScreenSize.Height + "\n" + MainConfig.ScreenSize.Width;
             this.dgProposta.Location = new System.Drawing.Point(MainConfig.intPositionX + 5, lbItemProposta.Location.Y + lbItemProposta.Size.Height + 5);
@@ -411,62 +430,63 @@ namespace TitaniumColector.Forms
             this.dgProposta.RowHeadersVisible = false;
             this.dgProposta.Visible = false;
             this.dgProposta.Tag = "N";
-
+            //
             //pnCentral
-
+            //
             this.pnCentral.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 30, 150);
             this.pnCentral.Location = new System.Drawing.Point(this.Size.Width / 2 - pnCentral.Size.Width/ 2, lbCliente.Location.Y + lbCliente.Size.Height + 5);
-
+            //
             //TbPartNumber
-
+            //
             this.tbPartNumber.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 32);
             this.tbPartNumber.Font = MainConfig.FontGrandeBold;
             this.tbPartNumber.Enabled = false;
             this.tbPartNumber.BackColor = System.Drawing.SystemColors.Window;
             this.tbPartNumber.Location = new System.Drawing.Point(0,0);
             this.tbPartNumber.Tag = "L";
-
+            //
             //tbDescricao
-
+            //
             this.tbDescricao.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 23);
             this.tbDescricao.Font = MainConfig.FontMediaBold;
             this.tbDescricao.Enabled = false;
             this.tbDescricao.BackColor = System.Drawing.SystemColors.Window;
             this.tbDescricao.Location = new System.Drawing.Point(0, this.tbPartNumber.Location.Y + tbPartNumber.Size.Height);
             this.tbDescricao.Tag = "L";
-
+            //
             //tbLocal
-
+            //
             this.tbLocal.Size = new System.Drawing.Size(this.pnCentral.Size.Width/2,47);
             this.tbLocal.Font = MainConfig.FontMuitoGrandeBold;
             this.tbLocal.Enabled = false;
             this.tbLocal.BackColor = System.Drawing.SystemColors.Window;
             this.tbLocal.Location = new System.Drawing.Point(0, tbDescricao.Location.Y + tbDescricao.Size.Height);
             this.tbLocal.Tag = "L";
-
+            //
             //tbQuantidade
-
+            //
             this.tbQuantidade.Size = new System.Drawing.Size(this.pnCentral.Size.Width / 2, 47);
             this.tbQuantidade.Font = MainConfig.FontMuitoGrandeBold;
             this.tbQuantidade.Enabled = false;
             this.tbQuantidade.BackColor = System.Drawing.SystemColors.Window;
             this.tbQuantidade.Location = new System.Drawing.Point(pnCentral.Size.Width/2, tbDescricao.Location.Y + tbDescricao.Size.Height);
             this.tbQuantidade.Tag = "L";
-
+            //
             //pnCentral
+            //
             this.pnCentral.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 30, 
                                   tbPartNumber.Size.Height+ tbDescricao.Size.Height+ tbLocal.Size.Height);
-
+            //
             //lbProduto
-
-            this.lbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,pnCentral.Location.Y + pnCentral.Size.Height);
+            //
+            this.lbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,pnCentral.Location.Y + pnCentral.Size.Height+17);
             this.lbProduto.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbProduto.Text, MainConfig.FontPequenaBold);
             this.lbProduto.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
             this.lbProduto.Tag = "N";
-
+            //
             //tbProduto
-
+            //
             this.tbProduto.Location = new System.Drawing.Point(pnCentral.Location.X,lbProduto.Location.Y + lbProduto.Size.Height);
             this.tbProduto.Enabled = false;
             this.tbProduto.Multiline = true;
@@ -474,17 +494,17 @@ namespace TitaniumColector.Forms
             this.tbProduto.Size = new System.Drawing.Size(this.pnCentral.Size.Width,15);
             this.tbProduto.BackColor = System.Drawing.SystemColors.Window;
             this.tbProduto.Tag = "L";
-
+            //
             //lbLote
-
+            //
             this.lbLote.Location = new System.Drawing.Point(tbProduto.Location.X, tbProduto.Location.Y + tbProduto.Size.Height);
             this.lbLote.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbLote.Text, MainConfig.FontPequenaBold);
             this.lbLote.Size = new System.Drawing.Size((int)fontStringSize.Width+2, (int)fontStringSize.Height);
             this.lbLote.Tag = "N";
-
+            //
             //tbLote
-
+            //
             this.tbLote.Location = new System.Drawing.Point(lbLote.Location.X, lbLote.Location.Y + lbLote.Size.Height);
             this.tbLote.Multiline = true;
             this.tbLote.Font = MainConfig.FontPequenaBold;
@@ -492,17 +512,17 @@ namespace TitaniumColector.Forms
             this.tbLote.Enabled = false;
             this.tbLote.BackColor = System.Drawing.SystemColors.Window;
             this.tbLote.Tag = "L";
-
+            //
             //lbSequencia
-
+            //
             this.lbSequencia.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbSequencia.Text, MainConfig.FontPequenaBold);
             this.lbSequencia.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
             this.lbSequencia.Location = new System.Drawing.Point(this.Size.Width / 2 + 10, lbLote.Location.Y);
             this.lbSequencia.Tag = "N";
-
+            //
             //tbSequencia
-
+            //
             this.tbSequencia.Enabled = false;
             this.tbSequencia.Multiline = true;
             this.tbSequencia.Font = MainConfig.FontPequenaBold;
@@ -510,62 +530,93 @@ namespace TitaniumColector.Forms
             this.tbSequencia.BackColor = System.Drawing.SystemColors.Window;
             this.tbSequencia.Location = new System.Drawing.Point(this.Size.Width/2+10, tbLote.Location.Y);
             this.tbSequencia.Tag = "L";
-
+            //
             //lbMensagem
-
+            //
             this.lbMensagem.Font = MainConfig.FontPequenaBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbMensagem.Text, MainConfig.FontPequenaBold);
             this.lbMensagem.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
             this.lbMensagem.Location = new System.Drawing.Point(this.lbLote.Location.X, tbSequencia.Location.Y + tbSequencia.Size.Height);
             this.lbMensagem.Tag = "N";
-
+            //
             //tbMensagem
-
+            //
             this.tbMensagem.Location = new System.Drawing.Point(lbMensagem.Location.X, lbMensagem.Location.Y + lbMensagem.Size.Height);
             this.tbMensagem.Enabled = false;
+            this.tbMensagem.ForeColor = Color.Red;
             this.tbMensagem.Multiline = true;
             this.tbMensagem.Font = MainConfig.FontPequenaBold;
             this.tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 15);
             this.tbMensagem.BackColor = System.Drawing.SystemColors.Window;
             this.tbMensagem.Tag = "L";
-
-
-            this.textBox1.Location = new System.Drawing.Point(tbMensagem.Location.X,tbMensagem.Location.Y+tbMensagem.Size.Height);
-            this.textBox1.Tag = "L";
-            // txtCliente  https://social.msdn.microsoft.com/Forums/pt-BR/9a347425-6c37-4b44-a642-060eb0046d6d/coletor-motorola-mc3090
-            //https://atgsupportcentral.motorolasolutions.com/content/emb/docs/ReleaseNotes/Release%20Notes%20-%20EMDK-M-020205-UP1.htm
-                         
+            //
+            //LbQtdVolumes
+            //
+            this.lbQtdVolumes.Text = "1000 ";
+            this.lbQtdVolumes.TextAlign = ContentAlignment.TopCenter;
+            this.lbQtdVolumes.Font = MainConfig.FontPadraoItalicBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbQtdVolumes.Text, MainConfig.FontPadraoItalicBold);
+            this.lbQtdVolumes.BackColor = System.Drawing.Color.Black;
+            this.lbQtdVolumes.ForeColor = System.Drawing.Color.White;
+            this.lbQtdVolumes.Size = new System.Drawing.Size((int)fontStringSize.Width + 5, (int)fontStringSize.Height-2);
+            this.lbQtdVolumes.Location = new System.Drawing.Point(lbProduto.Location.X + 2,lbProduto.Location.Y - lbProduto.Size.Height -2);
+            //
+            //LbVolumes
+            // 
+            this.lbVolumes.Tag = "N";
+            this.lbVolumes.Text = "Volume(s)";
+            this.lbVolumes.Name = "lbVolumes";
+            this.lbVolumes.Font = MainConfig.FontPequenaItalicBold;
+            fontStringSize = MainConfig.sizeStringEmPixel(this.lbVolumes.Text, MainConfig.FontPequenaItalicBold);
+            this.lbVolumes.Size = new System.Drawing.Size((int)fontStringSize.Width + 2, (int)fontStringSize.Height);
+            this.lbVolumes.Location = new System.Drawing.Point(lbQtdVolumes.Location.X + lbQtdVolumes.Size.Width+2, pnCentral.Location.Y + pnCentral.Size.Height + 2);
+            //
+            //btDecrementaVol
+            //
+            this.btDecrementaVol.Size = new System.Drawing.Size(30, 25);
+            this.btDecrementaVol.Font = MainConfig.FontMediaBold;
+            this.btDecrementaVol.Location = new System.Drawing.Point(lbVolumes.Location.X + lbVolumes.Size.Width + 10,lbVolumes.Location.Y);
+            this.btDecrementaVol.TabStop = false;
+            //
+            //btDecrementaVol
+            //
+            this.btIncrementaVol.Size = new System.Drawing.Size(30, 25);
+            this.btIncrementaVol.Font = MainConfig.FontMediaBold;
+            this.btIncrementaVol.Location = new System.Drawing.Point(btDecrementaVol.Location.X + btDecrementaVol.Size.Width+15, lbVolumes.Location.Y);
+            this.btIncrementaVol.TabStop = false;
         }
 
         #endregion
 
         private System.Windows.Forms.MenuItem mnuPropostas;
+        private System.Windows.Forms.Panel pnlFrmProposta;
+        private System.Windows.Forms.DataGrid dgProposta;
         private System.Windows.Forms.Label lbPedido;
         private System.Windows.Forms.Label lbCliente;
-        private System.Windows.Forms.DataGrid dgProposta;
         private System.Windows.Forms.Label lbItemProposta;
-        private System.Windows.Forms.Panel pnlFrmProposta;
-        private System.Windows.Forms.BindingSource itemPropostaBindingSource;
         private System.Windows.Forms.Label lbNomeCliente;
         private System.Windows.Forms.Label lbNumeroPedido;
         private System.Windows.Forms.Label lbQtdItens;
         private System.Windows.Forms.Label lbQtdPecas;
+        private System.Windows.Forms.Label lbVolumes;
+        private System.Windows.Forms.Label lbProduto;
+        private System.Windows.Forms.Label lbLote;
+        private System.Windows.Forms.Label lbSequencia;
+        private System.Windows.Forms.Label lbMensagem;
+        private System.Windows.Forms.Label lbQtdVolumes;
         private System.Windows.Forms.Panel pnCentral;
         private System.Windows.Forms.TextBox tbQuantidade;
         private System.Windows.Forms.TextBox tbLocal;
         private System.Windows.Forms.TextBox tbDescricao;
         private System.Windows.Forms.TextBox tbPartNumber;
-        private System.Windows.Forms.Label lbProduto;
-        private System.Windows.Forms.Label lbLote;
-        private System.Windows.Forms.Label lbSequencia;
-        private System.Windows.Forms.Label lbMensagem;
         private System.Windows.Forms.TextBox tbMensagem;
         private System.Windows.Forms.TextBox tbSequencia;
         private System.Windows.Forms.TextBox tbLote;
         private System.Windows.Forms.TextBox tbProduto;
+        private System.Windows.Forms.Button  btIncrementaVol;
+        private System.Windows.Forms.Button  btDecrementaVol;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
-        private System.Windows.Forms.TextBox textBox1;
     }
 }
