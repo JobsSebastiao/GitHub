@@ -720,7 +720,8 @@ namespace TitaniumColector.Classes
             sql01.Append("clientePROPOSTA int not null,");
             sql01.Append("razaoclientePROPOSTA nvarchar(200),");
             sql01.Append("volumesPROPOSTA smallint,");
-            sql01.Append("operadorPROPOSTA int) ");
+            sql01.Append("operadorPROPOSTA int, ");
+            sql01.Append("codigopickingmobilePROPOSTA INT) ");
             CeSqlServerConn.execCommandSqlCe(sql01.ToString());
 
             //TABELAS tb0002_ItensProposta

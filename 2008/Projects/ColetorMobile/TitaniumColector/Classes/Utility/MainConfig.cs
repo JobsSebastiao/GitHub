@@ -386,7 +386,11 @@ namespace TitaniumColector
 
         }
 
-
+        /// <summary>
+        /// Exibe uma mensagem padronizada ao usuário.
+        /// </summary>
+        /// <param name="msg">Informação a ser passada</param>
+        /// <param name="head">Cabeçalho da caixa de texto.</param>
         public static void errorMessage(String msg,String head) 
         {
             System.Windows.Forms.MessageBox.Show(msg, head, System.Windows.Forms.MessageBoxButtons.OK,

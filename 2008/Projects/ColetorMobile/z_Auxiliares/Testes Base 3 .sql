@@ -40,10 +40,6 @@ ORDER BY  P.prioridadeLIBERACAOPROPOSTA ASC,dataLIBERACAOPROPOSTA ASC
 
 SP_HELPTEXT vwMobile_tb1601_Proposta
 
-
-
-
-
 update tb1611_Liberacoes_Proposta
 set prioridadeLIBERACAOPROPOSTA = 1
 where propostaLIBERACAOPROPOSTA in(
@@ -59,8 +55,6 @@ where propostaLIBERACAOPROPOSTA in(
 SELECT TOP 1 codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA 
 FROM vwMobile_tb1601_Proposta  
 ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC 
-
-
 
 
 
@@ -162,22 +156,8 @@ FROM vwMobile_tb1601_Proposta
 ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC 
 
 
-
-
 SELECT * FROM SYS.Tables t WHERE t.name LIKE '%tb16%'
 ORDER BY t.name
-
-
-
-
-
-
-
-
-
-
-
-
 
 GO
 ALTER TABLE dbo.doc_exz
@@ -186,4 +166,29 @@ DEFAULT 50 FOR column_b ;
 GO
 
 
+UPDATE tb1651_Picking_Mobile
+SET statusPICKINGMOBILE =0
+WHERE codigoPICKINGMOBILE =21
+
+UPDATE tb1601_Propostas
+SET statusProposta =1
+WHERE codigoPROPOSTA = 75899
+
+SELECT * FROM tb1651_Picking_Mobile
+DELETE FROM tb1651_Picking_Mobile
+SELECT MAX(codigoPICKINGMOBILE) AS maxCodigo FROM tb1651_Picking_Mobile WHERE propostaPICKINGMOBILE = 80457
+
+
+SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,razaoEMPRESA,volumesPROPOSTA,codigoPICKINGMOBILE
+FROM vwMobile_tb1601_Proposta 
+ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC 
+
+Insert INTO tb1651_Picking_Mobile(propostaPICKINGMOBILE,usuarioPICKINGMOBILE,statusPICKINGMOBILE,horainicioPICKINGMOBILE,horafimPICKINGMOBILE) 
+VALUES (80396,'114','1','8/28/2015 4:04:37 PM',NULL)
+
+
+UPDATE tb1651_Picking_Mobile 
+SET[statusPICKINGMOBILE] = 1,
+[horafimPICKINGMOBILE] = NULL 
+WHERE propostaPICKINGMOBILE = 80396  AND codigoPICKINGMOBILE = 18
 

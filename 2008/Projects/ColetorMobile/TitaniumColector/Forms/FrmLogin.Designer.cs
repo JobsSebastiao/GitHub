@@ -79,7 +79,6 @@ namespace TitaniumColector
             // 
             // panelFrmLogin
             // 
-            //this.panelFrmLogin.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.panelFrmLogin.Controls.Add(this.lbDescricao);
             this.panelFrmLogin.Controls.Add(this.txtSenha);
             this.panelFrmLogin.Controls.Add(this.cbUsuario);

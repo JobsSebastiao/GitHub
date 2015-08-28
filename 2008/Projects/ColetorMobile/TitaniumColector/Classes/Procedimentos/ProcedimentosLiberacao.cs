@@ -12,7 +12,6 @@ namespace TitaniumColector.Classes.Procedimentos
 {
      static class ProcedimentosLiberacao
     {
-
         private static Double totalItens;
         private static Double totalPecas;
         private static Double qtdPecasItem;
@@ -495,7 +494,7 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
-         /// <summary>
+        /// <summary>
          /// Verifica o formato da string bate com o formato esperado para a etiqueta.
          /// </summary>
          /// <param name="inputValue">String a ser verificada.</param>

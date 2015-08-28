@@ -100,8 +100,7 @@ namespace TitaniumColector.SqlServer
             get { return strConnection; }
         }
 
-
-        #endregion //Get & Set
+        #endregion 
 
         /// <summary>
         /// Recupera todos aos parâmetros informados e configura a string de conexão.
@@ -263,26 +262,30 @@ namespace TitaniumColector.SqlServer
 
         }
 
-        public static void beginTransaction()
+        public static SqlCommand beginTransaction(SqlConnection conn)
         {
-            openConn();
-
+           
             try
             {
                 if ((conn.State == ConnectionState.Open))
                 {
-                    transaction= conn.BeginTransaction(IsolationLevel.ReadCommitted);
+                    SqlCommand command = conn.CreateCommand();
+                    transaction = conn.BeginTransaction("SampleTransaction");
+                    command.Connection = conn;
+                    command.Transaction = transaction;
+                    return command;
                 }
             }
             catch (Exception ex)
             {
+                transaction.Rollback();
+                transaction.Commit();
+                transaction.Dispose();
+                closeConn();
                 throw new Exception("Ocorre um problema na conexão com a base de dados." + Environment.NewLine + "Erro : " + ex.Message);
             }
-            finally
-            {
-                closeConn();
-            }
 
+            return null;
         }
 
         public static void EndTransaction(ref bool flag)
@@ -419,7 +422,6 @@ namespace TitaniumColector.SqlServer
 	        makeStrConnection();
 
         }
-
 
         /// <summary>
         /// Redefine os atributos da string de conexão

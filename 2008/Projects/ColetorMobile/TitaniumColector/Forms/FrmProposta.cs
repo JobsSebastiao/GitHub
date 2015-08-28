@@ -8,6 +8,7 @@ using TitaniumColector.Classes.Procedimentos;
 using System.Globalization;
 using TitaniumColector.Classes.Dao;
 using System.Data.SqlServerCe;
+using System.Data.SqlClient;
 
 namespace TitaniumColector.Forms
 {
@@ -22,6 +23,7 @@ namespace TitaniumColector.Forms
         private DaoItemProposta daoItemProposta;
         private DaoProposta daoProposta;
         private DaoProduto daoProduto;
+        //private SqlCommand command;
 
         //LIST
         private List<ProdutoProposta> listaProdutoProposta;
@@ -129,15 +131,17 @@ namespace TitaniumColector.Forms
             {
                 //Limpa a Base.
                 objTransacoes.clearBaseMobile();
-
+                
                 //Carrega um objeto Proposta
                 objProposta = daoProposta.fillTop1PropostaServidor();
 
+                daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.CodigoUsuarioLogado, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
+
+                //recupera o codigoPickingMobile da proposta trabalhada.
+                objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
+
                 //Realiza o Insert na Base Mobile
-                daoProposta.insertProposta(objProposta.Codigo, objProposta.Numero, objProposta.DataLiberacao,
-                                             objProposta.CodigoCliente, objProposta.RazaoCliente,
-                                             objProposta.Volumes,
-                                              MainConfig.CodigoUsuarioLogado);
+                daoProposta.insertProposta(objProposta,MainConfig.CodigoUsuarioLogado);
 
                 //Recupera List com itens da proposta
                 this.listaProdutoProposta = daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
@@ -150,7 +154,6 @@ namespace TitaniumColector.Forms
 
                 //Insert na base Mobile tabela tb0003_Produtos
                 daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
-
 
             }
             catch (Exception ex)
@@ -354,7 +357,7 @@ namespace TitaniumColector.Forms
 
             lbNumeroPedido.Text = numeroProposta.ToString();
             lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = this.intOrDecimal(qtdPecas.ToString());
+            lbQtdPecas.Text = this.intOrDecimal(qtdPecas.ToString()) + " Pçs";
             lbQtdVolumes.Text = ProcedimentosLiberacao.QtdVolumes.ToString();     
             lbQtdItens.Text = qtdItens.ToString() + " Itens";
             tbPartNumber.Text = partnumber;
@@ -393,17 +396,13 @@ namespace TitaniumColector.Forms
                 ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
                 //seta status para separado
                 ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
-
                 //grava informações do item na base de dados mobile
                 daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
-
                 //ESTE TRECHO TALVES ESTEJA SENDO DESNECESSÀRIO.
                 //ANALIZAR MELHOR Action SUA UTILIZACAO 
                 daoEtiqueta.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
-
                 //inseri informações das etiquetas referente ao produto liberado em formato Xml
                 daoItemProposta.updateXmlItemProposta(Etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
-
                 //carrega próximo item
                 if (ProcedimentosLiberacao.TotalItens > 0)
                 {
@@ -421,11 +420,12 @@ namespace TitaniumColector.Forms
                         hasItem = false;
                     }
                 }
-                else
+                else // CASO não tenha um próximo item 
                 {
                     hasItem = false;
                 }
 
+                //Se existir um próximo item
                 if (hasItem)
                 {
                     //seta parametros para iniciar leitura do próximo item
@@ -437,7 +437,6 @@ namespace TitaniumColector.Forms
                 {
                     this.clearFormulario(true, true);
                 }
-
             }
             catch (SqlCeException Ex)
             {
@@ -454,7 +453,6 @@ namespace TitaniumColector.Forms
             }
 
             return hasItem;
-
         }
 
     #endregion
@@ -575,6 +573,7 @@ namespace TitaniumColector.Forms
             {
                 if (!this.nextItemProposta())
                 {
+
                     MessageBox.Show("PRÒXIMA PROPOSTA.");
                     this.Dispose();
                     this.Close();
@@ -590,11 +589,11 @@ namespace TitaniumColector.Forms
 
             if (Convert.ToDouble(value) % 1 == 0)
             {
-                value = String.Format(culture, "{0:0} Pçs", value);
+                value = String.Format(culture, "{0:0}", value);
             }
             else
             {
-                value = String.Format(culture, "{0:0.00} Pçs", value);
+                value = String.Format(culture, "{0:0.00}", value);
             }
             return value;
         }

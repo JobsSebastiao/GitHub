@@ -50,7 +50,6 @@ namespace TitaniumColector.Forms
             this.lbVolumes = new System.Windows.Forms.Label();
             this.lbQtdVolumes = new System.Windows.Forms.Label();
             this.pnlFrmProposta = new System.Windows.Forms.Panel();
-            this.dgProposta = new System.Windows.Forms.DataGrid();
             this.tbMensagem = new System.Windows.Forms.TextBox();
             this.tbSequencia = new System.Windows.Forms.TextBox();
             this.tbLote = new System.Windows.Forms.TextBox();
@@ -60,8 +59,9 @@ namespace TitaniumColector.Forms
             this.tbLocal = new System.Windows.Forms.TextBox();
             this.tbDescricao = new System.Windows.Forms.TextBox();
             this.tbPartNumber = new System.Windows.Forms.TextBox();
-            this.btDecrementaVol = new System.Windows.Forms.Button();
+            this.dgProposta = new System.Windows.Forms.DataGrid();
             this.btIncrementaVol = new System.Windows.Forms.Button();
+            this.btDecrementaVol = new System.Windows.Forms.Button();
             this.pnlFrmProposta.SuspendLayout();
             this.pnCentral.SuspendLayout();
             this.SuspendLayout();
@@ -106,14 +106,6 @@ namespace TitaniumColector.Forms
             this.lbCliente.Size = new System.Drawing.Size(70, 23);
             this.lbCliente.Text = "Cliente :";
             // 
-            // dgProposta
-            // 
-            this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.dgProposta.Location = new System.Drawing.Point(3, 90);
-            this.dgProposta.Name = "dgProposta";
-            this.dgProposta.Size = new System.Drawing.Size(41, 37);
-            this.dgProposta.TabIndex = 6;
-            // 
             // lbItemProposta
             // 
             this.lbItemProposta.Location = new System.Drawing.Point(3, 72);
@@ -121,64 +113,6 @@ namespace TitaniumColector.Forms
             this.lbItemProposta.Size = new System.Drawing.Size(83, 17);
             this.lbItemProposta.Text = "Itens Proposta";
             this.lbItemProposta.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-
-            //
-            //LbVolumes
-            // 
-            this.lbVolumes.Tag = "N";
-            this.lbVolumes.Text = "Volumes";
-            this.lbVolumes.Name = "lbVolumes";
-
-            //
-            //LbVolumes
-            // 
-            this.lbQtdVolumes.Tag = "N";
-            this.lbQtdVolumes.Text = "1";
-            this.lbQtdVolumes.Name = "lbQtdVolumes";
-
-            //
-            //BtIncremetaVol
-            //
-            this.btIncrementaVol.Tag = "N";
-            this.btIncrementaVol.Text = " + ";
-            this.btIncrementaVol.Name = "btIncrementaVol";
-            this.btDecrementaVol.Click += new System.EventHandler(btDecrementaVol_Click);
-            //
-            //BtDecremetaVol
-            //
-            this.btDecrementaVol.Tag = "N";
-            this.btDecrementaVol.Text = " - ";
-            this.btDecrementaVol.Name = "btDecrementaVol";
-            this.btIncrementaVol.Click += new System.EventHandler(btIncrementaVol_Click);
-            //
-            // 
-            // pnlFrmProposta
-            // 
-            this.pnlFrmProposta.Controls.Add(this.lbProduto);
-            this.pnlFrmProposta.Controls.Add(this.lbLote);
-            this.pnlFrmProposta.Controls.Add(this.lbSequencia);
-            this.pnlFrmProposta.Controls.Add(this.lbMensagem);
-            this.pnlFrmProposta.Controls.Add(this.tbMensagem);
-            this.pnlFrmProposta.Controls.Add(this.tbSequencia);
-            this.pnlFrmProposta.Controls.Add(this.tbLote);
-            this.pnlFrmProposta.Controls.Add(this.tbProduto);
-            this.pnlFrmProposta.Controls.Add(this.pnCentral);
-            this.pnlFrmProposta.Controls.Add(this.lbQtdItens);
-            this.pnlFrmProposta.Controls.Add(this.lbQtdPecas);
-            this.pnlFrmProposta.Controls.Add(this.lbNomeCliente);
-            this.pnlFrmProposta.Controls.Add(this.lbNumeroPedido);
-            this.pnlFrmProposta.Controls.Add(this.dgProposta);
-            this.pnlFrmProposta.Controls.Add(this.lbItemProposta);
-            this.pnlFrmProposta.Controls.Add(this.lbPedido);
-            this.pnlFrmProposta.Controls.Add(this.lbCliente);
-            this.pnlFrmProposta.Controls.Add(this.lbVolumes);
-            this.pnlFrmProposta.Controls.Add(this.lbQtdVolumes);
-            this.pnlFrmProposta.Controls.Add(this.btIncrementaVol);
-            this.pnlFrmProposta.Controls.Add(this.btDecrementaVol);
-            this.pnlFrmProposta.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlFrmProposta.Location = new System.Drawing.Point(0, 0);
-            this.pnlFrmProposta.Name = "pnlFrmProposta";
-            this.pnlFrmProposta.Size = new System.Drawing.Size(325, 455);
             // 
             // lbProduto
             // 
@@ -207,6 +141,80 @@ namespace TitaniumColector.Forms
             this.lbMensagem.Name = "lbMensagem";
             this.lbMensagem.Size = new System.Drawing.Size(70, 16);
             this.lbMensagem.Text = "Mensagem";
+            // 
+            // lbQtdItens
+            // 
+            this.lbQtdItens.Font = new System.Drawing.Font("Tahoma", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.lbQtdItens.Location = new System.Drawing.Point(252, 31);
+            this.lbQtdItens.Name = "lbQtdItens";
+            this.lbQtdItens.Size = new System.Drawing.Size(70, 23);
+            this.lbQtdItens.Text = "0000 Itens";
+            // 
+            // lbQtdPecas
+            // 
+            this.lbQtdPecas.Font = new System.Drawing.Font("Tahoma", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.lbQtdPecas.Location = new System.Drawing.Point(252, 54);
+            this.lbQtdPecas.Name = "lbQtdPecas";
+            this.lbQtdPecas.Size = new System.Drawing.Size(70, 23);
+            this.lbQtdPecas.Text = "00000 pçs";
+            // 
+            // lbNomeCliente
+            // 
+            this.lbNomeCliente.Location = new System.Drawing.Point(58, 54);
+            this.lbNomeCliente.Name = "lbNomeCliente";
+            this.lbNomeCliente.Size = new System.Drawing.Size(136, 23);
+            this.lbNomeCliente.Text = "Nome   Cliente";
+            // 
+            // lbNumeroPedido
+            // 
+            this.lbNumeroPedido.Location = new System.Drawing.Point(58, 31);
+            this.lbNumeroPedido.Name = "lbNumeroPedido";
+            this.lbNumeroPedido.Size = new System.Drawing.Size(136, 23);
+            this.lbNumeroPedido.Text = "000001";
+            // 
+            // lbVolumes
+            // 
+            this.lbVolumes.Location = new System.Drawing.Point(0, 0);
+            this.lbVolumes.Name = "lbVolumes";
+            this.lbVolumes.Size = new System.Drawing.Size(100, 20);
+            this.lbVolumes.Tag = "N";
+            this.lbVolumes.Text = "Volumes";
+            // 
+            // lbQtdVolumes
+            // 
+            this.lbQtdVolumes.Location = new System.Drawing.Point(0, 0);
+            this.lbQtdVolumes.Name = "lbQtdVolumes";
+            this.lbQtdVolumes.Size = new System.Drawing.Size(100, 20);
+            this.lbQtdVolumes.Tag = "N";
+            this.lbQtdVolumes.Text = "1";
+            // 
+            // pnlFrmProposta
+            // 
+            this.pnlFrmProposta.Controls.Add(this.lbProduto);
+            this.pnlFrmProposta.Controls.Add(this.lbLote);
+            this.pnlFrmProposta.Controls.Add(this.lbSequencia);
+            this.pnlFrmProposta.Controls.Add(this.lbMensagem);
+            this.pnlFrmProposta.Controls.Add(this.tbMensagem);
+            this.pnlFrmProposta.Controls.Add(this.tbSequencia);
+            this.pnlFrmProposta.Controls.Add(this.tbLote);
+            this.pnlFrmProposta.Controls.Add(this.tbProduto);
+            this.pnlFrmProposta.Controls.Add(this.pnCentral);
+            this.pnlFrmProposta.Controls.Add(this.lbQtdItens);
+            this.pnlFrmProposta.Controls.Add(this.lbQtdPecas);
+            this.pnlFrmProposta.Controls.Add(this.lbNomeCliente);
+            this.pnlFrmProposta.Controls.Add(this.lbNumeroPedido);
+            this.pnlFrmProposta.Controls.Add(this.dgProposta);
+            this.pnlFrmProposta.Controls.Add(this.lbItemProposta);
+            this.pnlFrmProposta.Controls.Add(this.lbPedido);
+            this.pnlFrmProposta.Controls.Add(this.lbCliente);
+            this.pnlFrmProposta.Controls.Add(this.lbVolumes);
+            this.pnlFrmProposta.Controls.Add(this.lbQtdVolumes);
+            this.pnlFrmProposta.Controls.Add(this.btIncrementaVol);
+            this.pnlFrmProposta.Controls.Add(this.btDecrementaVol);
+            this.pnlFrmProposta.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlFrmProposta.Location = new System.Drawing.Point(0, 0);
+            this.pnlFrmProposta.Name = "pnlFrmProposta";
+            this.pnlFrmProposta.Size = new System.Drawing.Size(325, 455);
             // 
             // tbMensagem
             // 
@@ -295,35 +303,33 @@ namespace TitaniumColector.Forms
             this.tbPartNumber.Text = "7020";
             this.tbPartNumber.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // lbQtdItens
+            // dgProposta
             // 
-            this.lbQtdItens.Font = new System.Drawing.Font("Tahoma", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lbQtdItens.Location = new System.Drawing.Point(252, 31);
-            this.lbQtdItens.Name = "lbQtdItens";
-            this.lbQtdItens.Size = new System.Drawing.Size(70, 23);
-            this.lbQtdItens.Text = "0000 Itens";
+            this.dgProposta.BackgroundColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.dgProposta.Location = new System.Drawing.Point(3, 90);
+            this.dgProposta.Name = "dgProposta";
+            this.dgProposta.Size = new System.Drawing.Size(41, 37);
+            this.dgProposta.TabIndex = 6;
             // 
-            // lbQtdPecas
+            // btIncrementaVol
             // 
-            this.lbQtdPecas.Font = new System.Drawing.Font("Tahoma", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
-            this.lbQtdPecas.Location = new System.Drawing.Point(252, 54);
-            this.lbQtdPecas.Name = "lbQtdPecas";
-            this.lbQtdPecas.Size = new System.Drawing.Size(70, 23);
-            this.lbQtdPecas.Text = "00000 pçs";
+            this.btIncrementaVol.Location = new System.Drawing.Point(0, 0);
+            this.btIncrementaVol.Name = "btIncrementaVol";
+            this.btIncrementaVol.Size = new System.Drawing.Size(72, 20);
+            this.btIncrementaVol.TabIndex = 25;
+            this.btIncrementaVol.Tag = "N";
+            this.btIncrementaVol.Text = " + ";
+            this.btIncrementaVol.Click += new System.EventHandler(this.btIncrementaVol_Click);
             // 
-            // lbNomeCliente
+            // btDecrementaVol
             // 
-            this.lbNomeCliente.Location = new System.Drawing.Point(58, 54);
-            this.lbNomeCliente.Name = "lbNomeCliente";
-            this.lbNomeCliente.Size = new System.Drawing.Size(136, 23);
-            this.lbNomeCliente.Text = "Nome   Cliente";
-            // 
-            // lbNumeroPedido
-            // 
-            this.lbNumeroPedido.Location = new System.Drawing.Point(58, 31);
-            this.lbNumeroPedido.Name = "lbNumeroPedido";
-            this.lbNumeroPedido.Size = new System.Drawing.Size(136, 23);
-            this.lbNumeroPedido.Text = "000001";
+            this.btDecrementaVol.Location = new System.Drawing.Point(0, 0);
+            this.btDecrementaVol.Name = "btDecrementaVol";
+            this.btDecrementaVol.Size = new System.Drawing.Size(72, 20);
+            this.btDecrementaVol.TabIndex = 26;
+            this.btDecrementaVol.Tag = "N";
+            this.btDecrementaVol.Text = " - ";
+            this.btDecrementaVol.Click += new System.EventHandler(this.btDecrementaVol_Click);
             // 
             // FrmProposta
             // 
@@ -332,6 +338,7 @@ namespace TitaniumColector.Forms
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(325, 455);
             this.Controls.Add(this.pnlFrmProposta);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Menu = this.menuPedido;
             this.Name = "FrmProposta";
