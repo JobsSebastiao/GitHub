@@ -69,7 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Dao\DaoEtiqueta.cs" />
-    <Compile Include="Classes\Dao\DaoItemProposta.cs" />
+    <Compile Include="Classes\Dao\DaoProdutoProposta.cs" />
     <Compile Include="Classes\Dao\DaoProduto.cs" />
     <Compile Include="Classes\Dao\DaoProposta.cs" />
     <Compile Include="Classes\Model\Etiqueta.cs" />

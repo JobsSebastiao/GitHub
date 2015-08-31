@@ -9,6 +9,7 @@ using System.Globalization;
 using TitaniumColector.Classes.Dao;
 using System.Data.SqlServerCe;
 using System.Data.SqlClient;
+using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Forms
 {
@@ -18,11 +19,12 @@ namespace TitaniumColector.Forms
         private Proposta objProposta;
         private BaseMobile objTransacoes;
         private String inputText;
-        private DaoEtiqueta daoEtiqueta;
 
-        private DaoItemProposta daoItemProposta;
+        private DaoEtiqueta daoEtiqueta;
+        private DaoProdutoProposta daoItemProposta;
         private DaoProposta daoProposta;
         private DaoProduto daoProduto;
+
         //private SqlCommand command;
 
         //LIST
@@ -48,21 +50,24 @@ namespace TitaniumColector.Forms
             Cursor.Current = Cursors.Default;
         }
 
-        private void menuItem1_Click(object sender, EventArgs e)
+        //private void menuItem1_Click(object sender, EventArgs e)
+        //{
+        //    frmLogin frlLogin = new frmLogin();
+        //    frlLogin.Show();
+        //    this.Hide();
+        //}
+
+        private void menuItem4_Click(object sender, EventArgs e)
         {
-            frmLogin frlLogin = new frmLogin();
-            frlLogin.Show();
-            this.Hide();
+            frmLogin login = new frmLogin();
+            login.Show();
+            this.Dispose();
+            this.Close();
         }
 
-        private void menuItem2_Click(object sender, EventArgs e)
+        private void menuItem5_Click(object sender, EventArgs e)
         {
-            ProcedimentosLiberacao.gerarEtiquetas();
-        }
-
-        private void menuItem3_Click(object sender, EventArgs e)
-        {
-            this.liberarItem();
+            Application.Exit();
         }
 
         private void btDecrementaVol_Click(object sender, System.EventArgs e)
@@ -122,7 +127,7 @@ namespace TitaniumColector.Forms
 
             objTransacoes = new BaseMobile();
             objProposta = new Proposta();
-            daoItemProposta = new DaoItemProposta();
+            daoItemProposta = new DaoProdutoProposta();
             daoProposta = new DaoProposta();
             daoProduto = new DaoProduto();
 
@@ -132,29 +137,44 @@ namespace TitaniumColector.Forms
                 //Limpa a Base.
                 objTransacoes.clearBaseMobile();
                 
-                //Carrega um objeto Proposta
-                objProposta = daoProposta.fillTop1PropostaServidor();
+                //Carrega um objeto Proposta e inicia todo o procedimento.
+                //Caso não exista propostas a serem liberadas gera um exception 
+                //onde será feito os tratamentos para evitar o travamento do sistema.
+                if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
+                {
+                    daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.CodigoUsuarioLogado, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
 
-                daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.CodigoUsuarioLogado, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
+                    //recupera o codigoPickingMobile da proposta trabalhada.
+                    objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
 
-                //recupera o codigoPickingMobile da proposta trabalhada.
-                objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
+                    //Realiza o Insert na Base Mobile
+                    daoProposta.insertProposta(objProposta, MainConfig.CodigoUsuarioLogado);
 
-                //Realiza o Insert na Base Mobile
-                daoProposta.insertProposta(objProposta,MainConfig.CodigoUsuarioLogado);
+                    //Recupera List com itens da proposta
+                    this.listaProdutoProposta = daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
 
-                //Recupera List com itens da proposta
-                this.listaProdutoProposta = daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>();
+                    //Insert na Base Mobile tabela tb0002_ItensProsposta
+                    daoItemProposta.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
 
-                //Insert na Base Mobile tabela tb0002_ItensProsposta
-                daoItemProposta.insertItemProposta(listaProdutoProposta.ToList<ProdutoProposta>());
+                    //Recupera informações sobre os produtos existentes na proposta
+                    this.listaProduto = daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
 
-                //Recupera informações sobre os produtos existentes na proposta
-                this.listaProduto = daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>();
-
-                //Insert na base Mobile tabela tb0003_Produtos
-                daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
-
+                    //Insert na base Mobile tabela tb0003_Produtos
+                    daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
+                }
+                else 
+                {
+                    throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
+                }
+            }
+            catch (NoNewPropostaException ex)
+            {
+                this.Dispose();
+                this.Close();
+                MainConfig.errorMessage(ex.Message, "Próxima Proposta");
+                FrmAcao frmAcao = new FrmAcao();
+                Cursor.Current = Cursors.Default;
+                frmAcao.Show();
             }
             catch (Exception ex)
             {
@@ -383,7 +403,7 @@ namespace TitaniumColector.Forms
         private bool nextItemProposta()
         {
             bool hasItem = false;
-            daoItemProposta = new DaoItemProposta();
+            daoItemProposta = new DaoProdutoProposta();
             daoEtiqueta = new DaoEtiqueta();
             objTransacoes = new BaseMobile();
 
@@ -573,8 +593,11 @@ namespace TitaniumColector.Forms
             {
                 if (!this.nextItemProposta())
                 {
+                    daoItemProposta = new DaoProdutoProposta();
+                    daoItemProposta.updateItemPropostaRetorno();
 
                     MessageBox.Show("PRÒXIMA PROPOSTA.");
+
                     this.Dispose();
                     this.Close();
                 }
@@ -593,7 +616,8 @@ namespace TitaniumColector.Forms
             }
             else
             {
-                value = String.Format(culture, "{0:0.00}", value);
+                //value = String.Format(culture, "{0:0.00}", value);
+                value = String.Format(culture, "{0:0.000}", Convert.ToDouble(value));
             }
             return value;
         }
@@ -604,6 +628,23 @@ namespace TitaniumColector.Forms
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
             String retorno = "";
             if (Convert.ToDouble(value)% 1 == 0)
+            {
+                retorno = String.Format(culture, "{0:0} Pçs", value);
+            }
+            else
+            {
+                retorno = String.Format(culture, "{0:0.00} Pçs", value);
+            }
+
+            return retorno;
+        }
+
+        private String intOrDecimal(double value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+            String retorno = "";
+            if (Convert.ToDouble(value) % 1 == 0)
             {
                 retorno = String.Format(culture, "{0:0} Pçs", value);
             }

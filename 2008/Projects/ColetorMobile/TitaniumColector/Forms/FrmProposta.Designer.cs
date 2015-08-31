@@ -33,9 +33,8 @@ namespace TitaniumColector.Forms
         {
             this.menuPedido = new System.Windows.Forms.MainMenu();
             this.mnuPropostas = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.mnuOpcoes_Logout = new System.Windows.Forms.MenuItem();
+            this.mnuOpcoes_Exit = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
             this.lbItemProposta = new System.Windows.Forms.Label();
@@ -72,25 +71,20 @@ namespace TitaniumColector.Forms
             // 
             // mnuPropostas
             // 
-            this.mnuPropostas.MenuItems.Add(this.menuItem1);
+            this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Logout);
+            this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Exit);
             this.mnuPropostas.Text = "Opções";
-            this.mnuPropostas.Click += new System.EventHandler(this.menuItem1_Click);
+            //this.mnuPropostas.Click += new System.EventHandler(this.menuItem1_Click);
             // 
-            // menuItem1
+            // mnuOpcoes_Logout
             // 
-            this.menuItem1.MenuItems.Add(this.menuItem2);
-            this.menuItem1.MenuItems.Add(this.menuItem3);
-            this.menuItem1.Text = "Testes";
+            this.mnuOpcoes_Logout.Text = "Logout";
+            this.mnuOpcoes_Logout.Click += new System.EventHandler(this.menuItem4_Click);
             // 
-            // menuItem2
+            // mnuOpcoes_Exit
             // 
-            this.menuItem2.Text = "Gerar Etiquetas";
-            this.menuItem2.Click += new System.EventHandler(this.menuItem2_Click);
-            // 
-            // menuItem3
-            // 
-            this.menuItem3.Text = "Próximo Item";
-            this.menuItem3.Click += new System.EventHandler(this.menuItem3_Click);
+            this.mnuOpcoes_Exit.Text = "Exit";
+            this.mnuOpcoes_Exit.Click += new System.EventHandler(this.menuItem5_Click);
             // 
             // lbPedido
             // 
@@ -621,9 +615,8 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.TextBox tbLote;
         private System.Windows.Forms.TextBox tbProduto;
         private System.Windows.Forms.Button  btIncrementaVol;
-        private System.Windows.Forms.Button  btDecrementaVol;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItem2;
-        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.Button btDecrementaVol;
+        private System.Windows.Forms.MenuItem mnuOpcoes_Logout;
+        private System.Windows.Forms.MenuItem mnuOpcoes_Exit;
     }
 }

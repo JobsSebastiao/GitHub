@@ -45,4 +45,25 @@ namespace TitaniumColector.Classes.Exceptions
 
         }
     }
+
+    class NoNewPropostaException : Exception
+    {
+        public NoNewPropostaException()
+        {
+
+        }
+
+        public NoNewPropostaException(string message)
+            : base(message)
+        {
+
+        }
+
+        public NoNewPropostaException(string message, Exception inner)
+            : base(message, inner)
+        {
+
+        }
+    }
+
 }

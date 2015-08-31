@@ -9,10 +9,10 @@ using TitaniumColector.SqlServer;
 
 namespace TitaniumColector.Classes.Dao
 {
-    class DaoItemProposta
+    class DaoProdutoProposta
     {
         private StringBuilder sql01;
-        public DaoItemProposta() 
+        public DaoProdutoProposta() 
         {
 
         }
@@ -274,6 +274,37 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
+
+        public void updateItemPropostaRetorno() 
+        {
+            try
+            {
+                sql01 = new StringBuilder();
+                sql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,statusseparadoITEMPROPOSTA,codigoprodutoITEMPROPOSTA,xmlSequenciaITEMPROPOSTA ");
+                sql01.Append(" FROM tb0002_ItensProposta");
+                sql01.AppendFormat(" WHERE  statusseparadoITEMPROPOSTA = {0}", (int)ProdutoProposta.statusSeparado.SEPARADO);
+                SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
+
+                if( dr!=null )
+                {
+                    while(dr.Read())
+                    {
+                        sql01 = new StringBuilder();
+                        sql01.Append(" UPDATE      tb1602_Itens_Proposta");
+                        sql01.AppendFormat("  SET   separadoITEMPROPOSTA ={0}", Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]));
+                        sql01.AppendFormat(" ,xmlSequenciaITEMPROPOSTA ='{0}'", (string)dr["xmlSequenciaITEMPROPOSTA"]);
+                        sql01.AppendFormat(" WHERE (codigoITEMPROPOSTA = {0})", Convert.ToInt32(dr["codigoITEMPROPOSTA"]));
+                        SqlServerConn.execCommandSql(sql01.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
         /// <summary>
         /// Altera o status de separado do item na Base mobile.
         /// </summary>

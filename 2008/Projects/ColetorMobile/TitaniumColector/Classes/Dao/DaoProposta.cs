@@ -103,15 +103,21 @@ namespace TitaniumColector.Classes.Dao
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
 
-            //if ((dr.FieldCount > 0))
-            //{
+            if ((dr != null))
+            {
                 while ((dr.Read()))
                 {
                     objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
                                              Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]));
 
                 }
-            //}
+            }
+
+            if (objProposta.Codigo  ==0)
+            {
+                return objProposta = null;
+            }
+
 
             SqlServerConn.closeConn();
 

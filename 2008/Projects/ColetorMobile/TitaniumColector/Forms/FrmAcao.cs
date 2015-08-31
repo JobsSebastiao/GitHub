@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Utility;
+using TitaniumColector.Classes.Dao;
 
 namespace TitaniumColector.Forms
 {
