@@ -12,12 +12,13 @@ namespace TitaniumColector.Classes.Dao
     class DaoProposta
     {
         private StringBuilder sql01;
+        private SqlDataReader dr; 
 
         public DaoProposta() 
         {
+           
 
         }
-
 
         /// <summary>
         /// Preenche um objeto do tipo Proposta com todas as suas informações inclusive os itens e detalhes sobre os mesmos
@@ -31,7 +32,7 @@ namespace TitaniumColector.Classes.Dao
 
             sql01= new StringBuilder();
 
-            sql01.Append(" SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.volumesPROPOSTA,");
+            sql01.Append(" SELECT TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,TB_PROP.volumesPROPOSTA,TB_PROP.codigopickingmobilePROPOSTA");
             sql01.Append(" TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sql01.Append(" TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.localloteITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sql01.Append(" TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO, TB_PROD.codigolocalPRODUTO,");
@@ -55,7 +56,7 @@ namespace TitaniumColector.Classes.Dao
                     {
                         int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
+                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
 
                     }
 
@@ -96,21 +97,27 @@ namespace TitaniumColector.Classes.Dao
 
             sql01 = new StringBuilder();
             sql01.Append("SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA");
+            sql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA,codigoPICKINGMOBILE");
             sql01.Append(" FROM vwMobile_tb1601_Proposta ");
             sql01.Append(" ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC ");
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
 
-            if ((dr.FieldCount > 0))
+            if ((dr != null))
             {
                 while ((dr.Read()))
                 {
                     objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]));
+                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]));
 
                 }
             }
+
+            if (objProposta.Codigo  ==0)
+            {
+                return objProposta = null;
+            }
+
 
             SqlServerConn.closeConn();
 
@@ -138,16 +145,45 @@ namespace TitaniumColector.Classes.Dao
             {
                 while ((dr.Read()))
                 {
-
                     this.insertProposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
                                              Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"],
                                              Convert.ToInt32(dr["volumesPROPOSTA"]),
                                              MainConfig.CodigoUsuarioLogado);
-
                 }
             }
-
             SqlServerConn.closeConn();
+        }
+
+        /// <summary>
+        /// Realiza o insert na tabela de Propostas
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da Proposta</param>
+        /// <param name="dataliberacaoProposta">data de liberação da Proposta</param>
+        /// <param name="clienteProposta">Código do cliente</param>
+        /// <param name="razaoEmpreza">Nome da empreza cliente</param>
+        /// <param name="ordemseparacaoimpresaProposta">Status 0 ou 1</param>
+        /// <param name="usuarioLogado">Usuário logado</param>
+        public void insertProposta(Proposta proposta, int usuarioLogado)
+        {
+
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
+
+            //Query de insert na Base Mobile
+            sql01 = new StringBuilder();
+            sql01.Append("Insert INTO tb0001_Propostas");
+            sql01.Append("(codigoPROPOSTA,numeroPROPOSTA,dataliberacaoPROPOSTA,clientePROPOSTA,razaoclientePROPOSTA,volumesPROPOSTA,codigopickingmobilePROPOSTA,operadorPROPOSTA)");
+            sql01.Append(" VALUES (");
+            sql01.AppendFormat("{0},", proposta.Codigo);
+            sql01.AppendFormat("\'{0}\',",proposta.Numero);
+            sql01.AppendFormat("\'{0}\',", proposta.DataLiberacao);
+            sql01.AppendFormat("{0},", proposta.CodigoCliente);
+            sql01.AppendFormat("\'{0}\',",proposta.RazaoCliente);
+            sql01.AppendFormat("{0},",proposta.Volumes);
+            sql01.AppendFormat("{0},", proposta.CodigoPikingMobile);
+            sql01.AppendFormat("{0})", usuarioLogado);
+
+            CeSqlServerConn.execCommandSqlCe(sql01.ToString());
 
         }
 
@@ -182,6 +218,104 @@ namespace TitaniumColector.Classes.Dao
 
             CeSqlServerConn.execCommandSqlCe(sql01.ToString());
 
+        }
+
+        /// <summary>
+        /// Realiza o Insert na tabela de picking Mobile
+        /// </summary>
+        /// <param name="codigoProposta">Codigo da proposta a ser trabalhada</param>
+        /// <param name="usuarioProposta">Usuário trabalhando a proposta</param>
+        /// <param name="statusLiberacao">status atual de liberação da proposta</param>
+        public void insertPropostaTbPickingMobile(long codigoProposta,int usuarioProposta,Proposta.StatusLiberacao statusLiberacao,DateTime horaInicio) 
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("Insert INTO tb1651_Picking_Mobile");
+            sql01.Append("(propostaPICKINGMOBILE,usuarioPICKINGMOBILE,statusPICKINGMOBILE,horainicioPICKINGMOBILE,horafimPICKINGMOBILE)");
+            sql01.Append(" VALUES (");
+            sql01.AppendFormat("{0},", codigoProposta);
+            sql01.AppendFormat("\'{0}\',", usuarioProposta);
+            sql01.AppendFormat("\'{0}\',", (int)statusLiberacao);
+            sql01.AppendFormat("\'{0}\',", horaInicio);
+            sql01.AppendFormat("{0})", "NULL");
+
+            SqlServerConn.execCommandSql(sql01.ToString());
+
+        }
+
+        /// <summary>
+        /// Realiza o Insert na tabela de picking Mobile
+        /// </summary>
+        /// <param name="codigoProposta">Codigo da proposta a ser trabalhada</param>
+        /// <param name="usuarioProposta">Usuário trabalhando a proposta</param>
+        /// <param name="statusLiberacao">status atual de liberação da proposta</param>
+        public void insertPropostaTbPickingMobile(int codigoProposta, int usuarioProposta, Proposta.StatusLiberacao statusLiberacao, DateTime horaInicio,DateTime horafim)
+        {
+
+            sql01 = new StringBuilder();
+            sql01.Append("Insert INTO tb1651_Picking_Mobile");
+            sql01.Append("(propostaPICKINGMOBILE,usuarioPICKINGMOBILE,statusPICKINGMOBILE,horainicioPICKINGMOBILE,horafimPICKINGMOBILE)");
+            sql01.Append(" VALUES (");
+            sql01.AppendFormat("{0},", codigoProposta);
+            sql01.AppendFormat("\'{0}\',", usuarioProposta);
+            sql01.AppendFormat("\'{0}\',", statusLiberacao);
+            sql01.AppendFormat("\'{0}\',", horaInicio);
+            sql01.AppendFormat("{0})", horafim);
+
+            SqlServerConn.execCommandSql(sql01.ToString());
+
+        }
+
+        public int selectMaxCodigoPickingMobile(long codigoProposta) 
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("SELECT MAX(codigoPICKINGMOBILE) AS maxCodigo FROM tb1651_Picking_Mobile");
+            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0}", codigoProposta);
+            dr = SqlServerConn.fillDataReader(sql01.ToString());
+
+            if(dr != null)
+            {
+                while(dr.Read())
+                {
+                    return Convert.ToInt32((dr["maxCodigo"]));
+                }
+            }
+
+            return 0;
+        }
+
+        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile,String horaFim)
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("UPDATE tb1651_Picking_Mobile");
+            sql01.Append(" SET");
+            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
+            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim );
+            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ", proposta.Codigo);
+            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
+            SqlServerConn.execCommandSql(sql01.ToString());
+        }
+
+        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile, DateTime horaFim)
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("UPDATE tb1651_Picking_Mobile");
+            sql01.Append("SET");
+            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", statusPKMobile);
+            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}",horaFim);
+            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = ", proposta.Codigo);
+            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
+        }
+
+        public void updatePropostaTbPickingMobileFinalizar(Proposta proposta,Proposta.StatusLiberacao statusPKMobile) 
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("UPDATE tb1651_Picking_Mobile");
+            sql01.Append(" SET");
+            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}",(int)Proposta.StatusLiberacao.FINALIZADO);
+            sql01.AppendFormat(",[horafimPICKINGMOBILE] = '{0}'", DateTime.Now.ToString());
+            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ",proposta.Codigo);
+            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}",proposta.CodigoPikingMobile);
+            SqlServerConn.execCommandSql(sql01.ToString());
         }
 
         /// <summary>
@@ -238,13 +372,14 @@ namespace TitaniumColector.Classes.Dao
         public Proposta fillPropostaWithTop1Item()
         {
             Proposta objProposta = null;
+            Proposta objAux = null;
 
             List<ProdutoProposta> listProd = new List<ProdutoProposta>();
 
             sql01 = new StringBuilder();
 
             sql01.Append(" SELECT TOP (1) TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
-            sql01.Append("TB_PROP.volumesPROPOSTA,");
+            sql01.Append("TB_PROP.volumesPROPOSTA,TB_PROP.codigopickingmobilePROPOSTA,");
             sql01.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sql01.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sql01.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
@@ -253,7 +388,7 @@ namespace TitaniumColector.Classes.Dao
             sql01.Append(" INNER JOIN tb0003_Produtos AS TB_PROD ON TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA = TB_PROD.codigoPRODUTO ");
             sql01.Append(" WHERE TB_ITEMPROPOP.statusseparadoITEMPROPOSTA = 0 ");
             sql01.Append(" GROUP BY TB_PROP.codigoPROPOSTA, TB_PROP.numeroPROPOSTA, TB_PROP.dataliberacaoPROPOSTA,TB_PROP.clientePROPOSTA, TB_PROP.razaoclientePROPOSTA,");
-            sql01.Append("TB_PROP.volumesPROPOSTA,");
+            sql01.Append("TB_PROP.volumesPROPOSTA,TB_PROP.codigopickingmobilePROPOSTA,");
             sql01.Append("TB_ITEMPROPOP.codigoITEMPROPOSTA, TB_ITEMPROPOP.propostaITEMPROPOSTA, TB_ITEMPROPOP.quantidadeITEMPROPOSTA, TB_ITEMPROPOP.statusseparadoITEMPROPOSTA,");
             sql01.Append("TB_ITEMPROPOP.lotereservaITEMPROPOSTA, TB_ITEMPROPOP.codigoprodutoITEMPROPOSTA,");
             sql01.Append("TB_PROD.ean13PRODUTO, TB_PROD.partnumberPRODUTO,TB_PROD.descricaoPRODUTO, TB_PROD.identificacaolotePRODUTO, TB_PROD.codigolotePRODUTO,TB_PROD.nomelocalPRODUTO");
@@ -271,7 +406,7 @@ namespace TitaniumColector.Classes.Dao
                     if (i == 1)
                     {
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(1));
+                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(1), Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
 
                     }
 
@@ -292,16 +427,26 @@ namespace TitaniumColector.Classes.Dao
                     listProd.Add(objProdProp);
                 }
 
-                objProposta = new Proposta(objProposta, listProd);
+                objAux = new Proposta(objProposta,listProd);
+                //objProposta = new Proposta(objProposta, listProd);
 
             }
 
             CeSqlServerConn.closeConnCe();
 
-            return objProposta;
+            return objAux;
         }
 
-
-
+        public void InsertOrUpdatePickingMobile(Proposta proposta, int usuarioProposta, Proposta.StatusLiberacao statusLiberacao, DateTime horaInicio) 
+        {
+            if (proposta.CodigoPikingMobile == 0)
+            {
+                insertPropostaTbPickingMobile(proposta.Codigo,usuarioProposta,statusLiberacao,horaInicio);
+            }
+            else 
+            {
+                updatePropostaTbPickingMobile(proposta, statusLiberacao,"NULL");
+            }
+        }
     }
 }

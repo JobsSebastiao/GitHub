@@ -17,7 +17,7 @@ namespace TitaniumColector.Classes
         private Double totalpecas;
         private Int32 qtdVolumesProposta;
         private List<ProdutoProposta> listItemProposta;
-
+        private Int32 codigoPikingMobile;
 
     #region "CONSTRUCTORS" 
 
@@ -53,7 +53,7 @@ namespace TitaniumColector.Classes
         /// <param name="razaoCliente">Razão cliente Proposta</param>
         /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
         public Proposta(Int64 codigoProposta,string numeroProposta,string dataLiberacaoProposta,int codigoCliente,
-                        string razaoCliente,Int32 qtdVolumes)
+                        string razaoCliente,Int32 qtdVolumes,Int32 codPKMob)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
@@ -61,6 +61,7 @@ namespace TitaniumColector.Classes
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
             this.Volumes = qtdVolumes;
+            this.CodigoPikingMobile = codPKMob;
         }
 
 
@@ -95,7 +96,6 @@ namespace TitaniumColector.Classes
         {
             if (obj.GetType() == typeof(Proposta))
             {
-
                 this.Codigo = ((Proposta)obj).Codigo;
                 this.Numero = ((Proposta)obj).Numero;
                 this.DataLiberacao = ((Proposta)obj).DataLiberacao;
@@ -103,6 +103,7 @@ namespace TitaniumColector.Classes
                 this.RazaoCliente = ((Proposta)obj).RazaoCliente;
                 this.Volumes = ((Proposta)obj).Volumes;
                 this.ListObjItemProposta = listItens;
+                this.CodigoPikingMobile = ((Proposta)obj).CodigoPikingMobile;
             }
 
         }
@@ -132,6 +133,12 @@ namespace TitaniumColector.Classes
         } 
 
     #endregion
+
+        /// <summary>
+        /// Status do pedido na tabela de picking Mobile
+        /// </summary>
+        public enum StatusLiberacao { INSERIDO = 0, TRABALHANDO = 1, FINALIZADO = 2 }
+
 
     #region  "GETS E SETS"
 
@@ -249,6 +256,12 @@ namespace TitaniumColector.Classes
         {
             this.setTotalItens();
             this.setTotalPecas();
+        }
+
+        public Int32 CodigoPikingMobile
+        {
+            get { return codigoPikingMobile; }
+            set { codigoPikingMobile = value; }
         }
 
         /// <summary>

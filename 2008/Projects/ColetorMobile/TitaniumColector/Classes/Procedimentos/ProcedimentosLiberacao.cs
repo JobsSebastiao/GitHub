@@ -12,7 +12,6 @@ namespace TitaniumColector.Classes.Procedimentos
 {
      static class ProcedimentosLiberacao
     {
-
         private static Double totalItens;
         private static Double totalPecas;
         private static Double qtdPecasItem;
@@ -481,6 +480,10 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
+        /// <summary>
+        /// Altera o status do produto para separado.
+        /// </summary>
+        /// <param name="item">item que tera o seu status alterado.</param>
         public static void setStatusProdutoParaSeparado(ProdutoProposta item)
         {
 
@@ -495,7 +498,7 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
-         /// <summary>
+        /// <summary>
          /// Verifica o formato da string bate com o formato esperado para a etiqueta.
          /// </summary>
          /// <param name="inputValue">String a ser verificada.</param>
@@ -550,6 +553,10 @@ namespace TitaniumColector.Classes.Procedimentos
             return resposta;
         }
 
+        /// <summary>
+        /// Valida a quantidade de volumes existentes e decrementa 1 se caso for possível.
+        /// </summary>
+        /// <returns>String com a quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
         public static String decrementaVolume() 
         {
             if (QtdVolumes > 1)
@@ -561,6 +568,11 @@ namespace TitaniumColector.Classes.Procedimentos
             return "Qtd Volumes não pode ser menor que 1.";
         }
 
+         /// <summary>
+         /// Encrementa mais 1 a quantidade de volumes atual.
+         /// </summary>
+         /// <returns>String com a quantidade de volumes após a alteração
+         /// </returns>
         public static String incrementaVolume() 
         {
             String teste = QtdVolumes.ToString();

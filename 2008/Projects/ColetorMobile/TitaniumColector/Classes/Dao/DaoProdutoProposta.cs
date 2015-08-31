@@ -6,13 +6,14 @@ using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlServerCe;
 using System.Data.SqlClient;
 using TitaniumColector.SqlServer;
+using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Classes.Dao
 {
-    class DaoItemProposta
+    class DaoProdutoProposta
     {
         private StringBuilder sql01;
-        public DaoItemProposta() 
+        public DaoProdutoProposta() 
         {
 
         }
@@ -68,11 +69,19 @@ namespace TitaniumColector.Classes.Dao
                 }
 
                 dr.Close();
-
                 SqlServerConn.closeConn();
+
+                if (listItensProposta.Count == 0)
+                {
+                    throw new SqlQueryExceptions("Não foi possível recuperar informações sobre os itens da proposta " + codigoProposta);
+                }
 
                 return listItensProposta;
 
+            }
+            catch(SqlQueryExceptions Ex)
+            {
+                throw Ex;
             }
             catch (SqlException ex)
             {
@@ -132,6 +141,7 @@ namespace TitaniumColector.Classes.Dao
             }
 
             //fecha a conexão
+            dr.Close();
             CeSqlServerConn.closeConnCe();
 
             if (obj != null)
@@ -142,8 +152,6 @@ namespace TitaniumColector.Classes.Dao
             {
                 return null;
             }
-
-
         }
 
         /// <summary>
@@ -180,13 +188,17 @@ namespace TitaniumColector.Classes.Dao
             }
             catch (SqlCeException sqlEx)
             {
-                StringBuilder strBuilder = new StringBuilder();
-                strBuilder.Append("Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta. \n");
-                strBuilder.Append("O procedimento não pode ser concluído");
-                strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
-                strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
+                throw sqlEx;
 
-                MainConfig.errorMessage(strBuilder.ToString(), "SqlException!!");
+                //StringBuilder strBuilder = new StringBuilder();
+                //strBuilder.Append("Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta. \n");
+                //strBuilder.Append("O procedimento não pode ser concluído");
+                //strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
+                //strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
+                //MainConfig.errorMessage(strBuilder.ToString(), "SqlException!!");
+
+
+
             }
             catch (Exception Ex)
             {
@@ -210,7 +222,7 @@ namespace TitaniumColector.Classes.Dao
         /// <param name="codigoProduto">Código do produto </param>
         /// <param name="loteReserva">Lote referente a reserva do item</param>
         public void insertItemProposta(Int64 codigoItem, Int64 propostaItemProposta, Double quantidade, ProdutoProposta.statusSeparado statusSeparado,
-                                        Int64 codigoProduto, Int64 loteReserva, Int64 codigoLocalItemProposta)
+                                       Int64 codigoProduto, Int64 loteReserva, Int64 codigoLocalItemProposta)
         {
             try
             {
@@ -271,6 +283,42 @@ namespace TitaniumColector.Classes.Dao
             {
                 throw ex;
             }
+
+        }
+
+        public void updateItemPropostaRetorno() 
+        {
+            try
+            {
+                sql01 = new StringBuilder();
+                sql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,statusseparadoITEMPROPOSTA,codigoprodutoITEMPROPOSTA,xmlSequenciaITEMPROPOSTA ");
+                sql01.Append(" FROM tb0002_ItensProposta");
+                sql01.AppendFormat(" WHERE  statusseparadoITEMPROPOSTA = {0}", (int)ProdutoProposta.statusSeparado.SEPARADO);
+                SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
+
+                if( dr!=null )
+                {
+                    while(dr.Read())
+                    {
+                        sql01 = new StringBuilder();
+                        sql01.Append(" UPDATE tb1602_Itens_Proposta");
+                        sql01.AppendFormat("  SET   separadoITEMPROPOSTA ={0}", Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]));
+                        sql01.AppendFormat(" ,xmlSequenciaITEMPROPOSTA ='{0}'", (string)dr["xmlSequenciaITEMPROPOSTA"]);
+                        sql01.AppendFormat(" WHERE (codigoITEMPROPOSTA = {0})", Convert.ToInt32(dr["codigoITEMPROPOSTA"]));
+                        SqlServerConn.execCommandSql(sql01.ToString());
+                    }
+                }
+
+                //fecha a conexão
+                dr.Close();
+                CeSqlServerConn.closeConnCe();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex as SqlException;
+            }
+
 
         }
 
