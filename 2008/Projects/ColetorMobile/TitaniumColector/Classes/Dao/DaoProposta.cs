@@ -240,8 +240,8 @@ namespace TitaniumColector.Classes.Dao
 
             SqlServerConn.execCommandSql(sql01.ToString());
 
-         }
-       
+        }
+
         /// <summary>
         /// Realiza o Insert na tabela de picking Mobile
         /// </summary>
@@ -289,7 +289,6 @@ namespace TitaniumColector.Classes.Dao
             sql01.Append("UPDATE tb1651_Picking_Mobile");
             sql01.Append(" SET");
             sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
-            //sql01.AppendFormat(",[horainicioPICKINGMOBILE] = {0}", horaInicio);
             sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim );
             sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ", proposta.Codigo);
             sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
@@ -311,11 +310,12 @@ namespace TitaniumColector.Classes.Dao
         {
             sql01 = new StringBuilder();
             sql01.Append("UPDATE tb1651_Picking_Mobile");
-            sql01.Append("SET");
-            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}",statusPKMobile);
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", DateTime.Now);
-            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = ",proposta.Codigo);
+            sql01.Append(" SET");
+            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}",(int)Proposta.StatusLiberacao.FINALIZADO);
+            sql01.AppendFormat(",[horafimPICKINGMOBILE] = '{0}'", DateTime.Now.ToString());
+            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ",proposta.Codigo);
             sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}",proposta.CodigoPikingMobile);
+            SqlServerConn.execCommandSql(sql01.ToString());
         }
 
         /// <summary>
@@ -372,6 +372,7 @@ namespace TitaniumColector.Classes.Dao
         public Proposta fillPropostaWithTop1Item()
         {
             Proposta objProposta = null;
+            Proposta objAux = null;
 
             List<ProdutoProposta> listProd = new List<ProdutoProposta>();
 
@@ -426,13 +427,14 @@ namespace TitaniumColector.Classes.Dao
                     listProd.Add(objProdProp);
                 }
 
-                objProposta = new Proposta(objProposta, listProd);
+                objAux = new Proposta(objProposta,listProd);
+                //objProposta = new Proposta(objProposta, listProd);
 
             }
 
             CeSqlServerConn.closeConnCe();
 
-            return objProposta;
+            return objAux;
         }
 
         public void InsertOrUpdatePickingMobile(Proposta proposta, int usuarioProposta, Proposta.StatusLiberacao statusLiberacao, DateTime horaInicio) 

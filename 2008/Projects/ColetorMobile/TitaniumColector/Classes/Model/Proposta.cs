@@ -96,7 +96,6 @@ namespace TitaniumColector.Classes
         {
             if (obj.GetType() == typeof(Proposta))
             {
-
                 this.Codigo = ((Proposta)obj).Codigo;
                 this.Numero = ((Proposta)obj).Numero;
                 this.DataLiberacao = ((Proposta)obj).DataLiberacao;
@@ -104,6 +103,7 @@ namespace TitaniumColector.Classes
                 this.RazaoCliente = ((Proposta)obj).RazaoCliente;
                 this.Volumes = ((Proposta)obj).Volumes;
                 this.ListObjItemProposta = listItens;
+                this.CodigoPikingMobile = ((Proposta)obj).CodigoPikingMobile;
             }
 
         }

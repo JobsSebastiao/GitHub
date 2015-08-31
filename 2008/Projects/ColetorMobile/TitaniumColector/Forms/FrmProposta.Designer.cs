@@ -74,17 +74,16 @@ namespace TitaniumColector.Forms
             this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Logout);
             this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Exit);
             this.mnuPropostas.Text = "Opções";
-            //this.mnuPropostas.Click += new System.EventHandler(this.menuItem1_Click);
             // 
             // mnuOpcoes_Logout
             // 
             this.mnuOpcoes_Logout.Text = "Logout";
-            this.mnuOpcoes_Logout.Click += new System.EventHandler(this.menuItem4_Click);
+            this.mnuOpcoes_Logout.Click += new System.EventHandler(this.mnuOpcoes_Logout_Click);
             // 
             // mnuOpcoes_Exit
             // 
             this.mnuOpcoes_Exit.Text = "Exit";
-            this.mnuOpcoes_Exit.Click += new System.EventHandler(this.menuItem5_Click);
+            this.mnuOpcoes_Exit.Click += new System.EventHandler(this.mnuOpcoes_Exit_Click);
             // 
             // lbPedido
             // 
@@ -338,6 +337,7 @@ namespace TitaniumColector.Forms
             this.Name = "FrmProposta";
             this.Text = "Proposta";
             this.Load += new System.EventHandler(this.FrmProposta_Load);
+            this.Closing += new System.ComponentModel.CancelEventHandler(this.FrmProposta_Closing);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmProposta_KeyPress);
             this.pnlFrmProposta.ResumeLayout(false);
             this.pnCentral.ResumeLayout(false);

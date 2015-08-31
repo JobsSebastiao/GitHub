@@ -49,30 +49,43 @@ namespace TitaniumColector.Forms
             this.carregarForm();
             Cursor.Current = Cursors.Default;
         }
-
-        //private void menuItem1_Click(object sender, EventArgs e)
-        //{
-        //    frmLogin frlLogin = new frmLogin();
-        //    frlLogin.Show();
-        //    this.Hide();
-        //}
-
-        private void menuItem4_Click(object sender, EventArgs e)
+        
+        /// <summary>
+        /// Menu evento ao clicar em Opções/Logout
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuOpcoes_Logout_Click(object sender, EventArgs e)
         {
-            frmLogin login = new frmLogin();
-            login.Show();
-            this.Dispose();
+            try
+            {
+                this.newLogin();
+            }
+            catch (Exception ex)
+            {
+                MainConfig.errorMessage(ex.Message, "Logout");
+            }
+        }
+     
+        /// <summary>
+        /// Menu evento ao clicar em Opções/Exit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mnuOpcoes_Exit_Click(object sender, EventArgs e)
+        {
             this.Close();
         }
-
-        private void menuItem5_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
+       
+        /// <summary>
+        /// realiza o decremento do campo volume.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btDecrementaVol_Click(object sender, System.EventArgs e)
         {
             String valor = ProcedimentosLiberacao.decrementaVolume();
+
             if (valor.Contains("Qtd"))
             {
                 tbMensagem.Text = valor;
@@ -87,6 +100,11 @@ namespace TitaniumColector.Forms
             this.Focus();
         }
 
+        /// <summary>
+        /// Realiza o incremento do campo volume
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btIncrementaVol_Click(object sender, System.EventArgs e)
         {
             lbQtdVolumes.Text = ProcedimentosLiberacao.incrementaVolume();
@@ -115,6 +133,29 @@ namespace TitaniumColector.Forms
             }
         }
 
+        /// <summary>
+        /// Valida o fechamento do form.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FrmProposta_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Desejar salvar as alterações realizadas?", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            if (result == DialogResult.No)
+            {
+                Application.Exit();
+            }
+            else if (result == DialogResult.Yes)
+            {
+                MessageBox.Show("Aqui eu salvo tudo que acontece.");
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+
     #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
@@ -131,12 +172,11 @@ namespace TitaniumColector.Forms
             daoProposta = new DaoProposta();
             daoProduto = new DaoProduto();
 
-
             try
             {
                 //Limpa a Base.
                 objTransacoes.clearBaseMobile();
-                
+
                 //Carrega um objeto Proposta e inicia todo o procedimento.
                 //Caso não exista propostas a serem liberadas gera um exception 
                 //onde será feito os tratamentos para evitar o travamento do sistema.
@@ -162,19 +202,27 @@ namespace TitaniumColector.Forms
                     //Insert na base Mobile tabela tb0003_Produtos
                     daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
                 }
-                else 
+                else
                 {
                     throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
                 }
             }
+            catch (SqlQueryExceptions ex) 
+            {
+                this.exitOnError(ex.Message, "Próxima Proposta");
+            }
             catch (NoNewPropostaException ex)
             {
-                this.Dispose();
-                this.Close();
-                MainConfig.errorMessage(ex.Message, "Próxima Proposta");
-                FrmAcao frmAcao = new FrmAcao();
-                Cursor.Current = Cursors.Default;
-                frmAcao.Show();
+                this.exitOnError(ex.Message, "Próxima Proposta");
+            }
+            catch (SqlCeException sqlEx)
+            {
+                StringBuilder strBuilder = new StringBuilder();
+                strBuilder.Append("Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta. \n");
+                strBuilder.Append("O procedimento não pode ser concluído");
+                strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
+                strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
+                MainConfig.errorMessage(strBuilder.ToString(), "SqlException!!");
             }
             catch (Exception ex)
             {
@@ -587,21 +635,38 @@ namespace TitaniumColector.Forms
 
         private void liberarItem(String inputText)
         {
-            ProcedimentosLiberacao.lerEtiqueta(inputText,objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
-
-            if (ProcedimentosLiberacao.QtdPecasItem == 0)
+            try
             {
-                if (!this.nextItemProposta())
+                ProcedimentosLiberacao.lerEtiqueta(inputText, objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+                if (ProcedimentosLiberacao.QtdPecasItem == 0)
                 {
-                    daoItemProposta = new DaoProdutoProposta();
-                    daoItemProposta.updateItemPropostaRetorno();
+                    if (!this.nextItemProposta())
+                    {
+                        daoItemProposta = new DaoProdutoProposta();
+                        daoProposta = new DaoProposta();
+                        daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta,Proposta.StatusLiberacao.FINALIZADO);
+                        daoItemProposta.updateItemPropostaRetorno();
+                        this.Dispose();
+                        this.Close();
+                    }
 
-                    MessageBox.Show("PRÒXIMA PROPOSTA.");
-
-                    this.Dispose();
-                    this.Close();
                 }
-
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally 
+            {
+                if (daoProposta != null)
+                {
+                    daoProposta = null;
+                }
+                if (daoItemProposta != null)
+                {
+                    daoItemProposta = null;
+                }
             }
         }
 
@@ -616,7 +681,6 @@ namespace TitaniumColector.Forms
             }
             else
             {
-                //value = String.Format(culture, "{0:0.00}", value);
                 value = String.Format(culture, "{0:0.000}", Convert.ToDouble(value));
             }
             return value;
@@ -654,6 +718,44 @@ namespace TitaniumColector.Forms
             }
 
             return retorno;
+        }
+
+        private void exitOnError(String mensagem,String headForm) 
+        {
+            this.Dispose();
+            this.Close();
+            MainConfig.errorMessage(mensagem, headForm);
+            FrmAcao frmAcao = new FrmAcao();
+            Cursor.Current = Cursors.Default;
+            frmAcao.Show();
+        }
+
+        private void newLogin() 
+        {
+            try
+            {
+                DialogResult resp = MessageBox.Show("Deseja salvar as altereções relalizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (resp == DialogResult.Yes)
+                {
+
+
+                }
+                else if (resp == DialogResult.No)
+                {
+                    daoProposta = new DaoProposta();
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.INSERIDO, "null");
+                    daoProposta = null;
+                    this.Dispose();
+                    this.Close();
+                    frmLogin login = new frmLogin();
+                    login.Show();
+                }
+
+            }
+            catch (Exception)
+            {
+                throw new Exception("Não foi possível executar o comando solicitado. \n ", null);
+            }
         }
 
     #endregion

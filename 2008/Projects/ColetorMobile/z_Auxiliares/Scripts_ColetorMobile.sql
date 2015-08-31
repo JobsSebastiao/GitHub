@@ -232,12 +232,3 @@ CREATE TABLE tb1651_Picking_Mobile
 	CONSTRAINT FKpropostaPicking FOREIGN KEY (propostaPICKINGMOBILE)
 	REFERENCES tb1601_Propostas(codigoPROPOSTA)
 )
-
-
-DROP TABLE tb1651_Picking_Mobile
-
-
-Insert INTO tb1651_Picking_Mobile
- VALUES (1234,1234,1234,CONVERT(NVARCHAR(30),getdate(),111),null)
-
- SELECT * FROM tb1651_Picking_Mobile

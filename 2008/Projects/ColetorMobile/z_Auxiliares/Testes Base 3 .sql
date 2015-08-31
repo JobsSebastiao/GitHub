@@ -183,3 +183,64 @@ SET[statusPICKINGMOBILE] = 1,
 [horafimPICKINGMOBILE] = NULL 
 WHERE propostaPICKINGMOBILE = 80396  AND codigoPICKINGMOBILE = 18
 
+
+
+
+
+
+
+                SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,statusITEMPROPOSTA,
+                ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD
+                 FROM tb1206_Reservas (NOLOCK) 
+                INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
+                INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO 
+                LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL 
+                LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL 
+				WHERE propostaITEMPROPOSTA  < 80446
+                AND tipodocRESERVA = 1602 
+                --AND statusITEMPROPOSTA = 3 
+                AND separadoITEMPROPOSTA <>1  
+                GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,statusITEMPROPOSTA,
+                nomePRODUTO,partnumberPRODUTO
+				ORDER BY codigoPRODUTO DESC
+
+
+
+				SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,statusseparadoITEMPROPOSTA,codigoprodutoITEMPROPOSTA,xmlSequenciaITEMPROPOSTA  
+				FROM tb0002_ItensProposta 
+				WHERE  statusseparadoITEMPROPOSTA = 1
+
+				select * from tb1651_Picking_Mobile
+
+				delete FROM tb1651_Picking_Mobile
+
+				UPDATE tb1651_Picking_Mobile
+				SET statusPIcKINGMOBILE = 0
+                WHERE codigoPICKINGMOBILE = 1046
+
+				PROP 75899---
+				ITENS
+				1143211,1143212,1150875
+
+				UPDATE tb1602_Itens_Proposta
+				SET separadoITEMPROPOSTA = 0
+				WHERE codigoITEMPROPOSTA IN (1143211,1143212,1150875)
+
+
+				SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoITEMPROPOSTA,quantidadeITEMPROPOSTA,statusITEMPROPOSTA,separadoITEMPROPOSTA,xmlsequenciaITEMPROPOSTA 
+				FROM tb1602_Itens_Proposta 
+				WHERE propostaITEMPROPOSTA = 75899 AND codigoITEMPROPOSTA IN (1143211,1143212,1150875)
+
+
+
+
+
+				UPDATE tb1651_Picking_Mobile 
+				SET[statusPICKINGMOBILE] = 2,[horafimPICKINGMOBILE] = 8/31/2015 1:58:39 PM
+				WHERE propostaPICKINGMOBILE =  AND codigoPICKINGMOBILE = 0
+
+				UPDATE tb1651_Picking_Mobile
+				SET[statusPICKINGMOBILE] = 2,[horafimPICKINGMOBILE] = '8/31/2015 2:45:12 PM' 
+				WHERE propostaPICKINGMOBILE = 75899  AND codigoPICKINGMOBILE = 1046
+
+
