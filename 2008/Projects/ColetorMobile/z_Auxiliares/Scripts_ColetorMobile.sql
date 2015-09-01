@@ -232,3 +232,29 @@ CREATE TABLE tb1651_Picking_Mobile
 	CONSTRAINT FKpropostaPicking FOREIGN KEY (propostaPICKINGMOBILE)
 	REFERENCES tb1601_Propostas(codigoPROPOSTA)
 )
+
+
+--########################################################################################################################################
+--# Atualiza os registros sem vínculos para a embalagem padrão
+--# Gabriel
+--# dd/mm/yyyy
+--########################################################################################################################################
+
+IF ( SELECT COUNT(codigoEMBALAGEMPRODUTO)
+	 FROM tb0504_Embalagens_Produtos
+	 LEFT JOIN tb0545_Embalagens ON codigoEMBALAGEM = embalagemEMBALAGEMPRODUTO
+	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
+    ) > 0
+
+BEGIN
+
+	 UPDATE tb0504_Embalagens_Produtos
+	 SET embalagemEMBALAGEMPRODUTO = (SELECT codigoEMBALAGEM
+			  FROM tb0545_Embalagens
+			  WHERE nomeEMBALAGEM = 'Padrão'
+			 )
+	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
+
+END
+
+GO

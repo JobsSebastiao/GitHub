@@ -100,8 +100,6 @@ namespace TitaniumColector.Classes
                             QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
                         }
 
-                        DataHoraValidacao = DateTime.Now;
-                        tipoEtiqueta = Tipo.QRCODE;
                     }
 
                     break;
@@ -137,8 +135,7 @@ namespace TitaniumColector.Classes
                             QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
                         }
 
-                        DataHoraValidacao = DateTime.Now;
-                        tipoEtiqueta = Tipo.BARRAS;
+
                     }
 
                     break;
@@ -148,7 +145,9 @@ namespace TitaniumColector.Classes
                     break;
             }
 
-            
+            DataHoraValidacao = DateTime.Now;
+            this.TipoEtiqueta = tipoEtiqueta;
+
         }
 
     #endregion

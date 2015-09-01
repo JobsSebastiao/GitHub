@@ -196,31 +196,52 @@ namespace TitaniumColector.Classes.Procedimentos
         public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta)
         {
             //Verifica se o List foi iniciado
-            if (EtiquetasLidas != null)
+
+            switch (objEtiqueta.TipoEtiqueta )
             {
-                if (EtiquetasLidas.Count == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    //Verifica se a etiqueta está na lista de etiquetas lidas.
-                    if (Etiqueta.validarEtiqueta(objEtiqueta, EtiquetasLidas))
+                case Etiqueta.Tipo.INVALID:
+
+                    return false;
+
+                case Etiqueta.Tipo.QRCODE:
+
+                    if (EtiquetasLidas != null)
                     {
-                        //Caso esteja na lista
-                        return false;
+                        if (EtiquetasLidas.Count == 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            //Verifica se a etiqueta está na lista de etiquetas lidas.
+                            if (Etiqueta.validarEtiqueta(objEtiqueta, EtiquetasLidas))
+                            {
+                                //Caso esteja na lista
+                                return false;
+                            }
+                            else
+                            {
+                                //caso não esteja na lista.
+                                return true;
+                            }
+                        }
                     }
                     else
                     {
-                        //caso não esteja na lista.
                         return true;
                     }
-                }
+
+
+                case Etiqueta.Tipo.BARRAS:
+
+                    return true;
+
+                default :
+                    return false;
             }
-            else
-            {
-                return true;
-            }
+
+
+            
         }
 
         /// <summary>
@@ -321,7 +342,19 @@ namespace TitaniumColector.Classes.Procedimentos
 
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new Etiqueta();
-            objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
+            objEtiqueta = new Etiqueta(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
+          // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
+        }
+
+        public static void lerEtiqueta(String inputValue,Etiqueta.Tipo tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
+        {
+            tbMensagem.Text = "";
+
+            ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
+            Etiqueta objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
+            // objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
+            // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
 
@@ -380,7 +413,6 @@ namespace TitaniumColector.Classes.Procedimentos
                 sb.Append("A quantidade de peças desta etiqueta difere com a quantidade de peças do Item.");
                 sb.AppendFormat("error : {0} ", qtdEx.Message);
                 MainConfig.errorMessage(sb.ToString(),"Etiqueta Inválida!!");
-
             }
             catch (Exception)
             {
@@ -398,13 +430,35 @@ namespace TitaniumColector.Classes.Procedimentos
         public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
         {
             //Verifica se os produtos são iguais
-            if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+            switch (etiquetaLida.TipoEtiqueta)
             {
-                if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
-                {
-                    return true;
-                }
+                case Etiqueta.Tipo.INVALID:
+                    break;
+                case Etiqueta.Tipo.QRCODE:
+
+                    if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+                    {
+                        if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                        {
+                            return true;
+                        }
+                    }
+
+                    break;
+
+                case Etiqueta.Tipo.BARRAS:
+
+                    if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                    {
+                        return true;
+                    }
+
+                    break;
+
+                default:
+                    break;
             }
+           
 
             return false;
         }

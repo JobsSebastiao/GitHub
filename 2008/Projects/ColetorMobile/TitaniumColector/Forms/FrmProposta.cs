@@ -133,14 +133,14 @@ namespace TitaniumColector.Forms
 
                     case Etiqueta.Tipo.QRCODE:
 
-                        this.liberarItem(inputText);
+                        this.liberarItem(inputText,tipoEtiqueta);
                         inputText = string.Empty;
                         break;
 
                     case Etiqueta.Tipo.BARRAS:
 
+                        this.liberarItem(inputText,tipoEtiqueta);
                         inputText = string.Empty;
-                        tbMensagem.Text = " Ean13!!!";
                         break;
 
                     default:
@@ -693,6 +693,45 @@ namespace TitaniumColector.Forms
                 }
             }
         }
+
+        private void liberarItem(String inputText,Etiqueta.Tipo tipoEtiqueta)
+        {
+            try
+            {
+                ProcedimentosLiberacao.lerEtiqueta(inputText,tipoEtiqueta, objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+                if (ProcedimentosLiberacao.QtdPecasItem == 0)
+                {
+                    if (!this.nextItemProposta())
+                    {
+                        daoItemProposta = new DaoProdutoProposta();
+                        daoProposta = new DaoProposta();
+                        daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
+                        daoItemProposta.updateItemPropostaRetorno();
+                        this.Dispose();
+                        this.Close();
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (daoProposta != null)
+                {
+                    daoProposta = null;
+                }
+                if (daoItemProposta != null)
+                {
+                    daoItemProposta = null;
+                }
+            }
+        }
+
+
 
         private String intOrDecimal(String value)
         {
