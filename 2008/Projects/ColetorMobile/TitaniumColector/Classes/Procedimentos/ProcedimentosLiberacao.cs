@@ -259,34 +259,34 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-        /// <summary>
-         /// Gera etiquetas para testes.
-         /// </summary>
-        public static void gerarEtiquetas()
-        {
-            Etiqueta objEtiqueta;
-            List<Etiqueta> list = new List<Etiqueta>();
+        ///// <summary>
+        // /// Gera etiquetas para testes.
+        // /// </summary>
+        //public static void gerarEtiquetas()
+        //{
+        //    Etiqueta objEtiqueta;
+        //    List<Etiqueta> list = new List<Etiqueta>();
 
-            ProximaEtiqueta = 0;
-            list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
-            for (int i = 1; i <= 8; i++)
-            {
-                if (i < 5)
-                {
-                    objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
-                }
-                else 
-                {
-                    objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
-                }
+        //    ProximaEtiqueta = 0;
+        //    list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
+        //    for (int i = 1; i <= 8; i++)
+        //    {
+        //        if (i < 5)
+        //        {
+        //            objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
+        //        }
+        //        else 
+        //        {
+        //            objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
+        //        }
                 
-                list.Add(objEtiqueta);
-                objEtiqueta = null;
-            }
+        //        list.Add(objEtiqueta);
+        //        objEtiqueta = null;
+        //    }
 
-            list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
-            ListEtiquetasGeradas = list;
-        }
+        //    list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
+        //    ListEtiquetasGeradas = list;
+        //}
 
         /// <summary>
         /// 
@@ -498,59 +498,129 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
+        ///// <summary>
+        // /// Verifica o formato da string bate com o formato esperado para a etiqueta.
+        // /// </summary>
+        // /// <param name="inputValue">String a ser verificada.</param>
+        // /// <returns>True caso seja válido do contrário retorna false.</returns>
+        //public static bool validaInputValueEtiqueta(String inputValue)
+        //{
+        //    bool resposta = false;
+        //    if (inputValue.Contains("PNUMBER:"))
+        //    {
+        //        if (inputValue.Contains("DESCRICAO:"))
+        //        {
+        //            if (inputValue.Contains("EAN13:"))
+        //            {
+        //                if (inputValue.Contains("LOTE:"))
+        //                {
+        //                    if (inputValue.Contains("SEQ:"))
+        //                    {
+        //                        if (inputValue.Contains("QTD:"))
+        //                        {
+        //                            resposta = true;
+        //                        }
+        //                        else
+        //                        {
+        //                            resposta = false;
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        resposta = false;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    resposta = false;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                resposta = false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            resposta = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        resposta = false;
+        //    }
+
+        //    return resposta;
+        //}
+
         /// <summary>
-         /// Verifica o formato da string bate com o formato esperado para a etiqueta.
-         /// </summary>
-         /// <param name="inputValue">String a ser verificada.</param>
-         /// <returns>True caso seja válido do contrário retorna false.</returns>
-        public static bool validaInputValueEtiqueta(String inputValue)
-        {
-            bool resposta = false;
-            if (inputValue.Contains("PNUMBER:"))
+        /// Valida o tipo de etiqueta lido
+        /// </summary>
+        /// <param name="inputValue">informação capturada pelo leitor</param>
+        /// <returns>Etiqueta.tipo (EAN13,QRCODE,INVALID)</returns>
+        public static Etiqueta.Tipo validaInputValueEtiqueta(String inputValue)
+         {
+            Etiqueta.Tipo tipoEtiqueta;
+
+            int inputLength = inputValue.Length;
+
+            if(inputLength==13)
             {
-                if (inputValue.Contains("DESCRICAO:"))
+                tipoEtiqueta = Etiqueta.Tipo.BARRAS;
+            }
+            else if (inputLength > 13)
+            {
+                if (inputValue.Contains("PNUMBER:"))
                 {
-                    if (inputValue.Contains("EAN13:"))
+                    if (inputValue.Contains("DESCRICAO:"))
                     {
-                        if (inputValue.Contains("LOTE:"))
+                        if (inputValue.Contains("EAN13:"))
                         {
-                            if (inputValue.Contains("SEQ:"))
+                            if (inputValue.Contains("LOTE:"))
                             {
-                                if (inputValue.Contains("QTD:"))
+                                if (inputValue.Contains("SEQ:"))
                                 {
-                                    resposta = true;
+                                    if (inputValue.Contains("QTD:"))
+                                    {
+                                        tipoEtiqueta = Etiqueta.Tipo.QRCODE;
+                                    }
+                                    else
+                                    {
+                                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                    }
                                 }
                                 else
                                 {
-                                    resposta = false;
+                                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
                                 }
                             }
                             else
                             {
-                                resposta = false;
+                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
                             }
                         }
                         else
                         {
-                            resposta = false;
+                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
                         }
                     }
                     else
                     {
-                        resposta = false;
+                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
                     }
                 }
                 else
                 {
-                    resposta = false;
+                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
                 }
-            }
-            else
-            {
-                resposta = false;
-            }
 
-            return resposta;
+            }
+            else 
+            {
+                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+            }
+        
+            return tipoEtiqueta;
         }
 
         /// <summary>

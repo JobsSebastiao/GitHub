@@ -121,11 +121,35 @@ namespace TitaniumColector.Forms
         {
             if (e.KeyChar == Convert.ToChar(13))
             {
-                if (ProcedimentosLiberacao.validaInputValueEtiqueta(inputText))
+                Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
+
+                switch (tipoEtiqueta)
                 {
-                    this.liberarItem(inputText);
-                    inputText = string.Empty;
+                    case Etiqueta.Tipo.INVALID:
+
+                        inputText = string.Empty;
+                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                        break;
+
+                    case Etiqueta.Tipo.QRCODE:
+
+                        this.liberarItem(inputText);
+                        inputText = string.Empty;
+                        break;
+
+                    case Etiqueta.Tipo.BARRAS:
+
+                        inputText = string.Empty;
+                        tbMensagem.Text = " Ean13!!!";
+                        break;
+
+                    default:
+
+                        inputText = string.Empty;
+                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                        break;
                 }
+                
             }
             else
             {
