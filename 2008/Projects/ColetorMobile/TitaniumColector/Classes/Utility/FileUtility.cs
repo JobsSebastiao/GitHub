@@ -18,7 +18,7 @@ public class FileUtility
 
         //path diretório onde está salva a aplicação.
     private string _pathMobile;
-        //nome do arquivo a ser utilizado (ex : exemplo.txt)
+        //Nome do arquivo a ser utilizado (ex : exemplo.txt)
     private string _fileName;
         //caminho completo para o arquivo a ser utilizado
     private string _fullPath;
@@ -38,7 +38,7 @@ public class FileUtility
     }
 
     /// <summary>
-    /// Ao ser instanciada configura um caminho e um nome de arquivo 
+    /// Ao ser instanciada configura um caminho e um Nome de arquivo 
     /// de acordo com os parâmetros informados. 
     /// </summary>
     /// <param name="strPathMobile">Path no dispositivo mobile</param>
@@ -417,8 +417,8 @@ public class FileUtility
     /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
     /// </summary>
     /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
-    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
-    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
+    /// <param name="strArquivo">String parte do Nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
+    /// <returns>Arraylist de String contendo o Nome dos arquivos encontrados no diretório</returns>
     /// <remarks></remarks>
     //public string getFileOnDirectory(string extensao, string strArquivo)
     //{
@@ -452,8 +452,8 @@ public class FileUtility
     /// Recupera um arquivo em um caminho informado no parametro Fullpath do objeto
     /// </summary>
     /// <param name="extensao">tipo de extensão do arquivo a ser encontrado EX= ".txt"</param>
-    /// <param name="strArquivo">String parte do nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
-    /// <returns>Arraylist de String contendo o nome dos arquivos encontrados no diretório</returns>
+    /// <param name="strArquivo">String parte do Nome do arquivo a ser buscado para que seja feita uma verificação antes de retornar o arquivo</param>
+    /// <returns>Arraylist de String contendo o Nome dos arquivos encontrados no diretório</returns>
     /// <remarks></remarks>
     //public ArrayList getArquivosDiretorio(string extensao, string strArquivo)
     //{

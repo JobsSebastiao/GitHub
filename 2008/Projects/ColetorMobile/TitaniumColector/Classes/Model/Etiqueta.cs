@@ -385,7 +385,6 @@ namespace TitaniumColector.Classes
                 // O resultado é uma string.
                return result = str.ToString();
 
-               // System.Windows.Forms.MessageBox.Show(result);
             }
             catch (Exception)
             {

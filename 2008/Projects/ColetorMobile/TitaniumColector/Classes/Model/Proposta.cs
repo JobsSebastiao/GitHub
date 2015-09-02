@@ -137,7 +137,7 @@ namespace TitaniumColector.Classes
         /// <summary>
         /// Status do pedido na tabela de picking Mobile
         /// </summary>
-        public enum StatusLiberacao { INSERIDO = 0, TRABALHANDO = 1, FINALIZADO = 2 }
+        public enum StatusLiberacao { NAOFINALIZADO = 0, TRABALHANDO = 1, FINALIZADO = 2 }
 
 
     #region  "GETS E SETS"
@@ -214,7 +214,7 @@ namespace TitaniumColector.Classes
         }
 
         /// <summary>
-        /// Set a quantidade de itens recebendo um valor double como parâmetro.
+        /// Set a Quantidade de itens recebendo um valor double como parâmetro.
         /// </summary>
         /// <param name="qtdItens"></param>
         public void setTotalItens(Double qtdItens)

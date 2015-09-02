@@ -25,7 +25,7 @@ namespace TitaniumColector.Classes.Dao
         /// <returns>List do tipo ItemProposta </returns>
         public IEnumerable<ProdutoProposta> fillListItensProposta(int codigoProposta)
         {
-            ProdutoProposta objItemProposta = new ProdutoProposta();
+            ProdutoProposta objItemProposta = null; 
 
             List<ProdutoProposta> listItensProposta = new List<ProdutoProposta>();
 
@@ -33,19 +33,40 @@ namespace TitaniumColector.Classes.Dao
             {
 
                 sql01 = new StringBuilder();
-                sql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
-                sql01.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD");
-                sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
-                sql01.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
-                sql01.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
-                sql01.Append("LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
-                sql01.Append("LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
+
+                ///ALTERADO EM CRITERIO DE TESTES PARA RETORNAR MAIS INFORMAÇOES SOBRE O PRODUTO DA PROPOSTA
+                ///
+                //sql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,");
+                //sql01.Append("ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD");
+                //sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
+                //sql01.Append("INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
+                //sql01.Append("INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
+                //sql01.Append("LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
+                //sql01.Append("LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
+                //sql01.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);
+                //sql01.Append("AND tipodocRESERVA = 1602 ");
+                //sql01.Append("AND statusITEMPROPOSTA = 3 ");
+                //sql01.Append("AND separadoITEMPROPOSTA = 0  ");
+                //sql01.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
+                //sql01.Append("nomePRODUTO,partnumberPRODUTO");
+
+                sql01.Append("SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD");
+                sql01.Append(",quantidadeEMBALAGEMPRODUTO AS QtdEmbalagem");
+                sql01.Append(",dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA");
+                sql01.Append(",DBO.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS nomesLocaisLOTES");
+                sql01.Append(" FROM tb1206_Reservas (NOLOCK)");
+                sql01.Append(" INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA");
+                sql01.Append(" INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO ");
+                sql01.Append(" INNER JOIN tb0504_Embalagens_Produtos ON codigobarrasEMBALAGEMPRODUTO = ean13PRODUTO");
+                sql01.Append(" LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL ");
+                sql01.Append(" LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
                 sql01.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);
-                sql01.Append("AND tipodocRESERVA = 1602 ");
-                sql01.Append("AND statusITEMPROPOSTA = 3 ");
-                sql01.Append("AND separadoITEMPROPOSTA = 0  ");
-                sql01.Append("GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,produtoITEMPROPOSTA,");
-                sql01.Append("nomePRODUTO,partnumberPRODUTO");
+                sql01.Append(" AND tipodocRESERVA = 1602 ");
+                sql01.Append(" AND statusITEMPROPOSTA = 3");
+                sql01.Append(" AND separadoITEMPROPOSTA = 0  ");
+                sql01.Append(" GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO");
+                sql01.Append(" ,quantidadeEMBALAGEMPRODUTO,codigobarrasEMBALAGEMPRODUTO");
+                sql01.Append(" ORDER BY codigoPRODUTO");
 
                 SqlDataReader dr = SqlServerConn.fillDataReader( sql01.ToString());
 
@@ -56,6 +77,9 @@ namespace TitaniumColector.Classes.Dao
                                                                 Convert.ToInt32(dr["propostaITEMPROPOSTA"]),
                                                                 Convert.ToDouble(dr["QTD"]),
                                                                 ProdutoProposta.statusSeparado.NAOSEPARADO,
+                                                                (string)dr["lotesRESERVA"],
+                                                                Convert.ToDouble(dr["QtdEmbalagem"]),
+                                                                (string)dr["nomesLocaisLOTES"],
                                                                 Convert.ToInt32(dr["codigoPRODUTO"]),
                                                                 (string)dr["ean13PRODUTO"],
                                                                 (string)dr["partnumberPRODUTO"],
@@ -79,9 +103,9 @@ namespace TitaniumColector.Classes.Dao
                 return listItensProposta;
 
             }
-            catch(SqlQueryExceptions Ex)
+            catch(SqlQueryExceptions ex)
             {
-                throw Ex;
+                throw ex;
             }
             catch (SqlException ex)
             {
@@ -173,14 +197,17 @@ namespace TitaniumColector.Classes.Dao
                     sql01 = new StringBuilder();
                     sql01.Append("INSERT INTO tb0002_ItensProposta");
                     sql01.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,");
-                    sql01.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA) ");
+                    sql01.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA,alllotesreservaITEMPROPOSTA,qtdembalagemITEMPROPOSTA,allnomeslocaisITEMPROPOSTA) ");
                     sql01.Append("VALUES (");
                     sql01.AppendFormat("{0},", item.CodigoItemProposta);
                     sql01.AppendFormat("{0},", item.PropostaItemProposta);
                     sql01.AppendFormat("{0},", item.Quantidade);
                     sql01.AppendFormat("{0},", (int)item.StatusSeparado);
                     sql01.AppendFormat("{0},", item.CodigoProduto);
-                    sql01.AppendFormat("{0})", item.LotereservaItemProposta);
+                    sql01.AppendFormat("{0},", item.LotereservaItemProposta);
+                    sql01.AppendFormat("'{0}',", item.LotesReserva);
+                    sql01.AppendFormat("{0},", item.QuantidadeEmbalagem);
+                    sql01.AppendFormat("'{0}')", item.NomeLocaisItemProposta);
       
                     CeSqlServerConn.execCommandSqlCe(sql01.ToString());
                 }
@@ -189,15 +216,6 @@ namespace TitaniumColector.Classes.Dao
             catch (SqlCeException sqlEx)
             {
                 throw sqlEx;
-
-                //StringBuilder strBuilder = new StringBuilder();
-                //strBuilder.Append("Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta. \n");
-                //strBuilder.Append("O procedimento não pode ser concluído");
-                //strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
-                //strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
-                //MainConfig.errorMessage(strBuilder.ToString(), "SqlException!!");
-
-
 
             }
             catch (Exception Ex)
@@ -217,7 +235,7 @@ namespace TitaniumColector.Classes.Dao
         /// </summary>
         /// <param name="codigoItem">Código do Item da Proposta</param>
         /// <param name="propostaItemProposta">Proposta (ForeingKey)</param>
-        /// <param name="quantidade">Qunatidade de itens</param>
+        /// <param name="Quantidade">Qunatidade de itens</param>
         /// <param name="statusSeparado">status (Separado ou não)</param>
         /// <param name="codigoProduto">Código do produto </param>
         /// <param name="loteReserva">Lote referente a reserva do item</param>

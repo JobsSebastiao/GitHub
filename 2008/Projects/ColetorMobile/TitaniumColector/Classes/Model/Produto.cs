@@ -15,7 +15,7 @@ namespace TitaniumColector.Classes
         private String identificacaoLoteProduto;
         private Int32 codigoLocalProduto;
         private String nomeLocalProduto;
-
+       
 
     #region"CONTRUTORES"
 
@@ -36,7 +36,7 @@ namespace TitaniumColector.Classes
         /// <summary>
         /// Construtor onde alguns atributos não são setados duarante a intancia da classe.
         /// </summary>
-        /// <param name="codigo">Código do produto</param>
+        /// <param name="Codigo">Código do produto</param>
         /// <param name="ean13">Ean13 do produto</param>
         /// <param name="partnumber">`Partnumber do Produto</param>
         /// <param name="descricao">DEscrição (NOME) do produto</param>
@@ -56,7 +56,7 @@ namespace TitaniumColector.Classes
         /// <summary>
         /// Inclui ao contrutor valores para os atributos CodigoLoteProduto e IdentificacaoLoteProduto
         /// </summary>
-        /// <param name="codigo">Código do produto</param>
+        /// <param name="Codigo">Código do produto</param>
         /// <param name="ean13">Ean13 do produto</param>
         /// <param name="partnumber">`Partnumber do Produto</param>
         /// <param name="descricao">DEscrição (NOME) do produto</param>

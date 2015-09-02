@@ -24,6 +24,7 @@ namespace TitaniumColector.Forms
         private DaoProdutoProposta daoItemProposta;
         private DaoProposta daoProposta;
         private DaoProduto daoProduto;
+        private DaoEmbalagem daoEmbalagem;
 
         //private SqlCommand command;
 
@@ -195,6 +196,7 @@ namespace TitaniumColector.Forms
             daoItemProposta = new DaoProdutoProposta();
             daoProposta = new DaoProposta();
             daoProduto = new DaoProduto();
+            daoEmbalagem = new DaoEmbalagem();
 
             try
             {
@@ -225,6 +227,9 @@ namespace TitaniumColector.Forms
 
                     //Insert na base Mobile tabela tb0003_Produtos
                     daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
+
+                    daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
+
                 }
                 else
                 {
@@ -263,6 +268,7 @@ namespace TitaniumColector.Forms
                 daoProposta = null;
                 daoProduto = null;
                 daoItemProposta = null;
+                daoEmbalagem = null;
             }
 
         }
@@ -363,8 +369,8 @@ namespace TitaniumColector.Forms
         /// Carrega o form com as informações nescessárias para separação do próximo item.
         /// </summary>
         /// <param name="objProposta">ObjProposta já setado com as informações do seu próximo item. ITEM INDEX[0] DA LISTOBJITEMPROPOSTA</param>
-        /// <param name="qtdPecas">quantidade de peças ainda a separar</param>
-        /// <param name="qtdItens">quantidade itens ainda a liberar</param>
+        /// <param name="qtdPecas">Quantidade de peças ainda a separar</param>
+        /// <param name="qtdItens">Quantidade itens ainda a liberar</param>
         /// <remarks > O objeto proposta já deve ter sido carregado com o próximo item que será trabalhado pois as informações serão retira
         ///           retiradas do item de index [0] na ListObjItemProsta
         /// </remarks>
@@ -482,7 +488,7 @@ namespace TitaniumColector.Forms
             try
             {
                 this.clearParaProximoItem();
-                //processa quantidade de itens
+                //processa Quantidade de itens
                 ProcedimentosLiberacao.decrementaQtdTotalItens(1);
                 //processa qunatidade de peças
                 ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
@@ -806,7 +812,7 @@ namespace TitaniumColector.Forms
                 else if (resp == DialogResult.No)
                 {
                     daoProposta = new DaoProposta();
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.INSERIDO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
                     daoProposta = null;
                     this.Dispose();
                     this.Close();

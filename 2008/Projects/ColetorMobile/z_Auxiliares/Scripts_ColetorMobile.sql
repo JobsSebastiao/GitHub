@@ -121,7 +121,70 @@ GROUP BY codigoPICKINGMOBILE,codigoPROPOSTA,numeroPROPOSTA, CONVERT(NVARCHAR, P.
 
 
 
+--NOVA TABELA PARA GERENCIAMENTO DE PROPOSTA NO PIKING MOBILE.
+CREATE TABLE tb1651_Picking_Mobile
+(
+    codigoPICKINGMOBILE int identity(1,1),
+	propostaPICKINGMOBILE INT NOT NULL,
+	usuarioPICKINGMOBILE INT NOT NULL,
+	statusPICKINGMOBILE SMALLINT NOT NULL DEFAULT(0),
+	horainicioPICKINGMOBILE DATETIME,
+	horafimPICKINGMOBILE DATETIME
+	CONSTRAINT PKpickingMobileID PRIMARY KEY (codigoPICKINGMOBILE)
+	CONSTRAINT FKpropostaPicking FOREIGN KEY (propostaPICKINGMOBILE)
+	REFERENCES tb1601_Propostas(codigoPROPOSTA)
+)
 
+
+----NOA UTILIZO NO CODIO MOBILE
+--########################################################################################################################################
+--# Atualiza os registros sem vínculos para a embalagem padrão
+--# Gabriel
+--# dd/mm/yyyy
+--########################################################################################################################################
+
+IF ( SELECT COUNT(codigoEMBALAGEMPRODUTO)
+	 FROM tb0504_Embalagens_Produtos
+	 LEFT JOIN tb0545_Embalagens ON codigoEMBALAGEM = embalagemEMBALAGEMPRODUTO
+	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
+    ) > 0
+
+BEGIN
+
+	 UPDATE tb0504_Embalagens_Produtos
+	 SET embalagemEMBALAGEMPRODUTO = (SELECT codigoEMBALAGEM
+			  FROM tb0545_Embalagens
+			  WHERE nomeEMBALAGEM = 'Padrão'
+			 )
+	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
+
+END
+
+GO
+
+--INFORMAÇÔES SOBRE OS ITENS DA PROPOSTA
+SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,produtoRESERVA AS codigoPRODUTO,nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,SUM(quantidadeRESERVA) AS QTD
+,quantidadeEMBALAGEMPRODUTO AS QtdEmbalagem
+,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA
+,DBO.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS locaisLOTES
+FROM tb1206_Reservas (NOLOCK)
+--,LOTEreserva
+INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA
+INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO 
+INNER JOIN tb0504_Embalagens_Produtos ON codigobarrasEMBALAGEMPRODUTO = ean13PRODUTO
+LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL 
+LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL 
+WHERE propostaITEMPROPOSTA = 80471 
+AND tipodocRESERVA = 1602 
+AND statusITEMPROPOSTA = 3
+AND separadoITEMPROPOSTA = 0  
+GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO
+,quantidadeEMBALAGEMPRODUTO,codigobarrasEMBALAGEMPRODUTO
+ORDER BY codigoPRODUTO
+
+
+
+---Informações sobre cada produto exsitente na proposta informada
 CREATE FUNCTION fn0003_informacoesProdutos ( @codigoProposta int )
 
 RETURNS @InformationTable TABLE
@@ -176,6 +239,7 @@ BEGIN
 END
 
 
+
 ---FUNCAO PARA RETORNAR OS LOCAIS DE ARMAZENAMENTO DO PRODUTO.
 CREATE FUNCTION fn1211_LocaisLoteProduto(@codigoPRODUTO int,@lotePRODUTO int)
 
@@ -219,42 +283,193 @@ RETURN SUBSTRING(LTRIM(RTRIM(@LocalNames)),1,LEN(LTRIM(RTRIM(@LocalNames)))-1)
 
 END 
 
---NOVA TABELA PARA GERENCIAMENTO DE PROPOSTA NO PIKING MOBILE.
-CREATE TABLE tb1651_Picking_Mobile
-(
-    codigoPICKINGMOBILE int identity(1,1),
-	propostaPICKINGMOBILE INT NOT NULL,
-	usuarioPICKINGMOBILE INT NOT NULL,
-	statusPICKINGMOBILE SMALLINT NOT NULL DEFAULT(0),
-	horainicioPICKINGMOBILE DATETIME,
-	horafimPICKINGMOBILE DATETIME
-	CONSTRAINT PKpickingMobileID PRIMARY KEY (codigoPICKINGMOBILE)
-	CONSTRAINT FKpropostaPicking FOREIGN KEY (propostaPICKINGMOBILE)
-	REFERENCES tb1601_Propostas(codigoPROPOSTA)
-)
 
 
---########################################################################################################################################
---# Atualiza os registros sem vínculos para a embalagem padrão
---# Gabriel
---# dd/mm/yyyy
---########################################################################################################################################
+---REALIZA O SPLIT DE UM TEXTO E RETORNA UMA TABELA COM ESTAS INFORMAÇÕES
+CREATE FUNCTION SplitTitanium( @InputString VARCHAR(8000), @Delimiter VARCHAR(50))
 
-IF ( SELECT COUNT(codigoEMBALAGEMPRODUTO)
-	 FROM tb0504_Embalagens_Produtos
-	 LEFT JOIN tb0545_Embalagens ON codigoEMBALAGEM = embalagemEMBALAGEMPRODUTO
-	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
-    ) > 0
+RETURNS @Items TABLE (Item VARCHAR(8000))
+
+AS
+BEGIN
+      IF @Delimiter = ' '
+      BEGIN
+            SET @Delimiter = ','
+            SET @InputString = REPLACE(@InputString, ' ', @Delimiter)
+      END
+
+      IF (@Delimiter IS NULL OR @Delimiter = '')
+            SET @Delimiter = ','
+
+--INSERT INTO @Items VALUES (@Delimiter) -- Diagnostic
+--INSERT INTO @Items VALUES (@InputString) -- Diagnostic
+
+      DECLARE @Item                 VARCHAR(8000)
+      DECLARE @ItemList       VARCHAR(8000)
+      DECLARE @DelimIndex     INT
+
+      SET @ItemList = @InputString
+      SET @DelimIndex = CHARINDEX(@Delimiter, @ItemList, 0)
+      WHILE (@DelimIndex != 0)
+      BEGIN
+            SET @Item = SUBSTRING(@ItemList, 0, @DelimIndex)
+            INSERT INTO @Items VALUES (@Item)
+
+            -- Set @ItemList = @ItemList minus one less item
+            SET @ItemList = SUBSTRING(@ItemList, @DelimIndex+1, LEN(@ItemList)-@DelimIndex)
+            SET @DelimIndex = CHARINDEX(@Delimiter, @ItemList, 0)
+      END -- End WHILE
+
+      IF @Item IS NOT NULL -- At least one delimiter was encountered in @InputString
+      BEGIN
+            SET @Item = @ItemList
+            INSERT INTO @Items VALUES (@Item)
+      END
+
+      -- No delimiters were encountered in @InputString, so just return @InputString
+      ELSE INSERT INTO @Items VALUES (@InputString)
+
+      RETURN
+
+END
+GO
+
+
+------TAMBÈM REALIZA UM SPLIT MAS NAO ESTA EM USO.
+CREATE FUNCTION fn1211_SplitTitanium( @frase VARCHAR(max), @delimitador VARCHAR(max) = ',') 
+RETURNS @result TABLE (item VARCHAR(8000)) 
 
 BEGIN
 
-	 UPDATE tb0504_Embalagens_Produtos
-	 SET embalagemEMBALAGEMPRODUTO = (SELECT codigoEMBALAGEM
-			  FROM tb0545_Embalagens
-			  WHERE nomeEMBALAGEM = 'Padrão'
-			 )
-	 WHERE embalagemEMBALAGEMPRODUTO IS NULL
+	DECLARE @parte VARCHAR(8000)
+
+	WHILE CHARINDEX(@delimitador,@frase,0) <> 0
+
+		BEGIN
+
+			SELECT
+			  @parte=RTRIM(LTRIM(
+					  SUBSTRING(@frase,1,
+					CHARINDEX(@delimitador,@frase,0)-1))),
+			  @frase=RTRIM(LTRIM(SUBSTRING(@frase,
+					  CHARINDEX(@delimitador,@frase,0)
+					+ LEN(@delimitador), LEN(@frase))))
+			IF LEN(@parte) > 0
+			  INSERT INTO @result SELECT @parte
+
+		END 
+
+		IF LEN(@frase) > 0
+			INSERT INTO @result SELECT @frase
+
+	RETURN
 
 END
-
 GO
+
+
+
+--======RETORNA OS LOTES DOS PRODUTOS DE UMA PROPOSTA
+CREATE FUNCTION fn1211_LotesReservaProduto(@codigoPRODUTO int,@propostaReserva int)
+
+RETURNS NVARCHAR(20)
+
+BEGIN
+    
+	DECLARE @NumLote NVARCHAR(20)
+	DECLARE @NumsLotes NVARCHAR(20)
+
+	SET @NumsLotes = ' '
+
+	DECLARE Local_Cursor CURSOR FOR 
+
+
+		SELECT loteRESERVA
+		FROM tb1206_Reservas (NOLOCK)
+		INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA
+		INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO 
+		WHERE produtoRESERVA = @codigoPRODUTO
+		AND propostaITEMPROPOSTA = @propostaReserva
+		AND tipodocRESERVA = 1602 
+		AND statusITEMPROPOSTA = 3
+		AND separadoITEMPROPOSTA = 0  
+		ORDER BY produtoRESERVA ASC
+
+
+    OPEN Local_Cursor
+
+    FETCH NEXT FROM Local_Cursor INTO @NumLote
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+
+
+        SET @NumsLotes =  @NumsLotes + ',' + @NumLote
+
+
+        FETCH NEXT FROM Local_Cursor INTO @NumLote
+
+    END
+
+    CLOSE Local_Cursor
+    DEALLOCATE Local_Cursor
+
+RETURN SUBSTRING(LTRIM(RTRIM(@NumsLotes)),2,LEN(LTRIM(RTRIM(@NumsLotes)))-1)    
+
+END 
+
+
+
+
+--=-=-=-=--=--==--=-==-=--==--==-
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+---FUNCAO PARA RETORNAR OS LOCAIS DE ARMAZENAMENTO DO PRODUTO.
+CREATE FUNCTION fn1211_LocaisLoteProduto(@codigoPRODUTO INT,@lotePRODUTO NVARCHAR(10))
+
+RETURNS NVARCHAR(20)
+
+BEGIN
+    
+	DECLARE @Local NVARCHAR(20)
+	DECLARE @LocalNames NVARCHAR(20)
+
+	SET @LocalNames = ' '
+
+	DECLARE Local_Cursor CURSOR FOR 
+
+	SELECT nomeLOCAL 
+	FROM tb1205_Lotes
+	INNER JOIN tb1212_Lotes_Locais ON codigoLOTE = loteLOTELOCAL
+	INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
+	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.SplitTitanium(@lotePRODUTO,',') )
+	ORDER BY nomeLOCAL ASC
+
+    OPEN Local_Cursor
+
+    FETCH NEXT FROM Local_Cursor INTO @Local
+
+    WHILE @@FETCH_STATUS = 0
+    BEGIN
+
+
+        SET @LocalNames =  @Local  + ',' + @LocalNames
+
+
+        FETCH NEXT FROM Local_Cursor INTO @Local
+
+    END
+
+    CLOSE Local_Cursor
+    DEALLOCATE Local_Cursor
+
+RETURN SUBSTRING(LTRIM(RTRIM(@LocalNames)),1,LEN(LTRIM(RTRIM(@LocalNames)))-1)    
+
+END 
+
+
+
+
+
+
+
+

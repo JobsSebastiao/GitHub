@@ -26,7 +26,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         /// <param name="tItens">Total de Itens da Proposta</param>
         /// <param name="tPecas">Total de peças na Proposta</param>
-        /// <param name="pecasItens">quantidade de pecas do item a ser trabalhado.</param>
+        /// <param name="pecasItens">Quantidade de pecas do item a ser trabalhado.</param>
         public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens)
         {
             TotalItens = tItens;
@@ -89,7 +89,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <summary>
          /// Não altera o total de peças e o total de itens atualmente setados.
          /// </summary>
-         /// <param name="pecasItens">quantidade de peças do item a ser trabalhado.</param>
+         /// <param name="pecasItens">Quantidade de peças do item a ser trabalhado.</param>
         public static void inicializarProcedimentosProximoItem(Double pecasItens)
         {
             TotalItens = TotalItens;
@@ -483,9 +483,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         ///<summary>
-         ///Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
+         ///Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Pecas
          ///</summary>
-         ///<param name="qtd">quantidade a ser diminuida</param>
+         ///<param name="qtd">Quantidade a ser diminuida</param>
          ///<returns>Retorna true caso não ocorra erros
          ///         false se o calculo não ocorrer com esperado.</returns>
         public static  Boolean decrementaQtdTotalPecas(double qtd)
@@ -509,9 +509,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         /// <summary>
-        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
+        /// Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Itens
         /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <param name="qtd">Quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
         public static Boolean decrementaQtdTotalItens(double qtd )
@@ -678,9 +678,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         /// <summary>
-        /// Valida a quantidade de volumes existentes e decrementa 1 se caso for possível.
+        /// Valida a Quantidade de volumes existentes e decrementa 1 se caso for possível.
         /// </summary>
-        /// <returns>String com a quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
+        /// <returns>String com a Quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
         public static String decrementaVolume() 
         {
             if (QtdVolumes > 1)
@@ -693,9 +693,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
          /// <summary>
-         /// Encrementa mais 1 a quantidade de volumes atual.
+         /// Encrementa mais 1 a Quantidade de volumes atual.
          /// </summary>
-         /// <returns>String com a quantidade de volumes após a alteração
+         /// <returns>String com a Quantidade de volumes após a alteração
          /// </returns>
         public static String incrementaVolume() 
         {

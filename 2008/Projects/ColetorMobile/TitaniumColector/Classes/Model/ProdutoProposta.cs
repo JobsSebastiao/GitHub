@@ -12,7 +12,10 @@ namespace TitaniumColector.Classes
         private double quantidade;
         private statusSeparado isSeparado;
         private Int32 lotereservaItemProposta;
-        
+        private String strlotesReserva;
+        private Double quantidadeEmbalagem;
+        private String nomeLocaisItemProposta;
+
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
 
 
@@ -50,7 +53,7 @@ namespace TitaniumColector.Classes
         /// </summary>
         /// <param name="codigoItemProposta"></param>
         /// <param name="propostaItemProposta"></param>
-        /// <param name="quantidade"></param>
+        /// <param name="Quantidade"></param>
         /// <param name="isSeparado"></param>
         /// <param name="loteReservaItemProposta"></param>
         /// <param name="codigoProduto"></param>
@@ -80,6 +83,20 @@ namespace TitaniumColector.Classes
             this.LotereservaItemProposta = loteReservaItemProposta;
         }
 
+
+        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado,String strLotesReserva,Double dblQuantidadeEmbalagem,String strNomesLocaisItem
+                       ,Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
+            : base(intCodigoProduto, strEan13, strPartnumber, strDescricao)
+        {
+            this.CodigoItemProposta = intCodigoItemProposta;
+            this.PropostaItemProposta = intPropostaItemProposta;
+            this.Quantidade = dblQuantidade;
+            this.StatusSeparado = isSeparado;
+            this.LotereservaItemProposta = 0;
+            this.NomeLocaisItemProposta = strNomesLocaisItem;
+            this.LotesReserva = strLotesReserva;
+            this.QuantidadeEmbalagem = dblQuantidadeEmbalagem;
+        }
 
     #endregion
 
@@ -114,6 +131,24 @@ namespace TitaniumColector.Classes
         {
             get { return lotereservaItemProposta; }
             set { lotereservaItemProposta = value; }
+        }
+
+        public String NomeLocaisItemProposta
+        {
+            get { return nomeLocaisItemProposta; }
+            set { nomeLocaisItemProposta = value; }
+        }
+
+        public Double QuantidadeEmbalagem
+        {
+            get { return quantidadeEmbalagem; }
+            set { quantidadeEmbalagem = value; }
+        }
+
+        public String LotesReserva
+        {
+            get { return strlotesReserva; }
+            set { strlotesReserva = value; }
         }
 
     #endregion
