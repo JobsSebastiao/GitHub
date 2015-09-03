@@ -302,9 +302,9 @@ namespace TitaniumColector.SqlServer
         }
 
         /// <summary>
-        /// Lê um arquivo de texto que esteja na pasta padrão da aplicação, e que tenha o nome especificado no parâmetro fileName
+        /// Lê um arquivo de texto que esteja na pasta padrão da aplicação, e que tenha o Nome especificado no parâmetro fileName
         /// </summary>
-        /// <param name="fileName">nome do arquivo a ser lido</param>
+        /// <param name="fileName">Nome do arquivo a ser lido</param>
         /// <returns>Uma string contendo o texto existente no arquivo.</returns>
         /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
         /// </remarks>
@@ -323,7 +323,7 @@ namespace TitaniumColector.SqlServer
         }
 
         /// <summary>
-        ///  Lê um arquivo de texto que esteja no path informado no parâmetro mobilePath, e que tenha o nome especificado no parâmetro fileName
+        ///  Lê um arquivo de texto que esteja no path informado no parâmetro mobilePath, e que tenha o Nome especificado no parâmetro fileName
         /// </summary>
         /// <param name="mobilePath">Diretório do dispositivo onde será buscado o arquivo</param>
         /// <param name="fileName">Nome do arquivo a ser buscado</param>

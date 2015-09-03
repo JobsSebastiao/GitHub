@@ -26,7 +26,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         /// <param name="tItens">Total de Itens da Proposta</param>
         /// <param name="tPecas">Total de peças na Proposta</param>
-        /// <param name="pecasItens">quantidade de pecas do item a ser trabalhado.</param>
+        /// <param name="pecasItens">Quantidade de pecas do item a ser trabalhado.</param>
         public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens)
         {
             TotalItens = tItens;
@@ -89,7 +89,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <summary>
          /// Não altera o total de peças e o total de itens atualmente setados.
          /// </summary>
-         /// <param name="pecasItens">quantidade de peças do item a ser trabalhado.</param>
+         /// <param name="pecasItens">Quantidade de peças do item a ser trabalhado.</param>
         public static void inicializarProcedimentosProximoItem(Double pecasItens)
         {
             TotalItens = TotalItens;
@@ -140,9 +140,9 @@ namespace TitaniumColector.Classes.Procedimentos
 
         public static Double subtrairQtdPecasItem(Double value)
         {
-            if (QtdPecasItem - value >= 0)
+            if (QtdPecasItem - (value/10)>= 0)
             {
-                return qtdPecasItem -= value;
+                return qtdPecasItem -= (value / 10);
             }
             else 
             {
@@ -196,31 +196,52 @@ namespace TitaniumColector.Classes.Procedimentos
         public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta)
         {
             //Verifica se o List foi iniciado
-            if (EtiquetasLidas != null)
+
+            switch (objEtiqueta.TipoEtiqueta )
             {
-                if (EtiquetasLidas.Count == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    //Verifica se a etiqueta está na lista de etiquetas lidas.
-                    if (Etiqueta.validarEtiqueta(objEtiqueta, EtiquetasLidas))
+                case Etiqueta.Tipo.INVALID:
+
+                    return false;
+
+                case Etiqueta.Tipo.QRCODE:
+
+                    if (EtiquetasLidas != null)
                     {
-                        //Caso esteja na lista
-                        return false;
+                        if (EtiquetasLidas.Count == 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            //Verifica se a etiqueta está na lista de etiquetas lidas.
+                            if (Etiqueta.validarEtiqueta(objEtiqueta, EtiquetasLidas))
+                            {
+                                //Caso esteja na lista
+                                return false;
+                            }
+                            else
+                            {
+                                //caso não esteja na lista.
+                                return true;
+                            }
+                        }
                     }
                     else
                     {
-                        //caso não esteja na lista.
                         return true;
                     }
-                }
+
+
+                case Etiqueta.Tipo.BARRAS:
+
+                    return true;
+
+                default :
+                    return false;
             }
-            else
-            {
-                return true;
-            }
+
+
+            
         }
 
         /// <summary>
@@ -259,34 +280,34 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-        /// <summary>
-         /// Gera etiquetas para testes.
-         /// </summary>
-        public static void gerarEtiquetas()
-        {
-            Etiqueta objEtiqueta;
-            List<Etiqueta> list = new List<Etiqueta>();
+        ///// <summary>
+        // /// Gera etiquetas para testes.
+        // /// </summary>
+        //public static void gerarEtiquetas()
+        //{
+        //    Etiqueta objEtiqueta;
+        //    List<Etiqueta> list = new List<Etiqueta>();
 
-            ProximaEtiqueta = 0;
-            list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
-            for (int i = 1; i <= 8; i++)
-            {
-                if (i < 5)
-                {
-                    objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
-                }
-                else 
-                {
-                    objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
-                }
+        //    ProximaEtiqueta = 0;
+        //    list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
+        //    for (int i = 1; i <= 8; i++)
+        //    {
+        //        if (i < 5)
+        //        {
+        //            objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
+        //        }
+        //        else 
+        //        {
+        //            objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
+        //        }
                 
-                list.Add(objEtiqueta);
-                objEtiqueta = null;
-            }
+        //        list.Add(objEtiqueta);
+        //        objEtiqueta = null;
+        //    }
 
-            list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
-            ListEtiquetasGeradas = list;
-        }
+        //    list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
+        //    ListEtiquetasGeradas = list;
+        //}
 
         /// <summary>
         /// 
@@ -321,7 +342,19 @@ namespace TitaniumColector.Classes.Procedimentos
 
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new Etiqueta();
-            objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
+            objEtiqueta = new Etiqueta(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
+          // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
+        }
+
+        public static void lerEtiqueta(String inputValue,Etiqueta.Tipo tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
+        {
+            tbMensagem.Text = "";
+
+            ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
+            Etiqueta objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
+            // objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
+            // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
 
@@ -377,15 +410,14 @@ namespace TitaniumColector.Classes.Procedimentos
             catch ( QuantidadeInvalidaException qtdEx)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("A quantidade de peças desta etiqueta difere com a quantidade de peças do Item.");
+                sb.Append("Quantidade de peças na embalagem é maior que a quantidade a ser liberada!");
                 sb.AppendFormat("error : {0} ", qtdEx.Message);
                 MainConfig.errorMessage(sb.ToString(),"Etiqueta Inválida!!");
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 
-                throw;
+                throw ex;
             }   
         }
 
@@ -395,19 +427,85 @@ namespace TitaniumColector.Classes.Procedimentos
          /// <param name="propostaProduto">Obj Produto que será verificado </param>
          /// <param name="etiquetaLida"> Obj Etiqueta que será verificado </param>
          /// <returns>True --> Caso sejam iguais.</returns>
-        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
+         /// 
+        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta, Etiqueta etiquetaLida)
         {
             //Verifica se os produtos são iguais
-            if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+            switch (etiquetaLida.TipoEtiqueta)
             {
-                if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
-                {
-                    return true;
-                }
+                case Etiqueta.Tipo.INVALID:
+                    break;
+                case Etiqueta.Tipo.QRCODE:
+
+                    if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+                    {
+                        if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                        {
+                            return true;
+                        }
+                    }
+
+                    break;
+
+                case Etiqueta.Tipo.BARRAS:
+
+                    if(produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
+                    {
+                        foreach (var item in produtoProposta.Embalagens)
+                        {
+                            if(etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    
+                    break;
+
+                default:
+                    break;
             }
+
 
             return false;
         }
+
+
+        //public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
+        //{
+        //    //Verifica se os produtos são iguais
+        //    switch (etiquetaLida.TipoEtiqueta)
+        //    {
+        //        case Etiqueta.Tipo.INVALID:
+        //            break;
+        //        case Etiqueta.Tipo.QRCODE:
+
+        //            if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+        //            {
+        //                if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+        //                {
+        //                    return true;
+        //                }
+        //            }
+
+        //            break;
+
+        //        case Etiqueta.Tipo.BARRAS:
+
+        //            if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+        //            {
+        //                return true;
+        //            }
+
+        //            break;
+
+        //        default:
+        //            break;
+        //    }
+           
+
+        //    return false;
+        //}
 
         /// <summary>
          /// Adiciona uma atiqueta a List Etiquetas Lidas.
@@ -429,9 +527,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         ///<summary>
-         ///Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Pecas
+         ///Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Pecas
          ///</summary>
-         ///<param name="qtd">quantidade a ser diminuida</param>
+         ///<param name="qtd">Quantidade a ser diminuida</param>
          ///<returns>Retorna true caso não ocorra erros
          ///         false se o calculo não ocorrer com esperado.</returns>
         public static  Boolean decrementaQtdTotalPecas(double qtd)
@@ -455,9 +553,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         /// <summary>
-        /// Altera o valor do atributo auxiliar que armazena informações sobre a quantidade de Itens
+        /// Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Itens
         /// </summary>
-        /// <param name="qtd">quantidade a ser diminuida</param>
+        /// <param name="qtd">Quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
         ///          false se o calculo não ocorrer com esperado.</returns>
         public static Boolean decrementaQtdTotalItens(double qtd )
@@ -498,65 +596,135 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
+        ///// <summary>
+        // /// Verifica o formato da string bate com o formato esperado para a etiqueta.
+        // /// </summary>
+        // /// <param name="inputValue">String a ser verificada.</param>
+        // /// <returns>True caso seja válido do contrário retorna false.</returns>
+        //public static bool validaInputValueEtiqueta(String inputValue)
+        //{
+        //    bool resposta = false;
+        //    if (inputValue.Contains("PNUMBER:"))
+        //    {
+        //        if (inputValue.Contains("DESCRICAO:"))
+        //        {
+        //            if (inputValue.Contains("EAN13:"))
+        //            {
+        //                if (inputValue.Contains("LOTE:"))
+        //                {
+        //                    if (inputValue.Contains("SEQ:"))
+        //                    {
+        //                        if (inputValue.Contains("QTD:"))
+        //                        {
+        //                            resposta = true;
+        //                        }
+        //                        else
+        //                        {
+        //                            resposta = false;
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        resposta = false;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    resposta = false;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                resposta = false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            resposta = false;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        resposta = false;
+        //    }
+
+        //    return resposta;
+        //}
+
         /// <summary>
-         /// Verifica o formato da string bate com o formato esperado para a etiqueta.
-         /// </summary>
-         /// <param name="inputValue">String a ser verificada.</param>
-         /// <returns>True caso seja válido do contrário retorna false.</returns>
-        public static bool validaInputValueEtiqueta(String inputValue)
-        {
-            bool resposta = false;
-            if (inputValue.Contains("PNUMBER:"))
+        /// Valida o tipo de etiqueta lido
+        /// </summary>
+        /// <param name="inputValue">informação capturada pelo leitor</param>
+        /// <returns>Etiqueta.tipo (EAN13,QRCODE,INVALID)</returns>
+        public static Etiqueta.Tipo validaInputValueEtiqueta(String inputValue)
+         {
+            Etiqueta.Tipo tipoEtiqueta;
+
+            int inputLength = inputValue.Length;
+
+            if(inputLength==13)
             {
-                if (inputValue.Contains("DESCRICAO:"))
+                tipoEtiqueta = Etiqueta.Tipo.BARRAS;
+            }
+            else if (inputLength > 13)
+            {
+                if (inputValue.Contains("PNUMBER:"))
                 {
-                    if (inputValue.Contains("EAN13:"))
+                    if (inputValue.Contains("DESCRICAO:"))
                     {
-                        if (inputValue.Contains("LOTE:"))
+                        if (inputValue.Contains("EAN13:"))
                         {
-                            if (inputValue.Contains("SEQ:"))
+                            if (inputValue.Contains("LOTE:"))
                             {
-                                if (inputValue.Contains("QTD:"))
+                                if (inputValue.Contains("SEQ:"))
                                 {
-                                    resposta = true;
+                                    if (inputValue.Contains("QTD:"))
+                                    {
+                                        tipoEtiqueta = Etiqueta.Tipo.QRCODE;
+                                    }
+                                    else
+                                    {
+                                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                    }
                                 }
                                 else
                                 {
-                                    resposta = false;
+                                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
                                 }
                             }
                             else
                             {
-                                resposta = false;
+                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
                             }
                         }
                         else
                         {
-                            resposta = false;
+                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
                         }
                     }
                     else
                     {
-                        resposta = false;
+                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
                     }
                 }
                 else
                 {
-                    resposta = false;
+                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
                 }
-            }
-            else
-            {
-                resposta = false;
-            }
 
-            return resposta;
+            }
+            else 
+            {
+                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+            }
+        
+            return tipoEtiqueta;
         }
 
         /// <summary>
-        /// Valida a quantidade de volumes existentes e decrementa 1 se caso for possível.
+        /// Valida a Quantidade de volumes existentes e decrementa 1 se caso for possível.
         /// </summary>
-        /// <returns>String com a quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
+        /// <returns>String com a Quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
         public static String decrementaVolume() 
         {
             if (QtdVolumes > 1)
@@ -569,9 +737,9 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
          /// <summary>
-         /// Encrementa mais 1 a quantidade de volumes atual.
+         /// Encrementa mais 1 a Quantidade de volumes atual.
          /// </summary>
-         /// <returns>String com a quantidade de volumes após a alteração
+         /// <returns>String com a Quantidade de volumes após a alteração
          /// </returns>
         public static String incrementaVolume() 
         {

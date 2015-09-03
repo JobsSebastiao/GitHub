@@ -24,6 +24,7 @@ namespace TitaniumColector.Forms
         private DaoProdutoProposta daoItemProposta;
         private DaoProposta daoProposta;
         private DaoProduto daoProduto;
+        private DaoEmbalagem daoEmbalagem;
 
         //private SqlCommand command;
 
@@ -121,11 +122,35 @@ namespace TitaniumColector.Forms
         {
             if (e.KeyChar == Convert.ToChar(13))
             {
-                if (ProcedimentosLiberacao.validaInputValueEtiqueta(inputText))
+                Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
+
+                switch (tipoEtiqueta)
                 {
-                    this.liberarItem(inputText);
-                    inputText = string.Empty;
+                    case Etiqueta.Tipo.INVALID:
+
+                        inputText = string.Empty;
+                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                        break;
+
+                    case Etiqueta.Tipo.QRCODE:
+
+                        this.liberarItem(inputText,tipoEtiqueta);
+                        inputText = string.Empty;
+                        break;
+
+                    case Etiqueta.Tipo.BARRAS:
+
+                        this.liberarItem(inputText,tipoEtiqueta);
+                        inputText = string.Empty;
+                        break;
+
+                    default:
+
+                        inputText = string.Empty;
+                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                        break;
                 }
+                
             }
             else
             {
@@ -155,7 +180,6 @@ namespace TitaniumColector.Forms
             }
         }
 
-
     #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
@@ -171,6 +195,7 @@ namespace TitaniumColector.Forms
             daoItemProposta = new DaoProdutoProposta();
             daoProposta = new DaoProposta();
             daoProduto = new DaoProduto();
+            daoEmbalagem = new DaoEmbalagem();
 
             try
             {
@@ -201,6 +226,9 @@ namespace TitaniumColector.Forms
 
                     //Insert na base Mobile tabela tb0003_Produtos
                     daoProduto.insertProdutoBaseMobile(listaProduto.ToList<Produto>());
+
+                    daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
+
                 }
                 else
                 {
@@ -239,13 +267,14 @@ namespace TitaniumColector.Forms
                 daoProposta = null;
                 daoProduto = null;
                 daoItemProposta = null;
+                daoEmbalagem = null;
             }
 
         }
 
     #endregion 
       
-    #region "CARGA DO FORMULÁRIO"
+    #region "CARGA DO INFORMAÇÔES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
 
 
         private void carregarForm()
@@ -263,6 +292,7 @@ namespace TitaniumColector.Forms
             Proposta proposta = null;
             objTransacoes = new BaseMobile();
             daoProposta = new DaoProposta();
+            daoEmbalagem = new DaoEmbalagem();
 
             try
             {
@@ -274,17 +304,16 @@ namespace TitaniumColector.Forms
                 proposta = daoProposta.fillPropostaWithTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
-                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]),Convert.ToInt32(listInfoProposta[5]));
+                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), Convert.ToInt32(listInfoProposta[5]));
+
+                //Carrega informações de Embalagem para o produto que será trabalhado.
+                proposta.ListObjItemProposta[0].Embalagens = daoEmbalagem.carregarEmbalagensProduto(proposta);
 
                 //Set os valores para os atributos auxiliares.
                 ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
 
                 //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
                 this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
-                
-                //zera o obj transações 
-                objTransacoes = null;
-                objProposta = null;
 
                 //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
                 return proposta;
@@ -297,6 +326,14 @@ namespace TitaniumColector.Forms
                 sbMsg.Append("Contate o Administrador do sistema.");
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
                 return null;
+            }
+            finally 
+            {
+                //zera o obj transações 
+                objTransacoes = null;
+                daoProposta = null;
+                proposta = null;
+
             }
 
         }
@@ -339,8 +376,8 @@ namespace TitaniumColector.Forms
         /// Carrega o form com as informações nescessárias para separação do próximo item.
         /// </summary>
         /// <param name="objProposta">ObjProposta já setado com as informações do seu próximo item. ITEM INDEX[0] DA LISTOBJITEMPROPOSTA</param>
-        /// <param name="qtdPecas">quantidade de peças ainda a separar</param>
-        /// <param name="qtdItens">quantidade itens ainda a liberar</param>
+        /// <param name="qtdPecas">Quantidade de peças ainda a separar</param>
+        /// <param name="qtdItens">Quantidade itens ainda a liberar</param>
         /// <remarks > O objeto proposta já deve ter sido carregado com o próximo item que será trabalhado pois as informações serão retira
         ///           retiradas do item de index [0] na ListObjItemProsta
         /// </remarks>
@@ -458,7 +495,7 @@ namespace TitaniumColector.Forms
             try
             {
                 this.clearParaProximoItem();
-                //processa quantidade de itens
+                //processa Quantidade de itens
                 ProcedimentosLiberacao.decrementaQtdTotalItens(1);
                 //processa qunatidade de peças
                 ProcedimentosLiberacao.decrementaQtdTotalPecas(objProposta.ListObjItemProposta[0].Quantidade);
@@ -670,6 +707,45 @@ namespace TitaniumColector.Forms
             }
         }
 
+        private void liberarItem(String inputText,Etiqueta.Tipo tipoEtiqueta)
+        {
+            try
+            {
+                ProcedimentosLiberacao.lerEtiqueta(inputText,tipoEtiqueta, objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
+
+                if (ProcedimentosLiberacao.QtdPecasItem == 0)
+                {
+                    if (!this.nextItemProposta())
+                    {
+                        daoItemProposta = new DaoProdutoProposta();
+                        daoProposta = new DaoProposta();
+                        daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
+                        daoItemProposta.updateItemPropostaRetorno();
+                        this.Dispose();
+                        this.Close();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (daoProposta != null)
+                {
+                    daoProposta = null;
+                }
+                if (daoItemProposta != null)
+                {
+                    daoItemProposta = null;
+                }
+            }
+        }
+
+
+
         private String intOrDecimal(String value)
         {
 
@@ -743,7 +819,7 @@ namespace TitaniumColector.Forms
                 else if (resp == DialogResult.No)
                 {
                     daoProposta = new DaoProposta();
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.INSERIDO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
                     daoProposta = null;
                     this.Dispose();
                     this.Close();
