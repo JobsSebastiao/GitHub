@@ -180,7 +180,6 @@ namespace TitaniumColector.Forms
             }
         }
 
-
     #endregion
 
     #region "CARGA BASE DE DADOS MOBILE"
@@ -275,7 +274,7 @@ namespace TitaniumColector.Forms
 
     #endregion 
       
-    #region "CARGA DO FORMULÁRIO"
+    #region "CARGA DO INFORMAÇÔES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
 
 
         private void carregarForm()
@@ -293,6 +292,7 @@ namespace TitaniumColector.Forms
             Proposta proposta = null;
             objTransacoes = new BaseMobile();
             daoProposta = new DaoProposta();
+            daoEmbalagem = new DaoEmbalagem();
 
             try
             {
@@ -304,17 +304,16 @@ namespace TitaniumColector.Forms
                 proposta = daoProposta.fillPropostaWithTop1Item();
 
                 //Set o total de peças e o total de Itens para o objeto proposta
-                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]),Convert.ToInt32(listInfoProposta[5]));
+                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), Convert.ToInt32(listInfoProposta[5]));
+
+                //Carrega informações de Embalagem para o produto que será trabalhado.
+                proposta.ListObjItemProposta[0].Embalagens = daoEmbalagem.carregarEmbalagensProduto(proposta);
 
                 //Set os valores para os atributos auxiliares.
                 ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
 
                 //Carregao formulário  com as informações que serão manusueadas para a proposta e o item da proposta
                 this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
-                
-                //zera o obj transações 
-                objTransacoes = null;
-                objProposta = null;
 
                 //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
                 return proposta;
@@ -327,6 +326,14 @@ namespace TitaniumColector.Forms
                 sbMsg.Append("Contate o Administrador do sistema.");
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
                 return null;
+            }
+            finally 
+            {
+                //zera o obj transações 
+                objTransacoes = null;
+                daoProposta = null;
+                proposta = null;
+
             }
 
         }
@@ -720,9 +727,9 @@ namespace TitaniumColector.Forms
 
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {

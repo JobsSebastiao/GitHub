@@ -51,6 +51,15 @@ CREATE TABLE tb0004_Etiquetas
 	sequenciaETIQUETA    			INT NOT NULL
 )
 
+GO 
+	CREATE TABLE tb0005_Embalagens (
+	codigoEMBALAGEM				    INT				NOT NULL CONSTRAINT PKSequencia PRIMARY KEY,
+	nomeEMBALAGEM         			NVARCHAR(20)		NULL,
+	produtoEMBALAGEM	      		INT				NOT NULL,
+	quantidadeEMBALAGEM	      		REAL			NOT NULL,
+	padraoEMBALAGEM    			    SMALLINT		NOT NULL,
+	embalagemEMBALAGEM    			INT				NOT NULL,
+	ean13EMBALAGEM    			    NVARCHAR(13)	NOT NULL)
 
 
  --//CARGA DE TESTES
@@ -241,7 +250,7 @@ END
 
 
 ---FUNCAO PARA RETORNAR OS LOCAIS DE ARMAZENAMENTO DO PRODUTO.
-CREATE FUNCTION fn1211_LocaisLoteProduto(@codigoPRODUTO int,@lotePRODUTO int)
+ALTER FUNCTION fn1211_LocaisLoteProduto(@codigoPRODUTO int,@lotePRODUTO int)
 
 RETURNS NVARCHAR(20)
 
@@ -368,7 +377,6 @@ END
 GO
 
 
-
 --======RETORNA OS LOTES DOS PRODUTOS DE UMA PROPOSTA
 CREATE FUNCTION fn1211_LotesReservaProduto(@codigoPRODUTO int,@propostaReserva int)
 
@@ -442,7 +450,7 @@ BEGIN
 	INNER JOIN tb1212_Lotes_Locais ON codigoLOTE = loteLOTELOCAL
 	INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
 	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.SplitTitanium(@lotePRODUTO,',') )
-	ORDER BY nomeLOCAL ASC
+	ORDER BY nomeLOCAL DESC
 
     OPEN Local_Cursor
 

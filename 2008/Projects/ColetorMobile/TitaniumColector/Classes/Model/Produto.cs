@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes
 {
@@ -15,8 +16,8 @@ namespace TitaniumColector.Classes
         private String identificacaoLoteProduto;
         private Int32 codigoLocalProduto;
         private String nomeLocalProduto;
+        private List<Embalagem> embalagens;
        
-
     #region"CONTRUTORES"
 
         public Produto()
@@ -91,10 +92,14 @@ namespace TitaniumColector.Classes
                 NomeLocalLote = ((Produto)obj).NomeLocalLote;
                 CodigoLoteProduto = ((Produto)obj).CodigoLoteProduto;
                 IdentificacaoLoteProduto = ((Produto)obj).IdentificacaoLoteProduto;
+                Embalagens = ((Produto)obj).embalagens.ToList<Embalagem>();
             }
         }
 
     #endregion
+
+
+    #region "GETS E SETS" 
 
         public Int32 CodigoProduto
         {
@@ -143,6 +148,14 @@ namespace TitaniumColector.Classes
           get { return nomeLocalProduto; }
           set { nomeLocalProduto = value; }
         }
+
+        internal List<Embalagem> Embalagens
+        {
+            get { return embalagens; }
+            set { embalagens = value; }
+        }
+
+    #endregion
 
         public override string ToString()
         {

@@ -140,9 +140,9 @@ namespace TitaniumColector.Classes.Procedimentos
 
         public static Double subtrairQtdPecasItem(Double value)
         {
-            if (QtdPecasItem - value >= 0)
+            if (QtdPecasItem - (value/10)>= 0)
             {
-                return qtdPecasItem -= value;
+                return qtdPecasItem -= (value / 10);
             }
             else 
             {
@@ -410,14 +410,14 @@ namespace TitaniumColector.Classes.Procedimentos
             catch ( QuantidadeInvalidaException qtdEx)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("A quantidade de peças desta etiqueta difere com a quantidade de peças do Item.");
+                sb.Append("Quantidade de peças na embalagem é maior que a quantidade a ser liberada!");
                 sb.AppendFormat("error : {0} ", qtdEx.Message);
                 MainConfig.errorMessage(sb.ToString(),"Etiqueta Inválida!!");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 
-                throw;
+                throw ex;
             }   
         }
 
@@ -427,7 +427,8 @@ namespace TitaniumColector.Classes.Procedimentos
          /// <param name="propostaProduto">Obj Produto que será verificado </param>
          /// <param name="etiquetaLida"> Obj Etiqueta que será verificado </param>
          /// <returns>True --> Caso sejam iguais.</returns>
-        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
+         /// 
+        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta, Etiqueta etiquetaLida)
         {
             //Verifica se os produtos são iguais
             switch (etiquetaLida.TipoEtiqueta)
@@ -448,20 +449,63 @@ namespace TitaniumColector.Classes.Procedimentos
 
                 case Etiqueta.Tipo.BARRAS:
 
-                    if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                    if(produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
                     {
-                        return true;
+                        foreach (var item in produtoProposta.Embalagens)
+                        {
+                            if(etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem)
+                            {
+                                return true;
+                            }
+                        }
                     }
-
+                    
                     break;
 
                 default:
                     break;
             }
-           
+
 
             return false;
         }
+
+
+        //public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
+        //{
+        //    //Verifica se os produtos são iguais
+        //    switch (etiquetaLida.TipoEtiqueta)
+        //    {
+        //        case Etiqueta.Tipo.INVALID:
+        //            break;
+        //        case Etiqueta.Tipo.QRCODE:
+
+        //            if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+        //            {
+        //                if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+        //                {
+        //                    return true;
+        //                }
+        //            }
+
+        //            break;
+
+        //        case Etiqueta.Tipo.BARRAS:
+
+        //            if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+        //            {
+        //                return true;
+        //            }
+
+        //            break;
+
+        //        default:
+        //            break;
+        //    }
+           
+
+        //    return false;
+        //}
 
         /// <summary>
          /// Adiciona uma atiqueta a List Etiquetas Lidas.

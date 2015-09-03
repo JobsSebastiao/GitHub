@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using TitaniumColector.Classes.Dao;
 
 namespace TitaniumColector.Classes
 {
@@ -10,13 +11,14 @@ namespace TitaniumColector.Classes
     {
         private string partnumber;
         private string descricaoProduto;
-        private Int64 ean13;
+        private Int64 ean13Embalagem;
         private String lote;
         private Int32 sequencia;
         private Double quantidade;
         private Int32 volumeEtiqueta;
         private DateTime dataHoraValidacao;
         private Tipo tipoEtiqueta;
+        private DaoProduto daoProduto;
 
         public enum Tipo {INVALID=0,QRCODE=1,BARRAS=2 }
 
@@ -43,12 +45,12 @@ namespace TitaniumColector.Classes
 
                 case Tipo.BARRAS:
 
-                    PartnumberEtiqueta = null;
-                    DescricaoProdutoEtiqueta = null;
+                    PartnumberEtiqueta = partnumber;
+                    DescricaoProdutoEtiqueta = descricao;
                     Ean13Etiqueta = ean13;
-                    LoteEtiqueta = null;
+                    LoteEtiqueta = lote;
                     SequenciaEtiqueta = 0;
-                    QuantidadeEtiqueta = 0.0;
+                    QuantidadeEtiqueta = quantidade;
                     DataHoraValidacao = DateTime.Now;
                     TipoEtiqueta = Tipo.BARRAS;
                     break;
@@ -67,86 +69,82 @@ namespace TitaniumColector.Classes
         /// </param>
         public Etiqueta(Array arrayEtiqueta,Tipo tipoEtiqueta) 
         {
-            switch (tipoEtiqueta )
+            try
             {
-                case Tipo.QRCODE:
 
-                    foreach (string item in arrayEtiqueta)
-                    {
-                        string strItem = item.Substring(0, item.IndexOf(":", 0));
+                switch (tipoEtiqueta)
+                {
+                    case Tipo.QRCODE:
 
-                        if (strItem == "PNUMBER")
+                        foreach (string item in arrayEtiqueta)
                         {
-                            PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "DESCRICAO")
-                        {
-                            DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "EAN13")
-                        {
-                            Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
-                        }
-                        else if (strItem == "LOTE")
-                        {
-                            LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "SEQ")
-                        {
-                            SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                        }
-                        else if (strItem == "QTD")
-                        {
-                            QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
-                        }
+                            string strItem = item.Substring(0, item.IndexOf(":", 0));
 
-                    }
-
-                    break;
-
-                case Tipo.BARRAS:
-
-                    foreach (string item in arrayEtiqueta)
-                    {
-                        string strItem = item.Substring(0, item.IndexOf(":", 0));
-
-                        if (strItem == "PNUMBER")
-                        {
-                            PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "DESCRICAO")
-                        {
-                            DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "EAN13")
-                        {
-                            Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
-                        }
-                        else if (strItem == "LOTE")
-                        {
-                            LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                        }
-                        else if (strItem == "SEQ")
-                        {
-                            SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                        }
-                        else if (strItem == "QTD")
-                        {
-                            QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
+                            if (strItem == "PNUMBER")
+                            {
+                                PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "DESCRICAO")
+                            {
+                                DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "EAN13")
+                            {
+                                Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
+                            else if (strItem == "LOTE")
+                            {
+                                LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "SEQ")
+                            {
+                                SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
+                            else if (strItem == "QTD")
+                            {
+                                QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
                         }
 
+                        break;
 
-                    }
+                    case Tipo.BARRAS:
 
-                    break;
+                        foreach (string item in arrayEtiqueta)
+                        {
+                            daoProduto = new DaoProduto();
 
-                default:
-                    MainConfig.errorMessage("Tipo de Etiqueta indefinido!!","Leitura Etiquetas");
-                    break;
+                            this.TipoEtiqueta = Tipo.BARRAS;
+                            Ean13Etiqueta = Convert.ToInt64(item);
+                            Etiqueta aux = daoProduto.recuperarInformacoesPorEan13Etiqueta(this);
+
+                            if(aux !=null)
+                            {
+                                DescricaoProdutoEtiqueta = aux.DescricaoProdutoEtiqueta;
+                                PartnumberEtiqueta = aux.PartnumberEtiqueta;
+                                Ean13Etiqueta = aux.Ean13Etiqueta;
+                                LoteEtiqueta = aux.LoteEtiqueta;
+                                SequenciaEtiqueta = aux.SequenciaEtiqueta;
+                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        MainConfig.errorMessage("Tipo de Etiqueta indefinido!!", "Leitura Etiquetas");
+                        break;
+                }
+
+                DataHoraValidacao = DateTime.Now;
+                this.TipoEtiqueta = tipoEtiqueta;
+
             }
-
-            DataHoraValidacao = DateTime.Now;
-            this.TipoEtiqueta = tipoEtiqueta;
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
 
         }
 
@@ -156,8 +154,8 @@ namespace TitaniumColector.Classes
 
         public Int64 Ean13Etiqueta
         {
-            get { return ean13; }
-            set { ean13 = value; }
+            get { return ean13Embalagem; }
+            set { ean13Embalagem = value; }
         }
 
         public String LoteEtiqueta
@@ -274,10 +272,16 @@ namespace TitaniumColector.Classes
 
                     foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
                     {
-                        if (etiqueta.Equals(itemList))
+
+                        if (itemList.Equals(etiqueta))
                         {
                             return true;
                         }
+
+                        //if (etiqueta.Equals(itemList))
+                        //{
+                        //    return true;
+                        //}
                     }
                     return false;
 

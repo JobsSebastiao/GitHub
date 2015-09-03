@@ -28,7 +28,7 @@ namespace TitaniumColector.Classes.Dao
 
             try
             {
-                sql01.Append(" SELECT codigoEMBALAGEMPRODUTO,COALESCE(nomeEMBALAGEMPRODUTO,'ND') AS nomeEMBALAGEMPRODUTO,produtoEMBALAGEMPRODUTO,quantidadeEMBALAGEMPRODUTO,padraoEMBALAGEMPRODUTO,embalagemEMBALAGEMPRODUTO,codigobarrasEMBALAGEMPRODUTO");
+                sql01.Append(" SELECT codigoEMBALAGEMPRODUTO,COALESCE(nomeEMBALAGEMPRODUTO,'ND') AS nomeEMBALAGEMPRODUTO,produtoEMBALAGEMPRODUTO,quantidadeEMBALAGEMPRODUTO,padraoEMBALAGEMPRODUTO,COALESCE(embalagemEMBALAGEMPRODUTO,0) AS embalagemEMBALAGEMPRODUTO,COALESCE(codigobarrasEMBALAGEMPRODUTO,'0000000000000') AS codigobarrasEMBALAGEMPRODUTO ");
                 sql01.Append(" FROM tb0504_Embalagens_Produtos");
                 sql01.Append(" INNER JOIN tb0501_Produtos ON codigoPRODUTO = produtoEMBALAGEMPRODUTO");
                 sql01.Append(" WHERE produtoEMBALAGEMPRODUTO IN(");
@@ -55,9 +55,6 @@ namespace TitaniumColector.Classes.Dao
                                                  (Embalagem.PadraoEmbalagem)dr["padraoEMBALAGEMPRODUTO"], Convert.ToInt32(dr["embalagemEMBALAGEMPRODUTO"]),
                                                   (string)dr["codigobarrasEMBALAGEMPRODUTO"]);
 
-
-
-                        //Carrega a lista de itens que será retornada ao fim do procedimento.
                         listaEmbalagens.Add(embalagem);
 
                     }
@@ -72,6 +69,7 @@ namespace TitaniumColector.Classes.Dao
                     throw new SqlQueryExceptions("Não foi possível recuperar informações sobre embalagens para esta proposta :  " + codigoProposta);
                 }
 
+                embalagem = null;
                 return listaEmbalagens;
 
             }
@@ -124,6 +122,61 @@ namespace TitaniumColector.Classes.Dao
             }
 
         }
+
+        public void carregarEmbalagensProduto(Produto produto) 
+        {
+            //List<Embalagem> listaEmbalagens = null;
+
+            sql01 = new StringBuilder();
+            sql01.Append(" SELECT        TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
+            sql01.Append(" TB_EMB.embalagemEMBALAGEM, TB_EMB.ean13EMBALAGEM, TB_PROP.numeroPROPOSTA, TB_PROP.codigopickingmobilePROPOSTA, COUNT(*) AS TLINHAS");
+            sql01.Append(" FROM            tb0002_ItensProposta AS TB_ITEM INNER JOIN");
+            sql01.Append(" tb0001_Propostas AS TB_PROP ON TB_ITEM.propostaITEMPROPOSTA = TB_PROP.codigoPROPOSTA INNER JOIN");
+            sql01.Append(" tb0005_Embalagens AS TB_EMB ON TB_ITEM.codigoprodutoITEMPROPOSTA = TB_EMB.produtoEMBALAGEM");
+            sql01.Append(" GROUP BY TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
+            sql01.Append(" TB_EMB.embalagemEMBALAGEM, TB_EMB.ean13EMBALAGEM, TB_PROP.numeroPROPOSTA, TB_PROP.codigopickingmobilePROPOSTA");
+            sql01.AppendFormat(" HAVING        (TB_EMB.produtoEMBALAGEM = {0})", produto.CodigoProduto);
+
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
+
+            if (Convert.ToInt32(dr["TValues"]) > 0) 
+            {
+                while ((dr.Read()))
+                {
+
+                }
+            }
+
+        }
+
+        public List<Embalagem> carregarEmbalagensProduto(Proposta proposta)
+        {
+            Embalagem objEmbalagem = null;
+            List<Embalagem> listaEmbalagens = new List<Embalagem>();
+
+            sql01 = new StringBuilder();
+            sql01.Append(" SELECT        TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
+            sql01.Append(" TB_EMB.embalagemEMBALAGEM, TB_EMB.ean13EMBALAGEM, TB_PROP.numeroPROPOSTA, TB_PROP.codigopickingmobilePROPOSTA, COUNT(*) AS TLINHAS");
+            sql01.Append(" FROM            tb0002_ItensProposta AS TB_ITEM INNER JOIN");
+            sql01.Append(" tb0001_Propostas AS TB_PROP ON TB_ITEM.propostaITEMPROPOSTA = TB_PROP.codigoPROPOSTA INNER JOIN");
+            sql01.Append(" tb0005_Embalagens AS TB_EMB ON TB_ITEM.codigoprodutoITEMPROPOSTA = TB_EMB.produtoEMBALAGEM");
+            sql01.Append(" GROUP BY TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
+            sql01.Append(" TB_EMB.embalagemEMBALAGEM, TB_EMB.ean13EMBALAGEM, TB_PROP.numeroPROPOSTA, TB_PROP.codigopickingmobilePROPOSTA");
+            sql01.AppendFormat(" HAVING        (TB_EMB.produtoEMBALAGEM = {0})", proposta.ListObjItemProposta[0].CodigoProduto);
+
+            SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
+
+            while ((dr.Read()))
+            {
+                objEmbalagem = new Embalagem(Convert.ToInt32(dr["codigoEMBALAGEM"]), (string)dr["nomeEMBALAGEM"], Convert.ToInt32(dr["produtoEMBALAGEM"]), Convert.ToDouble(dr["quantidadeEMBALAGEM"])
+                                             ,(Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"]), Convert.ToInt32(dr["embalagemEMBALAGEM"]), (string)dr["ean13EMBALAGEM"]);
+
+                listaEmbalagens.Add(objEmbalagem);
+            }
+
+            return listaEmbalagens;
+        }
+
 
     }
 }
