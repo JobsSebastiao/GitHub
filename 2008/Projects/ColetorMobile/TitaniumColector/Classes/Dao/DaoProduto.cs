@@ -103,6 +103,9 @@ namespace TitaniumColector.Classes.Dao
                     throw new TitaniumColector.Classes.Exceptions.SqlQueryExceptions("Query não retornou valor.");
                 }
 
+                dr.Close();
+                SqlServerConn.closeConn();
+
                 return listProduto;
             }
             catch (SqlQueryExceptions queryEx)
@@ -137,6 +140,10 @@ namespace TitaniumColector.Classes.Dao
             {
                 nomesLocais += dr["nomeLOCAL"];
             }
+
+            dr.Close();
+            SqlServerConn.closeConn();
+
             return nomesLocais;
         }
 

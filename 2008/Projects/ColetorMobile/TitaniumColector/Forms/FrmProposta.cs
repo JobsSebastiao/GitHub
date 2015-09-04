@@ -274,7 +274,7 @@ namespace TitaniumColector.Forms
 
     #endregion 
       
-    #region "CARGA DO INFORMAÇÔES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
+    #region "CARGA INICIAL DE INFORMAÇÕES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
 
 
         private void carregarForm()
@@ -503,16 +503,22 @@ namespace TitaniumColector.Forms
                 ProcedimentosLiberacao.setStatusProdutoParaSeparado(objProposta.ListObjItemProposta[0]);
                 //grava informações do item na base de dados mobile
                 daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
-                //ESTE TRECHO TALVES ESTEJA SENDO DESNECESSÀRIO.
-                //ANALIZAR MELHOR Action SUA UTILIZACAO 
-                daoEtiqueta.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
+
+                ////ESTE TRECHO TALVES ESTEJA SENDO DESNECESSÀRIO.
+                ////ANALIZAR MELHOR Action SUA UTILIZACAO 
+                //daoEtiqueta.insertSequencia(ProcedimentosLiberacao.EtiquetasLidas);
+
+
                 //inseri informações das etiquetas referente ao produto liberado em formato Xml
                 daoItemProposta.updateXmlItemProposta(Etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+               
                 //carrega próximo item
                 if (ProcedimentosLiberacao.TotalItens > 0)
                 {
                     ProdutoProposta prod = daoItemProposta.fillTop1ItemProposta();
 
+                    //Carrega informações de Embalagem para o produto que será trabalhado.
+                    prod.Embalagens = daoEmbalagem.carregarEmbalagensProduto(prod);
 
                     if (prod != null)
                     {
@@ -535,6 +541,7 @@ namespace TitaniumColector.Forms
                 {
                     //seta parametros para iniciar leitura do próximo item
                     ProcedimentosLiberacao.inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
+
                     //recarrega o form com as informações do próximo item.
                     this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
                 }
@@ -547,9 +554,9 @@ namespace TitaniumColector.Forms
             {
                 MessageBox.Show(Ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception("Erro ao carregar próximo item!",ex);
             }
             finally
             {
@@ -743,8 +750,6 @@ namespace TitaniumColector.Forms
                 }
             }
         }
-
-
 
         private String intOrDecimal(String value)
         {

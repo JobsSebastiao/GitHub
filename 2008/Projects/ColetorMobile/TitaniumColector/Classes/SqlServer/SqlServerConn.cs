@@ -163,6 +163,9 @@ namespace TitaniumColector.SqlServer
             
         }
 
+        /// <summary>
+        /// Fecha a conexão
+        /// </summary>
         public static void closeConn()
         {
             try
@@ -198,6 +201,11 @@ namespace TitaniumColector.SqlServer
 
         }
 
+        /// <summary>
+        /// Preenche um dataTable
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="sql01"></param>
         public static void fillDataTable(DataTable dt, string sql01)
         {
             try
@@ -230,6 +238,11 @@ namespace TitaniumColector.SqlServer
 
         }
 
+        /// <summary>
+        /// Preenche um objeto DataReader
+        /// </summary>
+        /// <param name="sql01">Query a ser executada</param>
+        /// <returns>SqlDataReader preenchido</returns>
         public static SqlDataReader fillDataReader(string sql01)
         {
             try
@@ -242,6 +255,7 @@ namespace TitaniumColector.SqlServer
             {
                 throw new SqlQueryExceptions("Erro:" + ex.Message);
             }
+
         }
 
         public static void execCommandSql(string sql01)
@@ -319,6 +333,7 @@ namespace TitaniumColector.SqlServer
                 string strConnection= fileStrConn[0];
                 return strConnection;
             }
+
             return null;
         }
 
@@ -370,9 +385,17 @@ namespace TitaniumColector.SqlServer
         /// <param name="fileName">Nome do arquivo de texto onde está armazenado a string de Conexão.</param>
         public static void configuraStrConnection(string mobilePath,string fileName) 
         {
-            string strConnection = readFileStrConnection(mobilePath,fileName);
-            string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection,FileUtility.splitType.PONTO_VIRGULA);
-            setParametersStringConnection(arrayStrConnection);
+            try
+            {
+                string strConnection = readFileStrConnection(mobilePath, fileName);
+                string[] arrayStrConnection = FileUtility.arrayOfTextFile(strConnection, FileUtility.splitType.PONTO_VIRGULA);
+                setParametersStringConnection(arrayStrConnection);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
 
         /// <summary>
