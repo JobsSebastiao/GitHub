@@ -140,9 +140,9 @@ namespace TitaniumColector.Classes.Procedimentos
 
         public static Double subtrairQtdPecasItem(Double value)
         {
-            if (QtdPecasItem - (value/10)>= 0)
+            if (QtdPecasItem - value>= 0)
             {
-                return qtdPecasItem -= (value / 10);
+                return qtdPecasItem -= value;
             }
             else 
             {
@@ -437,13 +437,26 @@ namespace TitaniumColector.Classes.Procedimentos
                     break;
                 case Etiqueta.Tipo.QRCODE:
 
-                    if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+                    if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
                     {
-                        if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                        foreach (var item in produtoProposta.Embalagens)
                         {
-                            return true;
+                            if (etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem)
+                            {
+                                return true;
+                            }
                         }
                     }
+
+                    //A validacao agora é feita pelo ean13 da embalagem
+                    //if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
+                    //{
+                    //    if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
+                    //    {
+                    //        return true;
+                    //    }
+                    //}
+
 
                     break;
 

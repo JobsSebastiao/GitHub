@@ -12,6 +12,7 @@ using TitaniumColector.Classes.SqlServer;
 using TitaniumColector.Forms;
 using System.Reflection;
 using System.Collections;
+using TitaniumColector.Classes.Dao;
 
 
 namespace TitaniumColector
@@ -22,17 +23,13 @@ namespace TitaniumColector
         private Usuario objUsuario;
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
-        private DataTable dt;
-        private string sql01;
-        private List<object> listUsuario;
-
+        private DaoUsuario daoUsuario;
 
         public frmLogin()
         {
             try
             {
-
-               // Etiqueta.gerarXmlItensEtiquetas(new List<object>(1));
+                daoUsuario = new DaoUsuario();
 
                 //Configurações de criação do form
                 InitializeComponent();
@@ -42,98 +39,43 @@ namespace TitaniumColector
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
                 //Configura string de conexão E/OU cria a base mobile e todas as suas tabelas.
                 BaseMobile.configurarBaseMobile();
-               
                 //Configura Layout
                 this.configControls();
-                //carrega a combo de usuários.
-                this.carregarComboUsuario();
+                //Preenche o combo de Usuários para que seja validado o Login
+                this.preencheComboBoxUsuario(cbUsuario, daoUsuario.retornaListUsuarios(), Usuario.usuarioProperty.NOME, false);
 
             }
-            catch (System.Data.SqlClient.SqlException sqlEx) 
+            catch (System.Data.SqlClient.SqlException sqlEx)
             {
                 StringBuilder bdMsg = new StringBuilder();
-                bdMsg.Append("Ocorreu um problema durante a tentativa de conexão com a base de dados!");
-                bdMsg.AppendLine();
-                bdMsg.Append("A aplicação não poderá ser iniciada.");
-                bdMsg.AppendLine();
-                bdMsg.Append("Description :" + sqlEx.Message);
-                bdMsg.AppendLine();
-                bdMsg.Append("Source :" + sqlEx.Source);
-                string msg = bdMsg.ToString();
-                MessageBox.Show(msg, "Conection Error.");
+                bdMsg.Append("\nOcorreu um problema durante a tentativa de conexão com a base de dados!");
+                bdMsg.Append("\nA aplicação não poderá ser iniciada.");
+                bdMsg.Append("\nDescription :" + sqlEx.Message);
+                bdMsg.Append("\nSource :" + sqlEx.Source);
+                MainConfig.errorMessage(bdMsg.ToString(), "Connection error");
+
                 Application.Exit();
+
             }
             catch (Exception ex)
             {
                 StringBuilder bdMsg = new StringBuilder();
-                bdMsg.Append("O sistema não pode ser iniciado.");
-                bdMsg.AppendLine();
-                bdMsg.Append("Favor contate o administrador do sitema.");
-                bdMsg.AppendLine();
-                bdMsg.Append("Description :" + ex.Message);
-                bdMsg.AppendLine();
-                string msg = bdMsg.ToString();
-                MessageBox.Show(msg, "Application Error.");
+                bdMsg.Append("\nO sistema não pode ser iniciado.");
+                bdMsg.Append("\nFavor contate o administrador do sitema.");
+                bdMsg.Append("\nDescription :" + ex.Message);
+                MainConfig.errorMessage(bdMsg.ToString(), "Application Error.");
+
                 Application.Exit();
+
+            }
+            finally 
+            {
+                daoUsuario = null;
             }
 
         }
 
     #region "//PRINCIPAIS MÉTODOS DO FORMULÁRIO"
-
-        /// <summary>
-        /// Carrega a combo de usuários
-        /// </summary>
-        private void carregarComboUsuario()
-        {
-            dt = new DataTable("Usuario");
-            StringBuilder sbSql01 = new StringBuilder();
-            sbSql01.Append(" SELECT codigoUSUARIO as Codigo,pastaUSUARIO as Pasta,nomeUSUARIO as Nome,");
-            sbSql01.Append(" senhaUSUARIO as Senha,nomecompletoUSUARIO as NomeCompleto,ativoUSUARIO as StatusUsuario");
-            sbSql01.Append(" FROM tb0201_usuarios ");
-            sbSql01.Append(" ORDER BY nomeUSUARIO ");
-            this.sql01 = sbSql01.ToString();
-
-            listUsuario = new List<object>(this.fillListUsuarios(dt, this.sql01));
-
-            this.preencheComboBoxUsuario(cbUsuario, listUsuario,Usuario.usuarioProperty.NOME, false);
-
-        }
-
-
-        /// <summary>
-        /// Preenche um List com objetos da classe Usuario
-        /// </summary>
-        /// <param name="dt">Data table utilizado para armazenar os dados vindos da base de dados.</param>
-        /// <param name="sql01">Comando Sql que retorna dados para cada usuário.</param>
-        /// <returns></returns>
-        private List<object> fillListUsuarios(DataTable dt, string sql01)
-        {
-            Usuario.statusUsuario status;
-
-            List<object> listUsuario = new List<object>();
-            DataRow dr = null;
-            
-            //'preenche um DataTable
-           SqlServerConn.fillDataTable(dt, sql01);
-
-            foreach (DataRow dr_loopVariable in dt.Rows)
-            {
-                dr = dr_loopVariable;
-                if (Convert.ToInt32(dr["StatusUsuario"]) == 0) 
-                {
-                 status = Usuario.statusUsuario.DESATIVADO;  
-                }else
-                {
-                    status = Usuario.statusUsuario.ATIVO;
-                }
-                objUsuario = new Usuario(Convert.ToInt32(dr["Codigo"]), Convert.ToInt32(dr["Pasta"]),(string)dr["Nome"], (string)dr["Senha"],(string)dr["NomeCompleto"],status);
-                listUsuario.Add(objUsuario);
-            }
-
-            return listUsuario;
-
-        }
 
         /// <summary>
         /// Preenche a ComboBox com um atributo de classe Usuario.
@@ -145,7 +87,7 @@ namespace TitaniumColector
         ///                          (FALSE)Será feito um Loop nos objetos contidos na List não incluíndo na ComboBox os 
         ///                                 usuários com o statusUSUARIO = 0 (DESATIVADOS.)
         /// </param>
-        private void preencheComboBoxUsuario(ComboBox cb, List<object> listUsuario, Usuario.usuarioProperty prop,bool useDataSource)
+        private void preencheComboBoxUsuario(ComboBox cb, List<Usuario> listUsuario, Usuario.usuarioProperty prop,bool useDataSource)
         {
             string columnName = null;
             string displayName = null;
@@ -200,25 +142,32 @@ namespace TitaniumColector
                         {
 
                             case Usuario.usuarioProperty.CODIGO:
+
                                 cb.DisplayMember = "Codigo";
                                 cb.ValueMember = "Codigo";
                                 cb.Items.Add(objUsuarioLoop.Codigo);
                                 continue;
+
                             case Usuario.usuarioProperty.NOME:
+
                                 cb.DisplayMember = "Nome";
                                 cb.ValueMember = "Nome";
                                 cb.Items.Add(objUsuarioLoop);
                                 continue;
+
                             case Usuario.usuarioProperty.NOMECOMPLETO:
 
                                 cb.DisplayMember = "NomeCompleto";
                                 cb.ValueMember = "NomeCompleto";
                                 cb.Items.Add(objUsuarioLoop.NomeCompleto);
                                 continue;
+
                             default:
+
                                 cb.DisplayMember = "Nome";
                                 cb.ValueMember = "Nome";
                                 cb.Items.Add(objUsuarioLoop.NomeCompleto);
+
                                 break;
                         }
 
@@ -260,46 +209,54 @@ namespace TitaniumColector
 
         private void Logar()
         {
-            if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() != "")
+            try
             {
+                if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() != "")
+                {
+                    if (cbUsuario.SelectedItem != null)
+                    {
+                        objUsuario = new Usuario((Usuario)cbUsuario.SelectedItem);
 
-                if (cbUsuario.SelectedItem != null)
-                {
-                    objUsuario = new Usuario();
-                    objUsuario = (Usuario)cbUsuario.SelectedItem;
-                    if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
-                    {
-                        MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(objUsuario, Usuario.statusLogin.LOGADO);
-                        this.cbUsuario.Text = "";
-                        this.txtSenha.Text = "";
-                        FrmAcao frmAcao = new FrmAcao();
-                        frmAcao.Show();
-                        this.Hide();
+                        if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
+                        {
+                            MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(objUsuario, Usuario.statusLogin.LOGADO);
+                            this.cbUsuario.Text = "";
+                            this.txtSenha.Text = "";
+                            FrmAcao frmAcao = new FrmAcao();
+                            frmAcao.Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show(" A senha digitada \n é inválida!!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                            txtSenha.Text = "";
+                            txtSenha.Focus();
+                        }
                     }
-                    else
-                    {
-                        MessageBox.Show(" A senha digitada \n é inválida!!", "Login", MessageBoxButtons.OK, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
-                        txtSenha.Text = "";
-                        txtSenha.Focus();
-                    }
-                }
-            }
-            else
-            {
-                if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() == "")
-                {
-                    txtSenha.Text = "";
-                    txtSenha.Focus();
                 }
                 else
                 {
-                    cbUsuario.Text = "";
-                    cbUsuario.Focus();
+                    if (cbUsuario.SelectedItem != null && txtSenha.Text.Trim() == "")
+                    {
+                        txtSenha.Text = "";
+                        txtSenha.Focus();
+                    }
+                    else
+                    {
+                        cbUsuario.Text = "";
+                        cbUsuario.Focus();
+                    }
                 }
+
             }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            
         }
 
-        #endregion  
+    #endregion  
 
     #region "//MÉTODOS COMUNS AO FORMULÁRIO"
 

@@ -26,7 +26,6 @@ namespace TitaniumColector.Forms
             frmLogin login = new frmLogin();
             login.Show();
             this.Close();
-          
         }
 
         private void mnuAcao_Exit_Click(object sender, EventArgs e)

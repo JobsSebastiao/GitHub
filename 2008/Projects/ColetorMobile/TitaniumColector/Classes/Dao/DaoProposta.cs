@@ -12,7 +12,8 @@ namespace TitaniumColector.Classes.Dao
     class DaoProposta
     {
         private StringBuilder sql01;
-        private SqlDataReader dr; 
+        private SqlDataReader dr;
+        private Proposta objProposta;
 
         public DaoProposta() 
         {
@@ -93,7 +94,8 @@ namespace TitaniumColector.Classes.Dao
         /// <returns>Objeto do tipo Proposta</returns>
         public Proposta fillTop1PropostaServidor()
         {
-            Proposta objProposta = new Proposta();
+            //Proposta objProposta = new Proposta();
+            //Proposta objProposta = null;
 
             sql01 = new StringBuilder();
             sql01.Append("SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
@@ -103,26 +105,16 @@ namespace TitaniumColector.Classes.Dao
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
 
-            if ((dr != null))
+            while ((dr.Read()))
             {
-                while ((dr.Read()))
-                {
-                    objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                             Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]));
+                objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
+                                         Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]));
 
-                }
             }
 
-            if (objProposta.Codigo  ==0)
-            {
-                return objProposta = null;
-            }
-
-
+            dr.Close();
             SqlServerConn.closeConn();
-
             return objProposta;
-
         }
 
         /// <summary>
@@ -151,6 +143,8 @@ namespace TitaniumColector.Classes.Dao
                                              MainConfig.CodigoUsuarioLogado);
                 }
             }
+
+            dr.Close();
             SqlServerConn.closeConn();
         }
 
@@ -280,6 +274,7 @@ namespace TitaniumColector.Classes.Dao
                 }
             }
 
+            dr.Close();
             return 0;
         }
 

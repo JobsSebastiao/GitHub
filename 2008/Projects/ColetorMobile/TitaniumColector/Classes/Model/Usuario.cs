@@ -13,150 +13,154 @@ namespace TitaniumColector.Classes
         private statusUsuario enumStatusUsuario;
         private statusLogin enumStatusLogin;
 
-        public enum usuarioProperty
-        {
-            CODIGO = 1,
-            PASTA = 2,
-            NOME = 3,
-            SENHA = 4,
-            NOMECOMPLETO = 5,
-            STATUSUSUARIO = 6
-        }
+    #region "ENUMS" 
 
-        public enum statusLogin
-        {
-            LOGADO = 0,
-            NAOLOGADO = 1
-        }
+        public enum usuarioProperty { CODIGO = 1, PASTA = 2, NOME = 3, SENHA = 4, NOMECOMPLETO = 5, STATUSUSUARIO = 6 }
+        public enum statusLogin { LOGADO = 0, NAOLOGADO = 1 }
+        public enum statusUsuario { DESATIVADO = 0, ATIVO = 1 }
 
-        public enum statusUsuario 
-        {   
-            DESATIVADO =0,
-            ATIVO =1
-        }
+    #endregion
+
+    #region "GETS E SETS"
 
         public Usuario()
         {
         }
 
-        public Usuario(int codigoUsuario, int pastaUsuario, string nomeUsuario, string senhaUsuario, string nomeCompletoUsuario,statusUsuario statusUsuario)
+        public Usuario(int codigoUsuario, int pastaUsuario, string nomeUsuario, string senhaUsuario, string nomeCompletoUsuario, statusUsuario statusUsuario)
         {
-	        Codigo = codigoUsuario;
-	        Pasta = pastaUsuario;
-	        Nome = nomeUsuario;
-	        Senha = senhaUsuario;
-	        NomeCompleto = nomeCompletoUsuario;
+            Codigo = codigoUsuario;
+            Pasta = pastaUsuario;
+            Nome = nomeUsuario;
+            Senha = senhaUsuario;
+            NomeCompleto = nomeCompletoUsuario;
             StatusUsuario = statusUsuario;
             StatusLogin = statusLogin.NAOLOGADO;
         }
 
-        public int Codigo {
-	        get 
-            { 
-                return this.intCodigo; 
-            }
-
-	        set 
-            {
-
-		        if ((value  != this.intCodigo)) 
-                {
-			        intCodigo = value;
-		        }
-
-	        }
-        }
-        
-
-        public int Pasta {
-	        get 
-            { 
-                return intPasta; 
-            }
-
-	        set 
-            {
-		        if ((value != this.intPasta)) 
-                {
-			        intPasta = value;
-		        }
-	        }
+        public Usuario(Usuario user)
+        {
+            Codigo = user.Codigo;
+            Pasta = user.Pasta;
+            Nome = user.Nome;
+            Senha = user.Senha;
+            NomeCompleto = user.NomeCompleto;
+            StatusUsuario = user.StatusUsuario;
+            StatusLogin = user.StatusLogin;
         }
 
-
-        public string Nome {
-	        get 
-            { 
-                return strNome; 
+        public int Codigo
+        {
+            get
+            {
+                return this.intCodigo;
             }
 
-	        set 
+            set
             {
-		        if ((value != null )) 
+
+                if ((value != this.intCodigo))
                 {
-			        strNome = value.Trim();
-		        }
-	        }
+                    intCodigo = value;
+                }
+
+            }
         }
 
-
-        public string Senha {
-	        get 
-            { 
-                return strSenha; 
+        public int Pasta
+        {
+            get
+            {
+                return intPasta;
             }
 
-	        set 
+            set
             {
-		        if ((value != null) )
+                if ((value != this.intPasta))
                 {
-			        strSenha = value.Trim();
-		        }
-	        }
+                    intPasta = value;
+                }
+            }
         }
 
-
-        public string NomeCompleto {
-
-	        get { return strNomeCompleto; }
-
-	        set 
+        public string Nome
+        {
+            get
             {
-		        if ((value != null)) 
+                return strNome;
+            }
+
+            set
+            {
+                if ((value != null))
                 {
-			        strNomeCompleto = value.Trim();
-		        }
-	        }
+                    strNome = value.Trim();
+                }
+            }
+        }
+
+        public string Senha
+        {
+            get
+            {
+                return strSenha;
+            }
+
+            set
+            {
+                if ((value != null))
+                {
+                    strSenha = value.Trim();
+                }
+            }
+        }
+
+        public string NomeCompleto
+        {
+
+            get { return strNomeCompleto; }
+
+            set
+            {
+                if ((value != null))
+                {
+                    strNomeCompleto = value.Trim();
+                }
+            }
         }
 
         internal statusLogin StatusLogin
         {
-            get         
-            { 
-                return enumStatusLogin; 
+            get
+            {
+                return enumStatusLogin;
             }
-            set 
-            { 
-                enumStatusLogin = value; 
+            set
+            {
+                enumStatusLogin = value;
             }
         }
-
 
         internal statusUsuario StatusUsuario
         {
-            get 
-            { 
-                return enumStatusUsuario; 
+            get
+            {
+                return enumStatusUsuario;
             }
-            set 
-            { 
-                enumStatusUsuario = value; 
+            set
+            {
+                enumStatusUsuario = value;
             }
         }
 
-        public bool validaSenha(object obj,string strSenha) 
+
+    #endregion
+
+    #region "Métodos"
+
+        public bool validaSenha(object obj, string strSenha)
         {
-            
+
             bool retorno = false;
 
             if (obj == null || (obj.GetType() != typeof(Usuario)))
@@ -168,14 +172,14 @@ namespace TitaniumColector.Classes
                 if (strSenha == ((Usuario)obj).Senha)
                 {
                     retorno = true;
-                }  
+                }
             }
             return retorno;
         }
 
-        public bool validaNome(object obj,string strNome)
+        public bool validaNome(object obj, string strNome)
         {
-            
+
             bool retorno = false;
 
             if (obj == null || (obj.GetType() != typeof(Usuario)))
@@ -192,19 +196,26 @@ namespace TitaniumColector.Classes
             return retorno;
         }
 
-
-        public bool validaUsuario(object obj,string usuario,string senha) 
+        /// <summary>
+        /// Valida usuário durante Login
+        /// </summary>
+        /// <param name="obj">Objeto a ser validado como Objeto Usuário</param>
+        /// <param name="usuario">valor do campo Usuario</param>
+        /// <param name="senha">Valor do campo senha</param>
+        /// <returns>Validação True
+        ///          Nao validado False;</returns>
+        public bool validaUsuario(object obj, string usuario, string senha)
         {
             bool retorno = false;
-            if (Equals(obj)) 
+            if (Equals(obj))
             {
-                if (validaNome(obj,usuario)) 
+                if (validaNome(obj, usuario))
                 {
-                    if (validaSenha(obj,senha))
+                    if (validaSenha(obj, senha))
                     {
                         retorno = true;
                     }
-                    else 
+                    else
                     {
                         retorno = false;
                     }
@@ -225,7 +236,7 @@ namespace TitaniumColector.Classes
         {
 
             return " Código : " + Codigo + "\n" + Environment.NewLine +
-                   " Pasta : " + Pasta + Environment.NewLine + 
+                   " Pasta : " + Pasta + Environment.NewLine +
                    " Senha : " + Senha + Environment.NewLine +
                    " Nome : " + Nome + Environment.NewLine +
                    " Nome Completo :" + NomeCompleto + Environment.NewLine +
@@ -237,10 +248,12 @@ namespace TitaniumColector.Classes
             System.Type type = obj.GetType();
             if (obj == null || (type != typeof(Usuario)))
             {
-		        return false;
-	        } else {
-		        return Codigo == ((Usuario)obj).Codigo;
-	        }
+                return false;
+            }
+            else
+            {
+                return Codigo == ((Usuario)obj).Codigo;
+            }
 
         }
 
@@ -249,7 +262,6 @@ namespace TitaniumColector.Classes
             return base.GetHashCode();
         }
 
-
         /// <summary>
         /// Registra o acesso do usuário na Tabela tb0207_Acessos.
         /// E define o status de Login do usuário como Usuario.StatusLogin.LOGADO OU NAOLOGADO
@@ -257,11 +269,10 @@ namespace TitaniumColector.Classes
         /// <param name="user">Código do usuário.</param>
         /// <param name="tipodeAcao"> ENUM Usuario.StatusLogin da classe usuário</param>
         /// <returns>Retorna o código do acesso atual do usuário.</returns>
-        public long registrarAcesso(Usuario user,Usuario.statusLogin tipodeAcao)
+        public long registrarAcesso(Usuario user, Usuario.statusLogin tipodeAcao)
         {
-            
-            Int64 retorno = 0;
 
+            Int64 retorno = 0;
             this.StatusLogin = tipodeAcao;
 
             MainConfig.UsuarioLogado = user.Nome;
@@ -291,5 +302,7 @@ namespace TitaniumColector.Classes
 
         }
 
+    #endregion
+        
     }
 }

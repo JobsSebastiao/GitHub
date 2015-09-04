@@ -123,9 +123,11 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
-        public void carregarEmbalagensProduto(Produto produto) 
+        public List<Embalagem> carregarEmbalagensProduto(Produto produto) 
         {
-            //List<Embalagem> listaEmbalagens = null;
+
+            Embalagem objEmbalagem = null;
+            List<Embalagem> listaEmbalagens = new List<Embalagem>();
 
             sql01 = new StringBuilder();
             sql01.Append(" SELECT        TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
@@ -139,14 +141,16 @@ namespace TitaniumColector.Classes.Dao
 
             SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
 
-            if (Convert.ToInt32(dr["TValues"]) > 0) 
+            while ((dr.Read()))
             {
-                while ((dr.Read()))
-                {
+                objEmbalagem = new Embalagem(Convert.ToInt32(dr["codigoEMBALAGEM"]), (string)dr["nomeEMBALAGEM"], Convert.ToInt32(dr["produtoEMBALAGEM"]), Convert.ToDouble(dr["quantidadeEMBALAGEM"])
+                                        , (Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"]), Convert.ToInt32(dr["embalagemEMBALAGEM"]), (string)dr["ean13EMBALAGEM"]);
 
-                }
+                listaEmbalagens.Add(objEmbalagem);
             }
 
+            return listaEmbalagens;
+           
         }
 
         public List<Embalagem> carregarEmbalagensProduto(Proposta proposta)

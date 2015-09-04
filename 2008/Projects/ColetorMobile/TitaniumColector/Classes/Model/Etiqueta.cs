@@ -125,7 +125,7 @@ namespace TitaniumColector.Classes
                                 Ean13Etiqueta = aux.Ean13Etiqueta;
                                 LoteEtiqueta = aux.LoteEtiqueta;
                                 SequenciaEtiqueta = aux.SequenciaEtiqueta;
-                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
+                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta*5;
                             }
                         }
 
@@ -373,8 +373,10 @@ namespace TitaniumColector.Classes
                 {
                     //Elemento Raiz Seq
                     writer.WriteStartElement("Seq");
-                    //Escreve atributos para o Elemento Raiz Seq.
+                    //Escreve atributos IdEtiqueta
                     writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
+                    //Escreve atributos TIPO Etiqueta
+                    writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
                     //Escreve elemento entre a tag Seq
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
