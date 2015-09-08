@@ -304,6 +304,10 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
+        /// <summary>
+        /// Realiza update nas informações dos itens da proposta durante 
+        /// o retorno do mesmo para a base Principal após a finalização da liberação da proposta.
+        /// </summary>
         public void updateItemPropostaRetorno() 
         {
             try
@@ -314,20 +318,16 @@ namespace TitaniumColector.Classes.Dao
                 sql01.AppendFormat(" WHERE  statusseparadoITEMPROPOSTA = {0}", (int)ProdutoProposta.statusSeparado.SEPARADO);
                 SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
 
-                if( dr!=null )
+                while(dr.Read())
                 {
-                    while(dr.Read())
-                    {
-                        sql01 = new StringBuilder();
-                        sql01.Append(" UPDATE tb1602_Itens_Proposta");
-                        sql01.AppendFormat("  SET   separadoITEMPROPOSTA ={0}", Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]));
-                        sql01.AppendFormat(" ,xmlSequenciaITEMPROPOSTA ='{0}'", (string)dr["xmlSequenciaITEMPROPOSTA"]);
-                        sql01.AppendFormat(" WHERE (codigoITEMPROPOSTA = {0})", Convert.ToInt32(dr["codigoITEMPROPOSTA"]));
-                        SqlServerConn.execCommandSql(sql01.ToString());
-                    }
+                    sql01 = new StringBuilder();
+                    sql01.Append(" UPDATE tb1602_Itens_Proposta");
+                    sql01.AppendFormat("  SET   separadoITEMPROPOSTA ={0}", Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]));
+                    sql01.AppendFormat(" ,xmlSequenciaITEMPROPOSTA ='{0}'", (string)dr["xmlSequenciaITEMPROPOSTA"]);
+                    sql01.AppendFormat(" WHERE (codigoITEMPROPOSTA = {0})", Convert.ToInt32(dr["codigoITEMPROPOSTA"]));
+                    SqlServerConn.execCommandSql(sql01.ToString());
                 }
 
-                //fecha a conexão
                 dr.Close();
                 CeSqlServerConn.closeConnCe();
 
@@ -358,9 +358,13 @@ namespace TitaniumColector.Classes.Dao
             sql01.AppendFormat("WHERE tb0002_ItensProposta.codigoITEMPROPOSTA = {0})", codigoItem);
 
             CeSqlServerConn.execCommandSqlCe(sql01.ToString());
-
         }
 
+        /// <summary>
+        /// Atualiza informações do xml do item passado como parâmetro.
+        /// </summary>
+        /// <param name="xmlString">String no formato Xml</param>
+        /// <param name="codigoItem">Codigo do Item a ser atualizado</param>
         public void updateXmlItemProposta(String xmlString,Int32 codigoItem) 
         {
             sql01 = new StringBuilder();

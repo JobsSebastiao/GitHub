@@ -20,10 +20,12 @@ namespace TitaniumColector.Classes
 
         public void clearBaseMobile()
         {
+            CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0005_Embalagens");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0004_Etiquetas");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0003_Produtos");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0002_ItensProposta");
             CeSqlServerConn.execCommandSqlCe("DELETE FROM tb0001_Propostas");
+ 
         }
 
         /// <summary>

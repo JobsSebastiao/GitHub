@@ -125,7 +125,7 @@ namespace TitaniumColector.Classes
                                 Ean13Etiqueta = aux.Ean13Etiqueta;
                                 LoteEtiqueta = aux.LoteEtiqueta;
                                 SequenciaEtiqueta = aux.SequenciaEtiqueta;
-                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta*5;
+                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
                             }
                         }
 

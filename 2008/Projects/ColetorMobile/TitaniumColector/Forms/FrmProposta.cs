@@ -61,10 +61,16 @@ namespace TitaniumColector.Forms
             try
             {
                 this.newLogin();
+
             }
             catch (Exception ex)
             {
                 MainConfig.errorMessage(ex.Message, "Logout");
+            }
+            finally 
+            {
+                daoItemProposta = null;
+                daoProduto = null;
             }
         }
      
@@ -77,7 +83,7 @@ namespace TitaniumColector.Forms
         {
             this.Close();
         }
-       
+     
         /// <summary>
         /// realiza o decremento do campo volume.
         /// </summary>
@@ -122,35 +128,38 @@ namespace TitaniumColector.Forms
         {
             if (e.KeyChar == Convert.ToChar(13))
             {
-                Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
-
-                switch (tipoEtiqueta)
+                if (inputText != "")
                 {
-                    case Etiqueta.Tipo.INVALID:
+                    Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
 
-                        inputText = string.Empty;
-                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
-                        break;
+                    switch (tipoEtiqueta)
+                    {
+                        case Etiqueta.Tipo.INVALID:
 
-                    case Etiqueta.Tipo.QRCODE:
+                            inputText = string.Empty;
+                            tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                            break;
 
-                        this.liberarItem(inputText,tipoEtiqueta);
-                        inputText = string.Empty;
-                        break;
+                        case Etiqueta.Tipo.QRCODE:
 
-                    case Etiqueta.Tipo.BARRAS:
+                            this.liberarItem(inputText,tipoEtiqueta);
+                            inputText = string.Empty;
+                            break;
 
-                        this.liberarItem(inputText,tipoEtiqueta);
-                        inputText = string.Empty;
-                        break;
+                        case Etiqueta.Tipo.BARRAS:
 
-                    default:
+                            this.liberarItem(inputText,tipoEtiqueta);
+                            inputText = string.Empty;
+                            break;
 
-                        inputText = string.Empty;
-                        tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
-                        break;
+                        default:
+
+                            inputText = string.Empty;
+                            tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
+                            break;
+                    }
+
                 }
-                
             }
             else
             {
@@ -166,13 +175,26 @@ namespace TitaniumColector.Forms
         private void FrmProposta_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             DialogResult result = MessageBox.Show("Desejar salvar as alterações realizadas?", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            
+            
             if (result == DialogResult.No)
             {
+                daoProposta = new DaoProposta();
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoProposta = null;
+                this.Dispose();
+                this.Close();
                 Application.Exit();
             }
             else if (result == DialogResult.Yes)
             {
-                MessageBox.Show("Aqui eu salvo tudo que acontece.");
+                daoItemProposta = new DaoProdutoProposta();
+                daoProposta = new DaoProposta();
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoItemProposta.updateItemPropostaRetorno();
+                this.Dispose();
+                this.Close();
+                Application.Exit();
             }
             else
             {
@@ -661,22 +683,6 @@ namespace TitaniumColector.Forms
             this.tbMensagem.Text = "";
         }
 
-        private void liberarItem() 
-        {
-            ProcedimentosLiberacao.lerEtiqueta(objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
-
-            if (ProcedimentosLiberacao.QtdPecasItem == 0)
-            {
-                if (!this.nextItemProposta())
-                {
-                    MessageBox.Show("PRÒXIMA PROPOSTA.");
-                    this.Dispose();
-                    this.Close();
-                }
-
-            }
-        }
-
         private void liberarItem(String inputText)
         {
             try
@@ -703,17 +709,16 @@ namespace TitaniumColector.Forms
             }
             finally 
             {
-                if (daoProposta != null)
-                {
-                    daoProposta = null;
-                }
-                if (daoItemProposta != null)
-                {
-                    daoItemProposta = null;
-                }
+                daoProposta = null;
+                daoItemProposta = null;
             }
         }
 
+        /// <summary>
+        /// Realiza todo o processo de liberação para o produto lido
+        /// </summary>
+        /// <param name="inputText">Valor captado pelo leitor</param>
+        /// <param name="tipoEtiqueta">Tipo de Etiqueta a ser validada</param>
         private void liberarItem(String inputText,Etiqueta.Tipo tipoEtiqueta)
         {
             try
@@ -740,39 +745,60 @@ namespace TitaniumColector.Forms
             }
             finally
             {
-                if (daoProposta != null)
-                {
-                    daoProposta = null;
-                }
-                if (daoItemProposta != null)
-                {
-                    daoItemProposta = null;
-                }
+                daoProposta = null;
+                daoItemProposta = null;
             }
         }
 
-        private String intOrDecimal(String value)
+
+        /// <summary>
+        /// tratamentos para realizar updat de informações durante o fechamento do form.
+        /// </summary>
+        private void newLogin() 
         {
-
-            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
-
-            if (Convert.ToDouble(value) % 1 == 0)
+            try
             {
-                value = String.Format(culture, "{0:0}", value);
+                DialogResult resp = MessageBox.Show("Deseja salvar as altereções relalizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+               
+                if (resp == DialogResult.Yes)
+                {
+                    daoItemProposta = new DaoProdutoProposta();
+                    daoProposta = new DaoProposta();
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoItemProposta.updateItemPropostaRetorno();
+                    this.Dispose();
+                    this.Close();
+                    frmLogin login = new frmLogin();
+                    login.Show();
+                }
+                else if (resp == DialogResult.No)
+                {
+                    daoProposta = new DaoProposta();
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoProposta = null;
+                    this.Dispose();
+                    this.Close();
+                    frmLogin login = new frmLogin();
+                    login.Show();
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                value = String.Format(culture, "{0:0.000}", Convert.ToDouble(value));
+                throw new Exception("Não foi possível executar o comando solicitado. \n ",ex);
             }
-            return value;
         }
 
+        /// <summary>
+        /// Valida o numero a ser exibido no formulário tratando a quantidade de campos após a virgula.
+        /// </summary>
+        /// <param name="value">Valoe a ser tratado</param>
+        /// <returns>String no formato decimal ou inteiro</returns>
         private String intOrDecimal(int value)
         {
-
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
             String retorno = "";
-            if (Convert.ToDouble(value)% 1 == 0)
+            if (Convert.ToDouble(value) % 1 == 0)
             {
                 retorno = String.Format(culture, "{0:0} Pçs", value);
             }
@@ -784,6 +810,11 @@ namespace TitaniumColector.Forms
             return retorno;
         }
 
+        /// <summary>
+        /// Valida o numero a ser exibido no formulário tratando a quantidade de campos após a virgula.
+        /// </summary>
+        /// <param name="value">Valoe a ser tratado</param>
+        /// <returns>String no formato decimal ou inteiro</returns>
         private String intOrDecimal(double value)
         {
 
@@ -801,7 +832,33 @@ namespace TitaniumColector.Forms
             return retorno;
         }
 
-        private void exitOnError(String mensagem,String headForm) 
+        /// <summary>
+        /// Valida o numero a ser exibido no formulário tratando a quantidade de campos após a virgula.
+        /// </summary>
+        /// <param name="value">Valoe a ser tratado</param>
+        /// <returns>String no formato decimal ou inteiro</returns>
+        private String intOrDecimal(String value)
+        {
+
+            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
+
+            if (Convert.ToDouble(value) % 1 == 0)
+            {
+                value = String.Format(culture, "{0:0}", value);
+            }
+            else
+            {
+                value = String.Format(culture, "{0:0.000}", Convert.ToDouble(value));
+            }
+            return value;
+        }
+
+        /// <summary>
+        /// método para fechar o form durante execptions
+        /// </summary>
+        /// <param name="mensagem"></param>
+        /// <param name="headForm"></param>
+        private void exitOnError(String mensagem, String headForm)
         {
             this.Dispose();
             this.Close();
@@ -811,33 +868,7 @@ namespace TitaniumColector.Forms
             frmAcao.Show();
         }
 
-        private void newLogin() 
-        {
-            try
-            {
-                DialogResult resp = MessageBox.Show("Deseja salvar as altereções relalizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (resp == DialogResult.Yes)
-                {
 
-
-                }
-                else if (resp == DialogResult.No)
-                {
-                    daoProposta = new DaoProposta();
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
-                    daoProposta = null;
-                    this.Dispose();
-                    this.Close();
-                    frmLogin login = new frmLogin();
-                    login.Show();
-                }
-
-            }
-            catch (Exception)
-            {
-                throw new Exception("Não foi possível executar o comando solicitado. \n ", null);
-            }
-        }
 
     #endregion
 
