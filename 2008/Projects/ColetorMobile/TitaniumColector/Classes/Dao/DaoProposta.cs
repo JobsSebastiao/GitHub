@@ -96,8 +96,6 @@ namespace TitaniumColector.Classes.Dao
         /// <returns>Objeto do tipo Proposta</returns>
         public Proposta fillTop1PropostaServidor()
         {
-            //Proposta objProposta = new Proposta();
-            //Proposta objProposta = null;
 
             sql01 = new StringBuilder();
             sql01.Append("SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
@@ -280,12 +278,9 @@ namespace TitaniumColector.Classes.Dao
             return 0;
         }
 
-
-
         public void updatePropostaTbPickingMobileFinalizar(Proposta proposta, Proposta.StatusLiberacao statusPKMobile)
         {
-            
-
+           
             sql01 = new StringBuilder();
             sql01.Append("UPDATE tb1651_Picking_Mobile");
             sql01.Append(" SET");
@@ -490,6 +485,16 @@ namespace TitaniumColector.Classes.Dao
             return objAux;
         }
 
+        public void updateVolumeProposta(Int64 codProposta) 
+        {
+            sql01 = new StringBuilder();
+            sql01.Append("UPDATE tb1601_Propostas");
+            sql01.AppendFormat(" SET volumesPROPOSTA = {0} ",Procedimentos.ProcedimentosLiberacao.QtdVolumes);
+            sql01.AppendFormat(" WHERE codigoPROPOSTA = {0} " ,codProposta.ToString());
+            SqlServerConn.execCommandSql(sql01.ToString());
+
+        }
+
         public void InsertOrUpdatePickingMobile(Proposta proposta, int usuarioProposta, Proposta.StatusLiberacao statusLiberacao, DateTime horaInicio) 
         {
             if (proposta.CodigoPikingMobile == 0)
@@ -501,5 +506,15 @@ namespace TitaniumColector.Classes.Dao
                 updatePropostaTbPickingMobile(proposta, statusLiberacao,"NULL");
             }
         }
+
+        public void retiraPropostaListaPrioridade(Int64 codigoProposta,Int32 usuarioProposta) 
+        {
+
+            sql01 = new StringBuilder();
+            sql01.AppendFormat("EXECUTE sps1601_manipulaPRIORIDADEPICKING {0},{1},{2}",2,codigoProposta,usuarioProposta);
+            SqlServerConn.execCommandSql(sql01.ToString());
+
+        }
     }
 }
+

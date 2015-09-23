@@ -128,7 +128,7 @@ namespace TitaniumColector.Forms
         {
             if (e.KeyChar == Convert.ToChar(13))
             {
-                if (inputText != "")
+                if (inputText != "" && inputText != null)
                 {
                     Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
 
@@ -598,7 +598,6 @@ namespace TitaniumColector.Forms
         /// </summary>
         private void clearFormulario()
         {
-
             foreach (Control ctrl in this.Controls)
             {
                 if (ctrl.GetType() == typeof(Panel))
@@ -729,12 +728,7 @@ namespace TitaniumColector.Forms
                 {
                     if (!this.nextItemProposta())
                     {
-                        daoItemProposta = new DaoProdutoProposta();
-                        daoProposta = new DaoProposta();
-                        daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
-                        daoItemProposta.updateItemPropostaRetorno();
-                        this.Dispose();
-                        this.Close();
+                        this.finalizarProposta();
                     }
 
                 }
@@ -749,7 +743,6 @@ namespace TitaniumColector.Forms
                 daoItemProposta = null;
             }
         }
-
 
         /// <summary>
         /// tratamentos para realizar updat de informações durante o fechamento do form.
@@ -868,7 +861,17 @@ namespace TitaniumColector.Forms
             frmAcao.Show();
         }
 
-
+        private void finalizarProposta() 
+        {
+            daoItemProposta = new DaoProdutoProposta();
+            daoProposta = new DaoProposta();
+            daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
+            daoItemProposta.updateItemPropostaRetorno();
+            daoProposta.updateVolumeProposta(objProposta.Codigo);
+            daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.CodigoUsuarioLogado);
+            this.Dispose();
+            this.Close();
+        }
 
     #endregion
 

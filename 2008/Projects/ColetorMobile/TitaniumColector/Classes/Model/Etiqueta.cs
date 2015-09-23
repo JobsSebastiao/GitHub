@@ -381,6 +381,7 @@ namespace TitaniumColector.Classes
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
                     writer.WriteElementString("Time",item.DataHoraValidacao.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
                     //Encerra o elemento Seq
                     writer.WriteEndElement();
                 }
