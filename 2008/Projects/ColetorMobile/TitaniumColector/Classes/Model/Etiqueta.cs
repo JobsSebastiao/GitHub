@@ -125,7 +125,7 @@ namespace TitaniumColector.Classes
                                 Ean13Etiqueta = aux.Ean13Etiqueta;
                                 LoteEtiqueta = aux.LoteEtiqueta;
                                 SequenciaEtiqueta = aux.SequenciaEtiqueta;
-                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta*5;
+                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
                             }
                         }
 
@@ -381,6 +381,7 @@ namespace TitaniumColector.Classes
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
                     writer.WriteElementString("Time",item.DataHoraValidacao.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
                     //Encerra o elemento Seq
                     writer.WriteEndElement();
                 }

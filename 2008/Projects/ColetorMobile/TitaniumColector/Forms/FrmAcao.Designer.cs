@@ -70,6 +70,7 @@
             this.ClientSize = new System.Drawing.Size(346, 455);
             this.ControlBox = false;
             this.Controls.Add(this.painelFrmAcao);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FrmAcao";
             this.Text = "FrmAcao";
             this.painelFrmAcao.ResumeLayout(false);

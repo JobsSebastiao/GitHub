@@ -92,10 +92,22 @@ namespace TitaniumColector.Classes
             this.PropostaItemProposta = intPropostaItemProposta;
             this.Quantidade = dblQuantidade;
             this.StatusSeparado = isSeparado;
-            this.LotereservaItemProposta = 0;
+            this.LotereservaItemProposta = 0;//nao utilizo esta informacao.
             this.NomeLocaisItemProposta = strNomesLocaisItem;
             this.LotesReserva = strLotesReserva;
-            this.QuantidadeEmbalagem = dblQuantidadeEmbalagem;
+            this.QuantidadeEmbalagem = dblQuantidadeEmbalagem;//nao utilizo esta informacao.
+        }
+
+        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado, String strLotesReserva, String strNomesLocaisItem
+               , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
+            : base(intCodigoProduto, strEan13, strPartnumber, strDescricao)
+        {
+            this.CodigoItemProposta = intCodigoItemProposta;
+            this.PropostaItemProposta = intPropostaItemProposta;
+            this.Quantidade = dblQuantidade;
+            this.StatusSeparado = isSeparado;
+            this.NomeLocaisItemProposta = strNomesLocaisItem;
+            this.LotesReserva = strLotesReserva;
         }
 
     #endregion

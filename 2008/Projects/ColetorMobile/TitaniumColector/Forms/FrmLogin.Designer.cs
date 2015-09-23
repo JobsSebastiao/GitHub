@@ -186,9 +186,9 @@ namespace TitaniumColector
             //pboxFrmLogin
             //
             this.pboxFrmLogin.Location = new System.Drawing.Point(0, 0);
-            this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 77);
+            this.pboxFrmLogin.Size = new System.Drawing.Size(this.Size.Width, 90);
             //Tamanho da Imagem a ser mostrada no Picture Box
-            this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 77);
+            this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 89);
             this.pboxFrmLogin.BackColor = Color.Black;
             this.pboxFrmLogin.Image = ImgLogin.Images[1];
             //
@@ -199,12 +199,13 @@ namespace TitaniumColector
             // 
             // Label Descrição
             // 
-            this.lbDescricao.Font = MainConfig.FontGrandeBold;
-            this.lbDescricao.Size = new System.Drawing.Size(90, 35);
+            this.lbDescricao.Font = MainConfig.FontMuitoGrandeBold;
             this.lbDescricao.Text = "Login";
+            sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontMuitoGrandeBold);
+            this.lbDescricao.Size = new System.Drawing.Size((int)sizeString.Width,(int)sizeString.Height);
             this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
-            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - sizeString.Width / 2),
+            this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - lbDescricao.Width / 2),
                                                                   this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
             //
             //Label Usuário

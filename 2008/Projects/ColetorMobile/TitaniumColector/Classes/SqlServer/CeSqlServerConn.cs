@@ -149,8 +149,7 @@ namespace TitaniumColector.Classes.SqlServer
             catch (Exception)
             {
                 throw;
-            }		   
-
+            }
 	    }
         
 	    public static void execCommandSqlCe(string sql01)

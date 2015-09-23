@@ -335,7 +335,17 @@ namespace TitaniumColector.Classes.Procedimentos
                 tbMensagem.Text = "Próximo Item.";
             }
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="inputValue"></param>
+        /// <param name="produto"></param>
+        /// <param name="tbProduto"></param>
+        /// <param name="tblote"></param>
+        /// <param name="tbSequencia"></param>
+        /// <param name="tbQuantidade"></param>
+        /// <param name="tbMensagem"></param>
         public static void lerEtiqueta(String inputValue,ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
         {
             tbMensagem.Text = "";
@@ -343,21 +353,40 @@ namespace TitaniumColector.Classes.Procedimentos
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new Etiqueta();
             objEtiqueta = new Etiqueta(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
-          // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
-
+      
+        /// <summary>
+        /// Valida as informações lidas pelo coletor e as transformam em um objeto do tipo Etiqueta e continua o procedimento de leitura da etiqueta.
+        /// </summary>
+        /// <param name="inputValue">Valor fornecido pelo coletor de dados</param>
+        /// <param name="tipoEtiqueta">Tipo de etiqueta lida  (EAN13) OU (QRCOODE)</param>
+        /// <param name="produto">produto a ser validado durante processo de liberação do item</param>
+        /// <param name="tbProduto">Campo para informações ao usuário</param>
+        /// <param name="tblote">Campo para informações ao usuário</param>
+        /// <param name="tbSequencia">Campo para informações ao usuário</param>
+        /// <param name="tbQuantidade">Campo para informações ao usuário</param>
+        /// <param name="tbMensagem">Campo para informações ao usuário</param>
         public static void lerEtiqueta(String inputValue,Etiqueta.Tipo tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
         {
             tbMensagem.Text = "";
 
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
-            // objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
-            // EM TESTES----  objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
+        
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="produto"></param>
+        /// <param name="tbProduto"></param>
+        /// <param name="tblote"></param>
+        /// <param name="tbSequencia"></param>
+        /// <param name="tbQuantidade"></param>
+        /// <param name="tbMensagem"></param>
+        /// <param name="arrayEtiqueta"></param>
         public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem, Array arrayEtiqueta)
         {
             tbMensagem.Text = "";
@@ -433,30 +462,18 @@ namespace TitaniumColector.Classes.Procedimentos
             //Verifica se os produtos são iguais
             switch (etiquetaLida.TipoEtiqueta)
             {
-                case Etiqueta.Tipo.INVALID:
-                    break;
                 case Etiqueta.Tipo.QRCODE:
 
                     if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
                     {
                         foreach (var item in produtoProposta.Embalagens)
                         {
-                            if (etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem)
+                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem) && (etiquetaLida.QuantidadeEtiqueta == item.Quantidade))
                             {
                                 return true;
                             }
                         }
                     }
-
-                    //A validacao agora é feita pelo ean13 da embalagem
-                    //if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
-                    //{
-                    //    if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
-                    //    {
-                    //        return true;
-                    //    }
-                    //}
-
 
                     break;
 
@@ -466,7 +483,7 @@ namespace TitaniumColector.Classes.Procedimentos
                     {
                         foreach (var item in produtoProposta.Embalagens)
                         {
-                            if(etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem)
+                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
                             {
                                 return true;
                             }
@@ -475,50 +492,18 @@ namespace TitaniumColector.Classes.Procedimentos
                     
                     break;
 
+                case Etiqueta.Tipo.INVALID:
+
+                    break;
+
                 default:
+
                     break;
             }
 
 
             return false;
         }
-
-
-        //public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta,Etiqueta etiquetaLida)
-        //{
-        //    //Verifica se os produtos são iguais
-        //    switch (etiquetaLida.TipoEtiqueta)
-        //    {
-        //        case Etiqueta.Tipo.INVALID:
-        //            break;
-        //        case Etiqueta.Tipo.QRCODE:
-
-        //            if (produtoProposta.Partnumber == etiquetaLida.PartnumberEtiqueta)
-        //            {
-        //                if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
-        //                {
-        //                    return true;
-        //                }
-        //            }
-
-        //            break;
-
-        //        case Etiqueta.Tipo.BARRAS:
-
-        //            if (Convert.ToInt64(produtoProposta.Ean13) == etiquetaLida.Ean13Etiqueta)
-        //            {
-        //                return true;
-        //            }
-
-        //            break;
-
-        //        default:
-        //            break;
-        //    }
-           
-
-        //    return false;
-        //}
 
         /// <summary>
          /// Adiciona uma atiqueta a List Etiquetas Lidas.
@@ -608,61 +593,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }    
 
         }
-
-        ///// <summary>
-        // /// Verifica o formato da string bate com o formato esperado para a etiqueta.
-        // /// </summary>
-        // /// <param name="inputValue">String a ser verificada.</param>
-        // /// <returns>True caso seja válido do contrário retorna false.</returns>
-        //public static bool validaInputValueEtiqueta(String inputValue)
-        //{
-        //    bool resposta = false;
-        //    if (inputValue.Contains("PNUMBER:"))
-        //    {
-        //        if (inputValue.Contains("DESCRICAO:"))
-        //        {
-        //            if (inputValue.Contains("EAN13:"))
-        //            {
-        //                if (inputValue.Contains("LOTE:"))
-        //                {
-        //                    if (inputValue.Contains("SEQ:"))
-        //                    {
-        //                        if (inputValue.Contains("QTD:"))
-        //                        {
-        //                            resposta = true;
-        //                        }
-        //                        else
-        //                        {
-        //                            resposta = false;
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        resposta = false;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    resposta = false;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                resposta = false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            resposta = false;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        resposta = false;
-        //    }
-
-        //    return resposta;
-        //}
 
         /// <summary>
         /// Valida o tipo de etiqueta lido
