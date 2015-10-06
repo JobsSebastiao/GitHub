@@ -7,10 +7,10 @@
 		--							 --
 -------------------------------------------------------------------------------------------------------------
 
-ALTER TABLE tb1611_Liberacoes_Proposta ADD prioridadeLIBERACAOPROPOSTA INT NULL
+--ALTER TABLE tb1611_Liberacoes_Proposta ADD prioridadeLIBERACAOPROPOSTA INT NULL
 
 
-GO
+--GO
 
 
 ALTER TABLE tb1602_Itens_Proposta ADD xmlsequenciaITEMPROPOSTA NTEXT NULL
@@ -22,7 +22,7 @@ GO
 --NOVA TABELA PARA GERENCIAMENTO DE PROPOSTA NO PIKING MOBILE.
 CREATE TABLE tb1651_Picking_Mobile
 (
-    codigoPICKINGMOBILE int identity(1,1),
+    codigoPICKINGMOBILE INT IDENTITY(1,1),
 	propostaPICKINGMOBILE INT NOT NULL,
 	usuarioPICKINGMOBILE INT NOT NULL,
 	statusPICKINGMOBILE SMALLINT NOT NULL DEFAULT(0),
@@ -41,19 +41,18 @@ CREATE VIEW vwMobile_tb1601_Proposta
 AS
 
 SELECT COALESCE(codigoPICKINGMOBILE,0) AS codigoPICKINGMOBILE,
-codigoPROPOSTA,numeroPROPOSTA, CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,103)  +' '+ CONVERT(nvarchar, P.dataLIBERACAOPROPOSTA,108) as dataLIBERACAOPROPOSTA,clientePROPOSTA AS clientePROPOSTA, razaoEMPRESA ,
-COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA, P.prioridadeLIBERACAOPROPOSTA AS Prioridade,0 as volumesPROPOSTA
+codigoPROPOSTA,numeroPROPOSTA, CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,103)  +' '+ CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,108) AS dataLIBERACAOPROPOSTA,clientePROPOSTA AS clientePROPOSTA, razaoEMPRESA ,
+COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA,0 as volumesPROPOSTA
 FROM tb1601_Propostas (NOLOCK) 
 INNER JOIN tb1611_Liberacoes_Proposta P (NOLOCK) ON P.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
 LEFT JOIN tb1611_Liberacoes_Proposta C (NOLOCK) ON C.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
 LEFT JOIN tb0301_Empresas (NOLOCK) ON clientePROPOSTA = codigoEMPRESA
-LEFT JOIN tb1651_Picking_Mobile ON propostaPICKINGMOBILE = codigoPROPOSTA AND statusPICKINGMOBILE =0
+LEFT JOIN tb1651_Picking_Mobile ON propostaPICKINGMOBILE = codigoPROPOSTA AND statusPICKINGMOBILE = 0
 WHERE statusPROPOSTA = 1 
 AND P.liberacaoLIBERACAOPROPOSTA = 1 
 AND C.liberacaoLIBERACAOPROPOSTA = 2 
 AND P.liberadoLIBERACAOPROPOSTA = 1  
 AND C.liberadoLIBERACAOPROPOSTA = 0
-AND P.prioridadeLIBERACAOPROPOSTA >= 0
 AND (codigoPROPOSTA NOT IN (
 								SELECT propostaPICKINGMOBILE	
 								FROM tb1651_Picking_Mobile 
@@ -69,66 +68,110 @@ OR codigoPROPOSTA IN (
 
 GO
 
-
----Informações sobre cada produto exsitente na proposta informada
 CREATE FUNCTION fn0003_informacoesProdutos ( @codigoProposta int )
 
-RETURNS @InformationTable TABLE
-   (
-    codigoPRODUTO				INT,
-    partnumberPRODUTO			NVARCHAR(50),
-    nomePRODUTO					NVARCHAR(150),
-    ean13PRODUTO				NVARCHAR(15),
-    codigolotePRODUTO			INT,
-	identificacaolotePRODUTO	NVARCHAR(50),
-	codigolocalPRODUTO			INT,
-	nomelocalPRODUTO			NVARCHAR(20)
-   )
-AS
-BEGIN
-   INSERT @InformationTable
-        
-			SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigoLOTE, identificacaoLOTE,codigoLOCAL,nomeLOCAL
-			FROM tb1205_Lotes
-			INNER JOIN tb0501_Produtos ON produtoLOTE = codigoPRODUTO
-			INNER JOIN tb0301_Empresas ON codigoEMPRESA = empresaLOTE
-			INNER JOIN tb1207_Lotes_Armazens ON codigoLOTE = loteLOTEARMAZEM
-			INNER JOIN tb1203_Armazens ON armazemLOTEARMAZEM = codigoARMAZEM
-			INNER JOIN tb1201_Estoque ON produtoESTOQUE = produtoLOTEARMAZEM
-			INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON codigoLOTE = loteLOTELOCAL AND  codigoLOTE IN  
-																									(
-																									SELECT loteRESERVA
-																									FROM tb1206_Reservas (NOLOCK) 
-																									INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
-																									INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO
-																									INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL
-																									INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
-																									WHERE propostaITEMPROPOSTA = @codigoProposta
-																									AND tipodocRESERVA = 1602 
-																									AND statusITEMPROPOSTA = 3 
-																									AND separadoITEMPROPOSTA = 0
-																									)
-			INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL 
-			WHERE codigoPRODUTO IN (   
-									SELECT produtoRESERVA AS codigoPRODUTO
-									FROM tb1206_Reservas (NOLOCK) 
-									INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
-									INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO
-									INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL
-									INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
-									WHERE propostaITEMPROPOSTA = @codigoProposta
-									AND tipodocRESERVA = 1602 
-									AND statusITEMPROPOSTA = 3 
-				  					AND separadoITEMPROPOSTA = 0  
-								)
-   RETURN
-END
+	RETURNS @InformationTable TABLE
+	   (
+			codigoPRODUTO				INT,
+			partnumberPRODUTO			NVARCHAR(50),
+			nomePRODUTO					NVARCHAR(150),
+			ean13PRODUTO				NVARCHAR(15),
+			codigolotePRODUTO			INT,
+			identificacaolotePRODUTO	NVARCHAR(50),
+			codigolocalPRODUTO			INT,
+			nomelocalPRODUTO			NVARCHAR(20)
+	   )
+	AS
+	BEGIN
+	   INSERT @InformationTable
+		   SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigoLOTE, identificacaoLOTE,codigoLOCAL,nomeLOCAL
+					FROM tb1205_Lotes
+					INNER JOIN tb0501_Produtos ON produtoLOTE = codigoPRODUTO
+					INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON codigoLOTE = loteLOTELOCAL
+															   AND  codigoLOTE IN  
+																				(
+																					SELECT loteRESERVA
+																					FROM tb1206_Reservas (NOLOCK) 
+																					INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
+																					INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL
+																					WHERE propostaITEMPROPOSTA = @codigoProposta
+																					AND tipodocRESERVA = 1602 
+																					AND statusITEMPROPOSTA = 3 
+																					AND separadoITEMPROPOSTA = 0
+																				)
+					INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL 
+					WHERE codigoPRODUTO IN (   
+											SELECT produtoRESERVA AS codigoPRODUTO
+											FROM tb1206_Reservas (NOLOCK) 
+											INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
+											WHERE propostaITEMPROPOSTA = @codigoProposta
+											AND tipodocRESERVA = 1602 
+											AND statusITEMPROPOSTA = 3 
+				  							AND separadoITEMPROPOSTA = 0  
+										)
+			   RETURN
+	END
 
-GO
+
+-----Informações sobre cada produto existente na proposta informada
+--CREATE FUNCTION fn0003_informacoesProdutos ( @codigoProposta int )
+
+--RETURNS @InformationTable TABLE
+--   (
+--    codigoPRODUTO				INT,
+--    partnumberPRODUTO			NVARCHAR(50),
+--    nomePRODUTO					NVARCHAR(150),
+--    ean13PRODUTO				NVARCHAR(15),
+--    codigolotePRODUTO			INT,
+--	identificacaolotePRODUTO	NVARCHAR(50),
+--	codigolocalPRODUTO			INT,
+--	nomelocalPRODUTO			NVARCHAR(20)
+--   )
+--AS
+--BEGIN
+--   INSERT @InformationTable
+        
+--			SELECT codigoPRODUTO,partnumberPRODUTO,nomePRODUTO,ean13PRODUTO,codigoLOTE, identificacaoLOTE,codigoLOCAL,nomeLOCAL
+--			FROM tb1205_Lotes
+--			INNER JOIN tb0501_Produtos ON produtoLOTE = codigoPRODUTO
+--			INNER JOIN tb0301_Empresas ON codigoEMPRESA = empresaLOTE
+--			INNER JOIN tb1207_Lotes_Armazens ON codigoLOTE = loteLOTEARMAZEM
+--			INNER JOIN tb1203_Armazens ON armazemLOTEARMAZEM = codigoARMAZEM
+--			INNER JOIN tb1201_Estoque ON produtoESTOQUE = produtoLOTEARMAZEM
+--			INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON codigoLOTE = loteLOTELOCAL AND  codigoLOTE IN  
+--																									(
+--																									SELECT loteRESERVA
+--																									FROM tb1206_Reservas (NOLOCK) 
+--																									INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
+--																									INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO
+--																									INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL
+--																									INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
+--																									WHERE propostaITEMPROPOSTA = @codigoProposta
+--																									AND tipodocRESERVA = 1602 
+--																									AND statusITEMPROPOSTA = 3 
+--																									AND separadoITEMPROPOSTA = 0
+--																									)
+--			INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL 
+--			WHERE codigoPRODUTO IN (   
+--									SELECT produtoRESERVA AS codigoPRODUTO
+--									FROM tb1206_Reservas (NOLOCK) 
+--									INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA 
+--									INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO
+--									INNER JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL
+--									INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
+--									WHERE propostaITEMPROPOSTA = @codigoProposta
+--									AND tipodocRESERVA = 1602 
+--									AND statusITEMPROPOSTA = 3 
+--				  					AND separadoITEMPROPOSTA = 0  
+--								)
+--   RETURN
+--END
+
+--GO
 
 
 ---REALIZA O SPLIT DE UM TEXTO E RETORNA UMA TABELA COM ESTAS INFORMAÇÕES
-CREATE FUNCTION SplitTitanium( @InputString VARCHAR(8000), @Delimiter VARCHAR(50))
+CREATE FUNCTION fn0003_SplitTitanium( @InputString VARCHAR(8000), @Delimiter VARCHAR(50))
 
 RETURNS @Items TABLE (Item VARCHAR(8000))
 
@@ -252,7 +295,7 @@ BEGIN
 	FROM tb1205_Lotes
 	INNER JOIN tb1212_Lotes_Locais ON codigoLOTE = loteLOTELOCAL
 	INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
-	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.SplitTitanium(@lotePRODUTO,',') )
+	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.fn0003_SplitTitanium(@lotePRODUTO,',') )
 	ORDER BY nomeLOCAL DESC
 
     OPEN Local_Cursor
@@ -443,6 +486,27 @@ BEGIN
 END
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---------------------------              ---------------------------------------
 -----------------          -----------------------------------------------------
 ---------------------------             ----------------------------------------
@@ -517,6 +581,8 @@ GO
 	ean13EMBALAGEM    			    NVARCHAR(13)	NOT NULL)
 
 
+
+
  --//CARGA DE TESTES
 
 Insert INTO tb0001_Propostas VALUES (75514,'75514-1','20/05/2015 10:37:34',6191,'DIEGO ALEJANDRO RECZEK',0,114)
@@ -528,24 +594,24 @@ ALTER TABLE tb1611_Liberacoes_Proposta ADD prioridadeLIBERACAOPROPOSTA INT NULL
 
 ALTER TABLE tb1602_Itens_Proposta ADD xmlsequenciaITEMPROPOSTA NTEXT NULL
 
---INICIAL DESATIVADA
-CREATE VIEW vwMobile_tb1601_Proposta
+----INICIAL DESATIVADA
+--CREATE VIEW vwMobile_tb1601_Proposta
 
-AS
+--AS
 
-SELECT codigoPROPOSTA,numeroPROPOSTA, CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,103)  +' '+ CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,108) as dataLIBERACAOPROPOSTA,clientePROPOSTA AS clientePROPOSTA, razaoEMPRESA ,
-COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA, P.prioridadeLIBERACAOPROPOSTA AS Prioridade,0 as volumesPROPOSTA
-FROM tb1601_Propostas (NOLOCK) 
-INNER JOIN tb1611_Liberacoes_Proposta P (NOLOCK) ON P.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
-LEFT JOIN tb1611_Liberacoes_Proposta C (NOLOCK) ON C.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
-LEFT JOIN tb0301_Empresas (NOLOCK) ON clientePROPOSTA = codigoEMPRESA
-WHERE statusPROPOSTA = 1 
-AND P.liberacaoLIBERACAOPROPOSTA = 1 
-AND C.liberacaoLIBERACAOPROPOSTA = 2 
-AND P.liberadoLIBERACAOPROPOSTA = 1  
-AND C.liberadoLIBERACAOPROPOSTA = 0
-AND P.prioridadeLIBERACAOPROPOSTA >= 0
---ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC
+--SELECT codigoPROPOSTA,numeroPROPOSTA, CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,103)  +' '+ CONVERT(NVARCHAR, P.dataLIBERACAOPROPOSTA,108) as dataLIBERACAOPROPOSTA,clientePROPOSTA AS clientePROPOSTA, razaoEMPRESA ,
+--COALESCE(ordemseparacaoimpressaPROPOSTA,0) AS ordemseparacaoimpressaPROPOSTA, P.prioridadeLIBERACAOPROPOSTA AS Prioridade,0 as volumesPROPOSTA
+--FROM tb1601_Propostas (NOLOCK) 
+--INNER JOIN tb1611_Liberacoes_Proposta P (NOLOCK) ON P.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
+--LEFT JOIN tb1611_Liberacoes_Proposta C (NOLOCK) ON C.propostaLIBERACAOPROPOSTA = codigoPROPOSTA 
+--LEFT JOIN tb0301_Empresas (NOLOCK) ON clientePROPOSTA = codigoEMPRESA
+--WHERE statusPROPOSTA = 1 
+--AND P.liberacaoLIBERACAOPROPOSTA = 1 
+--AND C.liberacaoLIBERACAOPROPOSTA = 2 
+--AND P.liberadoLIBERACAOPROPOSTA = 1  
+--AND C.liberadoLIBERACAOPROPOSTA = 0
+--AND P.prioridadeLIBERACAOPROPOSTA >= 0
+----ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC
 
 
 --NOVA TABELA PARA GERENCIAMENTO DE PROPOSTA NO PIKING MOBILE.
@@ -761,37 +827,37 @@ END
 GO
 
 
-------TAMBÈM REALIZA UM SPLIT MAS NAO ESTA EM USO.
-CREATE FUNCTION fn1211_SplitTitanium( @frase VARCHAR(max), @delimitador VARCHAR(max) = ',') 
-RETURNS @result TABLE (item VARCHAR(8000)) 
+--------TAMBÈM REALIZA UM SPLIT MAS NAO ESTA EM USO.
+--CREATE FUNCTION fn1211_SplitTitanium( @frase VARCHAR(max), @delimitador VARCHAR(max) = ',') 
+--RETURNS @result TABLE (item VARCHAR(8000)) 
 
-BEGIN
+--BEGIN
 
-	DECLARE @parte VARCHAR(8000)
+--	DECLARE @parte VARCHAR(8000)
 
-	WHILE CHARINDEX(@delimitador,@frase,0) <> 0
+--	WHILE CHARINDEX(@delimitador,@frase,0) <> 0
 
-		BEGIN
+--		BEGIN
 
-			SELECT
-			  @parte=RTRIM(LTRIM(
-					  SUBSTRING(@frase,1,
-					CHARINDEX(@delimitador,@frase,0)-1))),
-			  @frase=RTRIM(LTRIM(SUBSTRING(@frase,
-					  CHARINDEX(@delimitador,@frase,0)
-					+ LEN(@delimitador), LEN(@frase))))
-			IF LEN(@parte) > 0
-			  INSERT INTO @result SELECT @parte
+--			SELECT
+--			  @parte=RTRIM(LTRIM(
+--					  SUBSTRING(@frase,1,
+--					CHARINDEX(@delimitador,@frase,0)-1))),
+--			  @frase=RTRIM(LTRIM(SUBSTRING(@frase,
+--					  CHARINDEX(@delimitador,@frase,0)
+--					+ LEN(@delimitador), LEN(@frase))))
+--			IF LEN(@parte) > 0
+--			  INSERT INTO @result SELECT @parte
 
-		END 
+--		END 
 
-		IF LEN(@frase) > 0
-			INSERT INTO @result SELECT @frase
+--		IF LEN(@frase) > 0
+--			INSERT INTO @result SELECT @frase
 
-	RETURN
+--	RETURN
 
-END
-GO
+--END
+--GO
 
 
 --======RETORNA OS LOTES DOS PRODUTOS DE UMA PROPOSTA
@@ -866,7 +932,7 @@ BEGIN
 	FROM tb1205_Lotes
 	INNER JOIN tb1212_Lotes_Locais ON codigoLOTE = loteLOTELOCAL
 	INNER JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL
-	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.SplitTitanium(@lotePRODUTO,',') )
+	WHERE produtoLOTE = @codigoPRODUTO AND codigoLOTE IN (SELECT * FROM  dbo.fn0003_SplitTitanium(@lotePRODUTO,',') )
 	ORDER BY nomeLOCAL DESC
 
     OPEN Local_Cursor

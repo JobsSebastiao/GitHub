@@ -191,10 +191,11 @@ namespace TitaniumColector
             this.ImgLogin.ImageSize = new Size((int)(this.Size.Width), 89);
             this.pboxFrmLogin.BackColor = Color.Black;
             this.pboxFrmLogin.Image = ImgLogin.Images[1];
+            this.FormBorderStyle = FormBorderStyle.None;
             //
             //pnFrmLogin  
             //
-            this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 53);
+            this.panelFrmLogin.Size = new System.Drawing.Size(this.Size.Width, this.Size.Height - 20);
             this.panelFrmLogin.BackColor = System.Drawing.SystemColors.AppWorkspace;
             // 
             // Label Descrição
@@ -206,11 +207,11 @@ namespace TitaniumColector
             this.lbDescricao.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             sizeString = MainConfig.sizeStringEmPixel(this.lbDescricao.Text, MainConfig.FontGrandeRegular);
             this.lbDescricao.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - lbDescricao.Width / 2),
-                                                                  this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height + 10);
+                                                                  this.panelFrmLogin.Location.Y + pboxFrmLogin.Size.Height);
             //
             //Label Usuário
             //
-            this.lbUsuario.Font = MainConfig.FontPadraoBold;
+            this.lbUsuario.Font = MainConfig.FontMediaBold;
             this.lbUsuario.Size = new System.Drawing.Size(90, 35);
             this.lbUsuario.Text = "Usuário :";
             this.lbUsuario.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -220,18 +221,18 @@ namespace TitaniumColector
             //
             //Label Senha
             //
-            this.lbSenha.Font = MainConfig.FontPadraoBold;
+            this.lbSenha.Font = MainConfig.FontMediaBold;
             this.lbSenha.Text = "Senha :";
             this.lbSenha.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
             this.lbSenha.Size = new System.Drawing.Size((int)sizeString.Width, (int)sizeString.Height);
             this.lbSenha.Location = new System.Drawing.Point((int)(this.lbUsuario.Location.X + 3),
-                                                                   this.lbUsuario.Location.Y + 25);
+                                                                   this.lbUsuario.Location.Y + 30);
 
             //
             //ComboBox Usuário
             //
-            this.cbUsuario.Font = MainConfig.FontPadraoRegular;
+            this.cbUsuario.Font = MainConfig.FontPequenaBold;
             sizeString = MainConfig.sizeStringEmPixel(this.lbSenha.Text, MainConfig.FontGrandeRegular);
             this.cbUsuario.Visible = true;
             this.cbUsuario.Size = new System.Drawing.Size(120, 27);
@@ -242,7 +243,7 @@ namespace TitaniumColector
             //
             // TextBox Senha
             //
-            this.txtSenha.Font = MainConfig.FontPadraoRegular;
+            this.txtSenha.Font = MainConfig.FontMediaBold;
             this.txtSenha.Text = "";
             this.txtSenha.MaxLength = 12;
             this.txtSenha.PasswordChar = MainConfig.PasswordChar;
@@ -255,18 +256,18 @@ namespace TitaniumColector
             //
             //Button Login 
             //
-            this.btLogin.Font = MainConfig.FontPadraoRegular;
+            this.btLogin.Font = MainConfig.FontMediaBold;
             this.btLogin.Visible = true;
-            this.btLogin.Size = new System.Drawing.Size(72, 20);
+            this.btLogin.Size = new System.Drawing.Size(72, 30);
             this.btLogin.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 - btLogin.Size.Width - 3),
                                                                     this.lbSenha.Location.Y + 40);
 
             //
             //Button Sair
             //
-            this.btSair.Font = MainConfig.FontPadraoRegular;
+            this.btSair.Font = MainConfig.FontMediaBold;
             this.btSair.Visible = true;
-            this.btSair.Size = new System.Drawing.Size(72, 20);
+            this.btSair.Size = new System.Drawing.Size(72, 30);
             this.btSair.Location = new System.Drawing.Point((int)(MainConfig.ScreenSize.Width / 2 + 3),
                                                                     this.lbSenha.Location.Y + 40);
 

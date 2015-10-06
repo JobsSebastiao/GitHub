@@ -39,7 +39,7 @@ namespace TitaniumColector.Forms
             InitializeComponent();
             configControls();
             this.carregaBaseMobile();
-        }
+         }
 
     #region "EVENTOS"
 
@@ -49,6 +49,24 @@ namespace TitaniumColector.Forms
             this.clearFormulario(true, true);
             this.carregarForm();
             Cursor.Current = Cursors.Default;
+        }
+
+        void mnuOpcoes_Terminar_Click(object sender, System.EventArgs e)
+        {
+            try
+            {
+                this.newLogin(new FrmAcao());
+
+            }
+            catch (Exception ex)
+            {
+                MainConfig.errorMessage(ex.Message, "Logout");
+            }
+            finally
+            {
+                daoItemProposta = null;
+                daoProduto = null;
+            }
         }
         
         /// <summary>
@@ -60,7 +78,7 @@ namespace TitaniumColector.Forms
         {
             try
             {
-                this.newLogin();
+                this.newLogin(new frmLogin());
 
             }
             catch (Exception ex)
@@ -747,7 +765,7 @@ namespace TitaniumColector.Forms
         /// <summary>
         /// tratamentos para realizar updat de informações durante o fechamento do form.
         /// </summary>
-        private void newLogin() 
+        private void newLogin(Form formulario) 
         {
             try
             {
@@ -761,8 +779,8 @@ namespace TitaniumColector.Forms
                     daoItemProposta.updateItemPropostaRetorno();
                     this.Dispose();
                     this.Close();
-                    frmLogin login = new frmLogin();
-                    login.Show();
+                    //frmLogin login = new frmLogin();
+                    formulario.Show();
                 }
                 else if (resp == DialogResult.No)
                 {
@@ -771,8 +789,8 @@ namespace TitaniumColector.Forms
                     daoProposta = null;
                     this.Dispose();
                     this.Close();
-                    frmLogin login = new frmLogin();
-                    login.Show();
+                    //frmLogin login = new frmLogin();
+                    formulario.Show();
                 }
 
             }

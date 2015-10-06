@@ -431,7 +431,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 }
                 else
                 {
-                    tbMensagem.Text = String.Format("Produto da Etiqueta {0} não pertence a está proposta.", objEtiqueta.SequenciaEtiqueta);
+                    tbMensagem.Text = String.Format("Produto da etiqueta lida não confere com o item a ser liberado.");
                     ProximaEtiqueta += 1;
                 }
 

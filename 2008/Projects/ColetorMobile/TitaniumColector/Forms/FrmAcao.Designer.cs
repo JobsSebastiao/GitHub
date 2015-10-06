@@ -54,7 +54,6 @@
             // 
             // painelFrmAcao
             // 
-            this.painelFrmAcao.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.painelFrmAcao.Controls.Add(this.btnVenda);
             this.painelFrmAcao.Controls.Add(this.btnSaida);
             this.painelFrmAcao.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -67,6 +66,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoScroll = true;
+            this.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.ClientSize = new System.Drawing.Size(346, 455);
             this.ControlBox = false;
             this.Controls.Add(this.painelFrmAcao);
@@ -88,7 +88,7 @@
             //FrmAcao
             //
             this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
-            this.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Text = "Próxima ação";
 
             //Menus 
@@ -122,10 +122,10 @@
             //
             //btnVenda
             //
-            this.btnVenda.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, MainConfig.intPositionY + 30);
+            this.btnVenda.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, MainConfig.intPositionY + 50);
             this.btnVenda.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnVenda.Text = "Próxima Venda";
-            this.btnVenda.Font = MainConfig.FontMediaBold;
+            this.btnVenda.Font = MainConfig.FontGrandeBold;
             //
             //btnSaida
             //
@@ -133,7 +133,7 @@
             this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnSaida.Text = "Próxima Compra";
             this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
-            this.btnSaida.Font = MainConfig.FontMediaBold;
+            this.btnSaida.Font = MainConfig.FontGrandeBold;
 
         }
 

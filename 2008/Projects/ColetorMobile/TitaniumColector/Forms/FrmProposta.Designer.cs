@@ -35,6 +35,7 @@ namespace TitaniumColector.Forms
             this.mnuPropostas = new System.Windows.Forms.MenuItem();
             this.mnuOpcoes_Logout = new System.Windows.Forms.MenuItem();
             this.mnuOpcoes_Exit = new System.Windows.Forms.MenuItem();
+            this.mnuOpcoes_Terminar = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
             this.lbItemProposta = new System.Windows.Forms.Label();
@@ -71,9 +72,15 @@ namespace TitaniumColector.Forms
             // 
             // mnuPropostas
             // 
+            this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Terminar);
             this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Logout);
             this.mnuPropostas.MenuItems.Add(this.mnuOpcoes_Exit);
             this.mnuPropostas.Text = "Opções";
+            // 
+            // mnuOpcoes_Terminar
+            // 
+            this.mnuOpcoes_Terminar.Text = "Terminar";
+            this.mnuOpcoes_Terminar.Click += new System.EventHandler(mnuOpcoes_Terminar_Click);
             // 
             // mnuOpcoes_Logout
             // 
@@ -212,6 +219,7 @@ namespace TitaniumColector.Forms
             // tbMensagem
             // 
             this.tbMensagem.Location = new System.Drawing.Point(14, 392);
+            this.tbMensagem.Multiline = true;
             this.tbMensagem.Name = "tbMensagem";
             this.tbMensagem.Size = new System.Drawing.Size(296, 23);
             this.tbMensagem.TabIndex = 14;
@@ -370,7 +378,7 @@ namespace TitaniumColector.Forms
             //
             // lbQtdItens
             //
-            this.lbQtdItens.Text = "1000_Itens";
+            this.lbQtdItens.Text = "9999_Itens";
             this.lbQtdItens.TextAlign = ContentAlignment.TopRight;
             this.lbQtdItens.Font = MainConfig.FontPadraoItalicBold;
             fontStringSize = MainConfig.sizeStringEmPixel(this.lbQtdItens.Text, MainConfig.FontPadraoItalicBold);
@@ -544,10 +552,11 @@ namespace TitaniumColector.Forms
             //
             this.tbMensagem.Location = new System.Drawing.Point(lbMensagem.Location.X, lbMensagem.Location.Y + lbMensagem.Size.Height);
             this.tbMensagem.Enabled = false;
+            this.tbMensagem.Multiline = true;
             this.tbMensagem.ForeColor = Color.Red;
             this.tbMensagem.Multiline = true;
             this.tbMensagem.Font = MainConfig.FontPequenaBold;
-            this.tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 15);
+            this.tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 35);
             this.tbMensagem.BackColor = System.Drawing.SystemColors.Window;
             this.tbMensagem.Tag = "L";
             //
@@ -616,6 +625,7 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.TextBox tbProduto;
         private System.Windows.Forms.Button  btIncrementaVol;
         private System.Windows.Forms.Button btDecrementaVol;
+        private System.Windows.Forms.MenuItem mnuOpcoes_Terminar;
         private System.Windows.Forms.MenuItem mnuOpcoes_Logout;
         private System.Windows.Forms.MenuItem mnuOpcoes_Exit;
     }
