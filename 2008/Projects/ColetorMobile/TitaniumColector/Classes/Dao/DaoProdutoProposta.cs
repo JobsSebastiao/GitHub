@@ -59,13 +59,11 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
                 sql01.Append(" INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
                 sql01.Append(" INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO  ");
-                //sql01.Append(" LEFT JOIN tb1212_Lotes_Locais (NOLOCK) ON loteRESERVA = loteLOTELOCAL  ");
-                //sql01.Append(" LEFT JOIN tb1211_Locais ON codigoLOCAL = localLOTELOCAL ");
                 sql01.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);
                 sql01.Append(" AND tipodocRESERVA = 1602");
                 sql01.Append(" AND statusITEMPROPOSTA = 3");
                 sql01.Append(" AND separadoITEMPROPOSTA = 0");
-                sql01.Append(" GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO,quantidadeRESERVA");
+                sql01.Append(" GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO");
                 sql01.Append(" ORDER BY codigoPRODUTO");
 
                 SqlDataReader dr = SqlServerConn.fillDataReader( sql01.ToString());
