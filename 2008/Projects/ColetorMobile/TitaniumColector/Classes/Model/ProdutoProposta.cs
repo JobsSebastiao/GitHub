@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes
 {
-    class ProdutoProposta : Produto 
+    class ProdutoProposta : Produto
     {
         private int codigoItemProposta;
         private int propostaItemProposta;
@@ -15,11 +15,11 @@ namespace TitaniumColector.Classes
         private String strlotesReserva;
         private Double quantidadeEmbalagem;
         private String nomeLocaisItemProposta;
+        private Double pesoProdutos;
 
         public enum statusSeparado { NAOSEPARADO = 0, SEPARADO = 1 };
 
-
-    #region "CONTRUTORES"
+        #region   "CONTRUTORES"
 
         public ProdutoProposta()
         {
@@ -39,7 +39,7 @@ namespace TitaniumColector.Classes
 
         public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,
          Int32 codigoProduto, String ean13, String partnumber, String nomeProduto, String nomeLocalLote, Int32 codigoLoteProduto, String identificacaoLoteProduto)
-        : base(codigoProduto, ean13, partnumber, nomeProduto, nomeLocalLote, codigoLoteProduto, identificacaoLoteProduto)
+            : base(codigoProduto, ean13, partnumber, nomeProduto, nomeLocalLote, codigoLoteProduto, identificacaoLoteProduto)
         {
             this.CodigoItemProposta = codigoItemProposta;
             this.PropostaItemProposta = propostaItemProposta;
@@ -73,7 +73,7 @@ namespace TitaniumColector.Classes
             this.LotereservaItemProposta = loteReservaItemProposta;
         }
 
-        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta,object objProduto)
+        public ProdutoProposta(Int32 codigoItemProposta, Int32 propostaItemProposta, Double quantidade, statusSeparado isSeparado, Int32 loteReservaItemProposta, object objProduto)
             : base(objProduto)
         {
             this.CodigoItemProposta = codigoItemProposta;
@@ -84,8 +84,8 @@ namespace TitaniumColector.Classes
         }
 
 
-        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado,String strLotesReserva,Double dblQuantidadeEmbalagem,String strNomesLocaisItem
-                       ,Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
+        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado, String strLotesReserva, Double dblQuantidadeEmbalagem, String strNomesLocaisItem
+                       , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
             : base(intCodigoProduto, strEan13, strPartnumber, strDescricao)
         {
             this.CodigoItemProposta = intCodigoItemProposta;
@@ -99,7 +99,20 @@ namespace TitaniumColector.Classes
         }
 
         public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado, String strLotesReserva, String strNomesLocaisItem
-               , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
+               , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao,Double peso)
+            : base(intCodigoProduto, strEan13, strPartnumber, strDescricao,peso)
+        {
+            this.CodigoItemProposta = intCodigoItemProposta;
+            this.PropostaItemProposta = intPropostaItemProposta;
+            this.Quantidade = dblQuantidade;
+            this.StatusSeparado = isSeparado;
+            this.NomeLocaisItemProposta = strNomesLocaisItem;
+            this.LotesReserva = strLotesReserva;
+            this.calcularPesoProdutos();
+        }
+
+        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado, String strLotesReserva, String strNomesLocaisItem
+       , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao)
             : base(intCodigoProduto, strEan13, strPartnumber, strDescricao)
         {
             this.CodigoItemProposta = intCodigoItemProposta;
@@ -110,9 +123,9 @@ namespace TitaniumColector.Classes
             this.LotesReserva = strLotesReserva;
         }
 
-    #endregion
+        #endregion
 
-    #region"GETS E SETS"
+        #region "GETS E SETS"
 
         public int CodigoItemProposta
         {
@@ -126,7 +139,7 @@ namespace TitaniumColector.Classes
             get { return propostaItemProposta; }
             set { propostaItemProposta = value; }
         }
-  
+
         public double Quantidade
         {
             get { return quantidade; }
@@ -163,7 +176,7 @@ namespace TitaniumColector.Classes
             set { strlotesReserva = value; }
         }
 
-    #endregion
+        #endregion
 
         /// <summary>
         /// Altera o statusSeparado do Produto entre SEPARADO e NAOSEPARADO
@@ -178,7 +191,18 @@ namespace TitaniumColector.Classes
             else
             {
                 this.StatusSeparado = statusSeparado.NAOSEPARADO;
-            }  
+            }
+        }
+
+        public Double PesoProdutos
+        {
+            get { return pesoProdutos; }
+            set { pesoProdutos = value; }
+        }
+
+        private void calcularPesoProdutos()
+        {
+            PesoProdutos = this.Quantidade * base.Peso;
         }
 
         /// <summary>
@@ -203,7 +227,7 @@ namespace TitaniumColector.Classes
         public override string ToString()
         {
             return base.ToString() + String.Format("\n Código Item : {0} \n Proposta Item : {1} \n Quantidade : {2} \n Status Separado : {3} \n Lote da Reserva : {4}",
-                                                    this.CodigoItemProposta,this.PropostaItemProposta,this.Quantidade,this.StatusSeparado,this.LotereservaItemProposta );
+                                                    this.CodigoItemProposta, this.PropostaItemProposta, this.Quantidade, this.StatusSeparado, this.LotereservaItemProposta);
         }
     }
 }

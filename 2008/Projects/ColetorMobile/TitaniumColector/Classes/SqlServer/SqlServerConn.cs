@@ -112,6 +112,7 @@ namespace TitaniumColector.SqlServer
 
         public static SqlConnection openConn()
         {
+           
             conn = new SqlConnection(StringConection);
 
             try
@@ -119,7 +120,12 @@ namespace TitaniumColector.SqlServer
                 conn.Open();
             }
             catch (SqlException sqlEx)
-            {
+            {   
+                if(sqlEx.Number == 11 )
+                {
+                    throw new Exception("Problemas a recuperar informações da base de dados.\nError:" + sqlEx.Message,sqlEx);
+                }
+
                 throw sqlEx;
             }
 
@@ -251,9 +257,9 @@ namespace TitaniumColector.SqlServer
                 SqlDataReader dr = cmd.ExecuteReader();
                 return dr;
             }
-            catch (Exception ex)
+            catch (SqlException ex)
             {
-                throw new SqlQueryExceptions("Erro:" + ex.Message);
+                throw new SqlQueryExceptions("\nErro: " + ex.Message,ex);
             }
 
         }
@@ -320,7 +326,7 @@ namespace TitaniumColector.SqlServer
         /// </summary>
         /// <param name="fileName">Nome do arquivo a ser lido</param>
         /// <returns>Uma string contendo o texto existente no arquivo.</returns>
-        /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
+        /// <remarks> Caso o arquivo não seja encontrado o método retornará o Valor null.
         /// </remarks>
         public static string readFileStrConnection(string fileName) 
         {
@@ -344,7 +350,7 @@ namespace TitaniumColector.SqlServer
         /// <param name="fileName">Nome do arquivo a ser buscado</param>
         /// <exception cref="System.FileNotFoundException">Lançada quando o arquivo não for encontrado</exception>
         /// <returns> Uma string contendo o texto existente no arquivo.</returns>
-        /// <remarks> Caso o arquivo não seja encontrado o método retornará o valor null.
+        /// <remarks> Caso o arquivo não seja encontrado o método retornará o Valor null.
         /// </remarks>
         public static string readFileStrConnection(string mobilePath,string fileName)
         {

@@ -59,7 +59,7 @@ namespace TitaniumColector.Classes.Dao
                     {
                         int statusOrdemSeparacao = Convert.ToInt32(dr["ordemseparacaoimpressaPROPOSTA"]);
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
+                                               Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(dr["volumesPROPOSTA"]),Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
 
                     }
 
@@ -99,17 +99,22 @@ namespace TitaniumColector.Classes.Dao
 
             sql01 = new StringBuilder();
             sql01.Append("SELECT TOP (1) codigoPROPOSTA,numeroPROPOSTA,dataLIBERACAOPROPOSTA,");
-            sql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA,codigoPICKINGMOBILE");
+            sql01.Append("clientePROPOSTA,razaoEMPRESA,volumesPROPOSTA,codigoPICKINGMOBILE,isinterrompidoPICKINGMOBILE");
             sql01.Append(" FROM vwMobile_tb1601_Proposta ");
-            sql01.Append(" ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC ");
+            //sql01.Append(" ORDER BY  Prioridade ASC,dataLIBERACAOPROPOSTA ASC ");
 
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
 
             while ((dr.Read()))
             {
                 objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                         Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]));
+                                         Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoEMPRESA"], Convert.ToInt32(dr["volumesPROPOSTA"]), Convert.ToInt32(dr["codigoPICKINGMOBILE"]),Convert.ToBoolean (dr["isinterrompidoPICKINGMOBILE"]));
 
+
+                if (objProposta.IsInterrompido) 
+                {
+                    objProposta.IsInterrompido = false;
+                }
             }
 
             dr.Close();
@@ -157,7 +162,7 @@ namespace TitaniumColector.Classes.Dao
         /// <param name="clienteProposta">Código do cliente</param>
         /// <param name="razaoEmpreza">Nome da empreza cliente</param>
         /// <param name="ordemseparacaoimpresaProposta">Status 0 ou 1</param>
-        /// <param name="usuarioLogado">Usuário logado</param>
+        /// <param name="UsuarioLogado1">Usuário logado</param>
         public void insertProposta(Proposta proposta, int usuarioLogado)
         {
 
@@ -190,7 +195,7 @@ namespace TitaniumColector.Classes.Dao
         /// <param name="clienteProposta">Código do cliente</param>
         /// <param name="razaoEmpreza">Nome da empreza cliente</param>
         /// <param name="ordemseparacaoimpresaProposta">Status 0 ou 1</param>
-        /// <param name="usuarioLogado">Usuário logado</param>
+        /// <param name="UsuarioLogado1">Usuário logado</param>
         public void insertProposta(Int64 codigoProposta, string numeroProposta, string dataliberacaoProposta, Int32 clienteProposta,
                                     string razaoEmpresa, int volumesProposta, int usuarioLogado)
         {
@@ -314,6 +319,7 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append("UPDATE tb1651_Picking_Mobile");
                 sql01.Append(" SET");
                 sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
+                sql01.AppendFormat(",[isinterrompidoPICKINGMOBILE] = {0}",Convert.ToInt16(proposta.IsInterrompido));
                 if (horaFim.ToUpper() == "NULL")
                 {
                     sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim);
@@ -362,7 +368,7 @@ namespace TitaniumColector.Classes.Dao
 
         public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile, String horaInicio, String horaFim)
         {
-
+            
 
             sql01 = new StringBuilder();
             sql01.Append("UPDATE tb1651_Picking_Mobile");
@@ -463,7 +469,7 @@ namespace TitaniumColector.Classes.Dao
                     if (i == 1)
                     {
                         objProposta = new Proposta(Convert.ToInt64(dr["codigoPROPOSTA"]), (string)dr["numeroPROPOSTA"], (string)dr["dataLIBERACAOPROPOSTA"],
-                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(1), Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
+                                                   Convert.ToInt32(dr["clientePROPOSTA"]), (string)dr["razaoclientePROPOSTA"], Convert.ToInt32(0), Convert.ToInt32(dr["codigopickingmobilePROPOSTA"]));
 
                     }
 
@@ -498,7 +504,7 @@ namespace TitaniumColector.Classes.Dao
         {
             sql01 = new StringBuilder();
             sql01.Append("UPDATE tb1601_Propostas");
-            sql01.AppendFormat(" SET volumesPROPOSTA = {0} ",Procedimentos.ProcedimentosLiberacao.QtdVolumes);
+            sql01.AppendFormat(" SET volumesPROPOSTA = {0} ",Procedimentos.ProcedimentosLiberacao.TotalVolumes);
             sql01.AppendFormat(" WHERE codigoPROPOSTA = {0} " ,codProposta.ToString());
             SqlServerConn.execCommandSql(sql01.ToString());
 

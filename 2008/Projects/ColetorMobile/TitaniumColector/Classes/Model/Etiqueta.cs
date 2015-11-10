@@ -277,11 +277,6 @@ namespace TitaniumColector.Classes
                         {
                             return true;
                         }
-
-                        //if (etiqueta.Equals(itemList))
-                        //{
-                        //    return true;
-                        //}
                     }
                     return false;
 

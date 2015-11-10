@@ -53,17 +53,17 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append(" SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,");
                 sql01.Append(" produtoRESERVA AS codigoPRODUTO,");
                 sql01.Append(" nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,");
-                sql01.Append(" SUM(quantidadeRESERVA) AS QTD,");
-                sql01.Append(" dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA,");
+                sql01.Append(" SUM(quantidadeRESERVA) AS QTD,pesobrutoPRODUTO,SUM(quantidadeRESERVA) * pesobrutoPRODUTO AS pesobrutototalPRODUTO");
+                sql01.Append(" ,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA,");
                 sql01.Append(" DBO.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS nomesLocaisLOTES ");
                 sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
                 sql01.Append(" INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
                 sql01.Append(" INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO  ");
-                sql01.AppendFormat("WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);
+                sql01.AppendFormat(" WHERE propostaITEMPROPOSTA = {0} ", codigoProposta);
                 sql01.Append(" AND tipodocRESERVA = 1602");
                 sql01.Append(" AND statusITEMPROPOSTA = 3");
                 sql01.Append(" AND separadoITEMPROPOSTA = 0");
-                sql01.Append(" GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO");
+                sql01.Append(" GROUP BY codigoITEMPROPOSTA,propostaITEMPROPOSTA,ean13PRODUTO,produtoRESERVA,nomePRODUTO,partnumberPRODUTO,pesobrutoPRODUTO");
                 sql01.Append(" ORDER BY codigoPRODUTO");
 
                 SqlDataReader dr = SqlServerConn.fillDataReader( sql01.ToString());
@@ -71,7 +71,7 @@ namespace TitaniumColector.Classes.Dao
                 while ((dr.Read()))
                 {
                     {
-                        objItemProposta = new ProdutoProposta(Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
+                        objItemProposta = new ProdutoProposta(  Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
                                                                 Convert.ToInt32(dr["propostaITEMPROPOSTA"]),
                                                                 Convert.ToDouble(dr["QTD"]),
                                                                 ProdutoProposta.statusSeparado.NAOSEPARADO,
@@ -80,7 +80,8 @@ namespace TitaniumColector.Classes.Dao
                                                                 Convert.ToInt32(dr["codigoPRODUTO"]),
                                                                 (string)dr["ean13PRODUTO"],
                                                                 (string)dr["partnumberPRODUTO"],
-                                                                (string)(dr["nomePRODUTO"]));
+                                                                (string)(dr["nomePRODUTO"]), 
+                                                                Convert.ToDouble(dr["pesobrutoPRODUTO"]));
 
                         //Carrega a lista de itens que será retornada ao fim do procedimento.
                         listItensProposta.Add(objItemProposta);
@@ -117,7 +118,7 @@ namespace TitaniumColector.Classes.Dao
         /// <returns>Objeto ProdutoProposta com o próximo item da sequência da base mobile.</returns>
         /// 
         /// <remarks>
-        ///       Caso a query não retorne valores da base mobile o método retorna um valor NULL
+        ///       Caso a query não retorne valores da base mobile o método retorna um Valor NULL
         /// </remarks>
         public ProdutoProposta fillTop1ItemProposta()
         {
@@ -193,17 +194,18 @@ namespace TitaniumColector.Classes.Dao
                     //Query de insert na Base Mobile
                     sql01 = new StringBuilder();
                     sql01.Append("INSERT INTO tb0002_ItensProposta");
-                    sql01.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,");
-                    sql01.Append("statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA,alllotesreservaITEMPROPOSTA,qtdembalagemITEMPROPOSTA,allnomeslocaisITEMPROPOSTA) ");
+                    sql01.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA,pesoITEMPROPOSTA");
+                    sql01.Append(",statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA, lotereservaITEMPROPOSTA,alllotesreservaITEMPROPOSTA,qtdembalagemITEMPROPOSTA,allnomeslocaisITEMPROPOSTA) ");
                     sql01.Append("VALUES (");
                     sql01.AppendFormat("{0},", item.CodigoItemProposta);
                     sql01.AppendFormat("{0},", item.PropostaItemProposta);
                     sql01.AppendFormat("{0},", item.Quantidade);
+                    sql01.AppendFormat("{0},", item.Peso);
                     sql01.AppendFormat("{0},", (int)item.StatusSeparado);
                     sql01.AppendFormat("{0},", item.CodigoProduto);
                     sql01.AppendFormat("{0},", item.LotereservaItemProposta);
                     sql01.AppendFormat("'{0}',", item.LotesReserva);
-                    sql01.AppendFormat("{0},", item.QuantidadeEmbalagem); //nao utilizo este valor
+                    sql01.AppendFormat("{0},", item.QuantidadeEmbalagem); //nao utilizo este Valor
                     sql01.AppendFormat("'{0}')", item.NomeLocaisItemProposta);
       
                     CeSqlServerConn.execCommandSqlCe(sql01.ToString());

@@ -23,6 +23,7 @@ namespace TitaniumColector.Forms
 
         private void mnuAcao_Logout_Click(object sender, EventArgs e)
         {
+            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
             frmLogin login = new frmLogin();
             login.Show();
             this.Close();
@@ -30,6 +31,7 @@ namespace TitaniumColector.Forms
 
         private void mnuAcao_Exit_Click(object sender, EventArgs e)
         {
+            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
             Application.Exit();
         }
 
@@ -38,6 +40,11 @@ namespace TitaniumColector.Forms
             Cursor.Current = Cursors.WaitCursor;
             FrmProposta proposta = new FrmProposta();
             proposta.Show();
+        }
+
+        private void btnSaida_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Funcionalidade em desenvolvimento!!");
         }
 
     }

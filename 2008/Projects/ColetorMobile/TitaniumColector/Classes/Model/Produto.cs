@@ -16,7 +16,8 @@ namespace TitaniumColector.Classes
         private String identificacaoLoteProduto;
         private Int32 codigoLocalProduto;
         private String nomeLocalProduto;
-        private List<Embalagem> embalagens;
+        private Double peso;
+        private List<EmbalagemProduto> embalagens;
        
     #region"CONTRUTORES"
 
@@ -31,6 +32,17 @@ namespace TitaniumColector.Classes
             this.Ean13 = ean13;
             this.Partnumber = partnumber;
             this.Descricao = descricao;
+            this.Peso = 0.0;
+
+        }
+
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao,Double peso)
+        {
+            this.CodigoProduto = codigo;
+            this.Ean13 = ean13;
+            this.Partnumber = partnumber;
+            this.Descricao = descricao;
+            this.Peso = peso;
 
         }
 
@@ -40,7 +52,7 @@ namespace TitaniumColector.Classes
         /// <param name="Codigo">Código do produto</param>
         /// <param name="ean13">Ean13 do produto</param>
         /// <param name="partnumber">`Partnumber do Produto</param>
-        /// <param name="descricao">DEscrição (NOME) do produto</param>
+        /// <param name="Descricao">DEscrição (NOME) do produto</param>
         /// <param name="codigoLocalLote">Código do local oonde está armazenado este produto.</param>
         /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
         public Produto(Int32 codigo,String ean13,String partnumber,String descricao,Int32 codigoLocalLote,String nomeLocalLote)
@@ -60,7 +72,7 @@ namespace TitaniumColector.Classes
         /// <param name="Codigo">Código do produto</param>
         /// <param name="ean13">Ean13 do produto</param>
         /// <param name="partnumber">`Partnumber do Produto</param>
-        /// <param name="descricao">DEscrição (NOME) do produto</param>
+        /// <param name="Descricao">DEscrição (NOME) do produto</param>
         /// <param name="codigoLocalLote">Código do local oonde está armazenado este produto.</param>
         /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
         /// <param name="codLoteProd">Código do lote do produto</param>
@@ -76,6 +88,19 @@ namespace TitaniumColector.Classes
             IdentificacaoLoteProduto = identificacaoLoteProd;
         }
 
+
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote, Int64 codLoteProd, String identificacaoLoteProd,Double peso)
+        {
+            this.CodigoProduto = codigo;
+            this.Ean13 = ean13;
+            this.Partnumber = partnumber;
+            this.Descricao = descricao;
+            this.NomeLocalLote = nomeLocalLote;
+            this.CodigoLoteProduto = codLoteProd;
+            this.IdentificacaoLoteProduto = identificacaoLoteProd;
+            this.Peso = peso;
+        }
+
         /// <summary>
         /// Recebe outro objeto do tipo Produto e seta seus valores para a nova instância do objeto.
         /// </summary>
@@ -84,15 +109,17 @@ namespace TitaniumColector.Classes
         {
             if (obj.GetType() != typeof(Produto))
             {
-                CodigoProduto = ((Produto)obj).CodigoProduto;
-                Ean13 = ((Produto)obj).Ean13;
-                Partnumber = ((Produto)obj).Partnumber;
-                Descricao = ((Produto)obj).Descricao ;
-                CodigoLocalLote = ((Produto)obj).CodigoLocalLote;
-                NomeLocalLote = ((Produto)obj).NomeLocalLote;
-                CodigoLoteProduto = ((Produto)obj).CodigoLoteProduto;
-                IdentificacaoLoteProduto = ((Produto)obj).IdentificacaoLoteProduto;
-                Embalagens = ((Produto)obj).embalagens.ToList<Embalagem>();
+                this.CodigoProduto = ((Produto)obj).CodigoProduto;
+                this.Ean13 = ((Produto)obj).Ean13;
+                this.Partnumber = ((Produto)obj).Partnumber;
+                this.Descricao = ((Produto)obj).Descricao;
+                this.CodigoLocalLote = ((Produto)obj).CodigoLocalLote;
+                this.NomeLocalLote = ((Produto)obj).NomeLocalLote;
+                this.CodigoLoteProduto = ((Produto)obj).CodigoLoteProduto;
+                this.IdentificacaoLoteProduto = ((Produto)obj).IdentificacaoLoteProduto;
+                this.Peso = ((Produto)obj).Peso;
+                this.Embalagens = ((Produto)obj).embalagens.ToList<EmbalagemProduto>();
+
             }
         }
 
@@ -149,10 +176,16 @@ namespace TitaniumColector.Classes
           set { nomeLocalProduto = value; }
         }
 
-        internal List<Embalagem> Embalagens
+        internal List<EmbalagemProduto> Embalagens
         {
             get { return embalagens; }
             set { embalagens = value; }
+        }
+
+        public Double Peso
+        {
+            get { return peso; }
+            set { peso = value; }
         }
 
     #endregion

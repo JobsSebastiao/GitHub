@@ -16,7 +16,7 @@ namespace TitaniumColector.Classes.Dao
         private StringBuilder sql01;
 
 
-        public DaoProduto() 
+        public DaoProduto()
         {
 
         }
@@ -100,7 +100,7 @@ namespace TitaniumColector.Classes.Dao
 
                 if (listProduto == null || listProduto.Count == 0)
                 {
-                    throw new TitaniumColector.Classes.Exceptions.SqlQueryExceptions("Query não retornou valor.");
+                    throw new TitaniumColector.Classes.Exceptions.SqlQueryExceptions("Query não retornou Valor.");
                 }
 
                 dr.Close();
@@ -147,22 +147,22 @@ namespace TitaniumColector.Classes.Dao
             return nomesLocais;
         }
 
-        public Etiqueta recuperarInformacoesPorEan13Etiqueta(Etiqueta etiqueta) 
+        public Etiqueta recuperarInformacoesPorEan13Etiqueta(Etiqueta etiqueta)
         {
-            
+
             sql01 = new StringBuilder();
             sql01.Append(" SELECT        tb0005_Embalagens.produtoEMBALAGEM, tb0005_Embalagens.codigoEMBALAGEM, tb0005_Embalagens.quantidadeEMBALAGEM AS qtdEMBALAGEM, tb0005_Embalagens.ean13EMBALAGEM, ");
             sql01.Append(" tb0003_Produtos.ean13PRODUTO, tb0003_Produtos.partnumberPRODUTO, tb0003_Produtos.descricaoPRODUTO, tb0003_Produtos.codigolotePRODUTO, tb0003_Produtos.identificacaolotePRODUTO, ");
             sql01.Append(" tb0003_Produtos.codigolocalPRODUTO, tb0003_Produtos.nomelocalPRODUTO");
             sql01.Append(" FROM            tb0005_Embalagens INNER JOIN");
             sql01.Append(" tb0003_Produtos ON tb0005_Embalagens.produtoEMBALAGEM = tb0003_Produtos.codigoPRODUTO");
-            sql01.AppendFormat(" WHERE        (tb0005_Embalagens.ean13EMBALAGEM = {0})",etiqueta.Ean13Etiqueta);
+            sql01.AppendFormat(" WHERE        (tb0005_Embalagens.ean13EMBALAGEM = {0})", etiqueta.Ean13Etiqueta);
 
             SqlCeDataReader dr = CeSqlServerConn.fillDataReaderCe(sql01.ToString());
 
-            while(dr.Read())
+            while (dr.Read())
             {
-                etiqueta = new Etiqueta((string)dr["partnumberPRODUTO"], (string)dr["descricaoPRODUTO"],Convert.ToInt64(dr["ean13PRODUTO"]),(string)dr["identificacaolotePRODUTO"]
+                etiqueta = new Etiqueta((string)dr["partnumberPRODUTO"], (string)dr["descricaoPRODUTO"], Convert.ToInt64(dr["ean13EMBALAGEM"]), (string)dr["identificacaolotePRODUTO"]
                                         , 0, Convert.ToDouble(dr["qtdEMBALAGEM"]), etiqueta.TipoEtiqueta);
             }
 

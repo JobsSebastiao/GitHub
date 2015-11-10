@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using TitaniumColector.Classes.Utility;
 namespace TitaniumColector.Forms
 {
     partial class FrmProposta
@@ -31,11 +32,12 @@ namespace TitaniumColector.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmProposta));
             this.menuPedido = new System.Windows.Forms.MainMenu();
             this.mnuPropostas = new System.Windows.Forms.MenuItem();
+            this.mnuOpcoes_Terminar = new System.Windows.Forms.MenuItem();
             this.mnuOpcoes_Logout = new System.Windows.Forms.MenuItem();
             this.mnuOpcoes_Exit = new System.Windows.Forms.MenuItem();
-            this.mnuOpcoes_Terminar = new System.Windows.Forms.MenuItem();
             this.lbPedido = new System.Windows.Forms.Label();
             this.lbCliente = new System.Windows.Forms.Label();
             this.lbItemProposta = new System.Windows.Forms.Label();
@@ -62,6 +64,8 @@ namespace TitaniumColector.Forms
             this.dgProposta = new System.Windows.Forms.DataGrid();
             this.btIncrementaVol = new System.Windows.Forms.Button();
             this.btDecrementaVol = new System.Windows.Forms.Button();
+            this.imgPropostas = new System.Windows.Forms.ImageList();
+            this.btnVolumes = new TitaniumColector.Classes.Utility.ImageButton();
             this.pnlFrmProposta.SuspendLayout();
             this.pnCentral.SuspendLayout();
             this.SuspendLayout();
@@ -80,7 +84,7 @@ namespace TitaniumColector.Forms
             // mnuOpcoes_Terminar
             // 
             this.mnuOpcoes_Terminar.Text = "Terminar";
-            this.mnuOpcoes_Terminar.Click += new System.EventHandler(mnuOpcoes_Terminar_Click);
+            this.mnuOpcoes_Terminar.Click += new System.EventHandler(this.mnuOpcoes_Terminar_Click);
             // 
             // mnuOpcoes_Logout
             // 
@@ -331,6 +335,23 @@ namespace TitaniumColector.Forms
             this.btDecrementaVol.Tag = "N";
             this.btDecrementaVol.Text = " - ";
             this.btDecrementaVol.Click += new System.EventHandler(this.btDecrementaVol_Click);
+            // 
+            // imgPropostas
+            // 
+            this.imgPropostas.ImageSize = new System.Drawing.Size(30, 30);
+            this.imgPropostas.Images.Clear();
+            this.imgPropostas.Images.Add(((System.Drawing.Icon)(resources.GetObject("resource"))));
+            this.imgPropostas.Images.Add(((System.Drawing.Icon)(resources.GetObject("resource1"))));
+            this.imgPropostas.Images.Add(((System.Drawing.Icon)(resources.GetObject("resource2"))));
+            // 
+            // btnVolumes
+            // 
+            this.btnVolumes.BackGroundImage = null;
+            this.btnVolumes.Location = new System.Drawing.Point(0, 0);
+            this.btnVolumes.Name = "btnVolumes";
+            this.btnVolumes.PressedImage = null;
+            this.btnVolumes.Size = new System.Drawing.Size(200, 200);
+            this.btnVolumes.TabIndex = 0;
             // 
             // FrmProposta
             // 
@@ -583,20 +604,40 @@ namespace TitaniumColector.Forms
             //
             //btDecrementaVol
             //
-            this.btDecrementaVol.Size = new System.Drawing.Size(30, 25);
-            this.btDecrementaVol.Font = MainConfig.FontMediaBold;
-            this.btDecrementaVol.Location = new System.Drawing.Point(lbVolumes.Location.X + lbVolumes.Size.Width + 10,lbVolumes.Location.Y);
-            this.btDecrementaVol.TabStop = false;
+            //this.btDecrementaVol.Size = new System.Drawing.Size(30, 25);
+            //this.btDecrementaVol.Font = MainConfig.FontMediaBold;
+            //this.btDecrementaVol.Location = new System.Drawing.Point(lbVolumes.Location.X + lbVolumes.Size.Width + 10, lbVolumes.Location.Y);
+            //this.btDecrementaVol.TabStop = false;
+            //this.btDecrementaVol.Visible = false;
+
+            //
+            //btVolume
+            //
+            btnVolumes = new ImageButton();
+            btnVolumes.Parent = this;
+            btnVolumes.Bounds = new Rectangle(lbVolumes.Location.X + lbVolumes.Size.Width + 10, lbVolumes.Location.Y, 30, 25);
+            btnVolumes.ForeColor = Color.White;
+            btnVolumes.PressedImage = MainConfig.MakeBitmap(Color.Transparent, btnVolumes.Width, btnVolumes.Height);
+            btnVolumes.BackGroundImage = imgPropostas.Images[1];
+            btnVolumes.Text = "";
+            btnVolumes.Tag = "N";
+            btnVolumes.Name = "btnVolumes";
+            btnVolumes.Visible = true;
+            btnVolumes.Click += new System.EventHandler(btnVolumes_Click);
+
             //
             //btDecrementaVol
             //
+            this.pnlFrmProposta.Controls.Add(this.btnVolumes);
             this.btIncrementaVol.Size = new System.Drawing.Size(30, 25);
             this.btIncrementaVol.Font = MainConfig.FontMediaBold;
             this.btIncrementaVol.Location = new System.Drawing.Point(btDecrementaVol.Location.X + btDecrementaVol.Size.Width+15, lbVolumes.Location.Y);
             this.btIncrementaVol.TabStop = false;
         }
 
+
         #endregion
+
 
         private System.Windows.Forms.MenuItem mnuPropostas;
         private System.Windows.Forms.Panel pnlFrmProposta;
@@ -628,5 +669,7 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.MenuItem mnuOpcoes_Terminar;
         private System.Windows.Forms.MenuItem mnuOpcoes_Logout;
         private System.Windows.Forms.MenuItem mnuOpcoes_Exit;
+        private ImageButton btnVolumes;
+        private System.Windows.Forms.ImageList imgPropostas;
     }
 }

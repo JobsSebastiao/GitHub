@@ -79,6 +79,7 @@ namespace TitaniumColector.Classes
             sql01.Append("codigoITEMPROPOSTA int not null CONSTRAINT PKItensProposta PRIMARY KEY,");
             sql01.Append("propostaITEMPROPOSTA int ,");
             sql01.Append("quantidadeITEMPROPOSTA real,");
+            sql01.Append("pesoITEMPROPOSTA real,");
             sql01.Append("statusseparadoITEMPROPOSTA SMALLINT,");
             sql01.Append("codigoprodutoITEMPROPOSTA int,");
             sql01.Append("lotereservaITEMPROPOSTA int,");

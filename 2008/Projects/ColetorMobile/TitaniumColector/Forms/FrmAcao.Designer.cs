@@ -51,6 +51,7 @@
             this.btnSaida.Size = new System.Drawing.Size(265, 174);
             this.btnSaida.TabIndex = 1;
             this.btnSaida.Text = "Saída";
+            this.btnSaida.Click += new System.EventHandler(this.btnSaida_Click);
             // 
             // painelFrmAcao
             // 

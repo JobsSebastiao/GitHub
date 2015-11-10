@@ -14,17 +14,17 @@ namespace TitaniumColector.Classes.Dao
     class DaoEmbalagem
     {
         StringBuilder sql01;
-        private Embalagem embalagem = null;
+        private EmbalagemProduto embalagem = null;
 
         public DaoEmbalagem() 
         {
 
         }
 
-        public List<Embalagem> cargaEmbalagensProduto(int codigoProposta) 
+        public List<EmbalagemProduto> cargaEmbalagensProduto(int codigoProposta) 
         {
             sql01 = new StringBuilder();
-            List<Embalagem> listaEmbalagens = new List<Embalagem>();
+            List<EmbalagemProduto> listaEmbalagens = new List<EmbalagemProduto>();
 
             try
             {
@@ -50,10 +50,10 @@ namespace TitaniumColector.Classes.Dao
                 while ((dr.Read()))
                 {
                     {
-                        embalagem = new Embalagem(Convert.ToInt32(dr["codigoEMBALAGEMPRODUTO"]), (string)dr["nomeEMBALAGEMPRODUTO"],
-                                                  Convert.ToInt32(dr["produtoEMBALAGEMPRODUTO"]), Convert.ToDouble(dr["quantidadeEMBALAGEMPRODUTO"]),
-                                                 (Embalagem.PadraoEmbalagem)dr["padraoEMBALAGEMPRODUTO"], Convert.ToInt32(dr["embalagemEMBALAGEMPRODUTO"]),
-                                                  (string)dr["codigobarrasEMBALAGEMPRODUTO"]);
+                        embalagem = new EmbalagemProduto(Convert.ToInt32(dr["codigoEMBALAGEMPRODUTO"]), (string)dr["nomeEMBALAGEMPRODUTO"],(EmbalagemProduto.PadraoEmbalagem)dr["padraoEMBALAGEMPRODUTO"]
+                                                         ,Convert.ToInt32(dr["produtoEMBALAGEMPRODUTO"]), Convert.ToDouble(dr["quantidadeEMBALAGEMPRODUTO"])
+                                                         ,Convert.ToInt32(dr["embalagemEMBALAGEMPRODUTO"])
+                                                         ,(string)dr["codigobarrasEMBALAGEMPRODUTO"]);
 
                         listaEmbalagens.Add(embalagem);
 
@@ -79,7 +79,7 @@ namespace TitaniumColector.Classes.Dao
             }
         }
 
-        public void insertEmbalagemBaseMobile(List<Embalagem> listaEmbalagens) 
+        public void insertEmbalagemBaseMobile(List<EmbalagemProduto> listaEmbalagens) 
         {
             try
             {
@@ -98,7 +98,7 @@ namespace TitaniumColector.Classes.Dao
                     sql01.AppendFormat("'{0}',", item.Nome);
                     sql01.AppendFormat("{0},", item.ProdutoEmbalagem);
                     sql01.AppendFormat("{0},", item.Quantidade);
-                    sql01.AppendFormat("{0},", (int)item.IsPadrao);
+                    sql01.AppendFormat("{0},", (int)item.Padrao);
                     sql01.AppendFormat("{0},", item.TipoEmbalagem);
                     sql01.AppendFormat("'{0}')", item.Ean13Embalagem);
 
@@ -123,11 +123,11 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
-        public List<Embalagem> carregarEmbalagensProduto(Produto produto) 
+        public List<EmbalagemProduto> carregarEmbalagensProduto(Produto produto) 
         {
 
-            Embalagem objEmbalagem = null;
-            List<Embalagem> listaEmbalagens = new List<Embalagem>();
+            EmbalagemProduto objEmbalagem = null;
+            List<EmbalagemProduto> listaEmbalagens = new List<EmbalagemProduto>();
 
             sql01 = new StringBuilder();
             sql01.Append(" SELECT        TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
@@ -143,8 +143,15 @@ namespace TitaniumColector.Classes.Dao
 
             while ((dr.Read()))
             {
-                objEmbalagem = new Embalagem(Convert.ToInt32(dr["codigoEMBALAGEM"]), (string)dr["nomeEMBALAGEM"], Convert.ToInt32(dr["produtoEMBALAGEM"]), Convert.ToDouble(dr["quantidadeEMBALAGEM"])
-                                        , (Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"]), Convert.ToInt32(dr["embalagemEMBALAGEM"]), (string)dr["ean13EMBALAGEM"]);
+                objEmbalagem = new EmbalagemProduto(
+                     
+                      Convert.ToInt32(dr["codigoEMBALAGEM"])
+                      ,(string)dr["nomeEMBALAGEM"]
+                      ,(EmbalagemProduto.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"])
+                      ,Convert.ToInt32(dr["produtoEMBALAGEM"])
+                      ,Convert.ToDouble(dr["quantidadeEMBALAGEM"])
+                      ,Convert.ToInt32(dr["embalagemEMBALAGEM"])
+                      ,(string)dr["ean13EMBALAGEM"]);
 
                 listaEmbalagens.Add(objEmbalagem);
             }
@@ -153,10 +160,41 @@ namespace TitaniumColector.Classes.Dao
            
         }
 
-        public List<Embalagem> carregarEmbalagensProduto(Proposta proposta)
+        public List<EmbalagemSeparacao> carregarEmbalagensSeparacao()
         {
-            Embalagem objEmbalagem = null;
-            List<Embalagem> listaEmbalagens = new List<Embalagem>();
+
+            EmbalagemSeparacao objEmbalagem = null;
+            List<EmbalagemSeparacao> listaEmbalagens = new List<EmbalagemSeparacao>();
+
+            sql01 = new StringBuilder();
+
+            sql01.Append(" SELECT codigoEMBALAGEM,nomeEMBALAGEM,produtoEMBALAGEM,pesoEMBALAGEM,padraoEMBALAGEM");
+            sql01.Append(" FROM tb0545_Embalagens");
+            sql01.Append(" INNER JOIN tb0501_Produtos ON codigoPRODUTO = produtoEMBALAGEM");
+
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+
+            while ((dr.Read()))
+            {
+                objEmbalagem = new EmbalagemSeparacao(
+
+                      Convert.ToInt32(dr["codigoEMBALAGEM"])
+                      , (string)dr["nomeEMBALAGEM"]
+                      , (Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"])
+                      , Convert.ToInt32(dr["produtoEMBALAGEM"])
+                      , Convert.ToDouble(dr["pesoEMBALAGEM"]));
+
+                listaEmbalagens.Add(objEmbalagem);
+            }
+
+            return listaEmbalagens;
+
+        }
+
+        public List<EmbalagemProduto> carregarEmbalagensProduto(Proposta proposta)
+        {
+            EmbalagemProduto objEmbalagem = null;
+            List<EmbalagemProduto> listaEmbalagens = new List<EmbalagemProduto>();
 
             sql01 = new StringBuilder();
             sql01.Append(" SELECT        TB_PROP.codigoPROPOSTA, TB_EMB.codigoEMBALAGEM, TB_EMB.nomeEMBALAGEM, TB_EMB.produtoEMBALAGEM, TB_EMB.quantidadeEMBALAGEM, TB_EMB.padraoEMBALAGEM, ");
@@ -172,8 +210,15 @@ namespace TitaniumColector.Classes.Dao
 
             while ((dr.Read()))
             {
-                objEmbalagem = new Embalagem(Convert.ToInt32(dr["codigoEMBALAGEM"]), (string)dr["nomeEMBALAGEM"], Convert.ToInt32(dr["produtoEMBALAGEM"]), Convert.ToDouble(dr["quantidadeEMBALAGEM"])
-                                             ,(Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"]), Convert.ToInt32(dr["embalagemEMBALAGEM"]), (string)dr["ean13EMBALAGEM"]);
+                objEmbalagem = new EmbalagemProduto(
+                    
+                    Convert.ToInt32(dr["codigoEMBALAGEM"])
+                    , (string)dr["nomeEMBALAGEM"]
+                    , (EmbalagemProduto.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"])
+                    , Convert.ToInt32(dr["produtoEMBALAGEM"])
+                    , Convert.ToDouble(dr["quantidadeEMBALAGEM"])
+                    , Convert.ToInt32(dr["embalagemEMBALAGEM"])
+                    , (string)dr["ean13EMBALAGEM"]);
 
                 listaEmbalagens.Add(objEmbalagem);
             }

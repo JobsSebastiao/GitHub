@@ -13,6 +13,7 @@ using TitaniumColector.Forms;
 using System.Reflection;
 using System.Collections;
 using TitaniumColector.Classes.Dao;
+using TitaniumColector.Classes.Utility;
 
 
 namespace TitaniumColector
@@ -24,11 +25,12 @@ namespace TitaniumColector
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
         private DaoUsuario daoUsuario;
-
+       
         public frmLogin()
         {
             try
             {
+
                 daoUsuario = new DaoUsuario();
 
                 //Configurações de criação do form
@@ -39,6 +41,8 @@ namespace TitaniumColector
                 SqlServerConn.configuraStrConnection(System.IO.Path.GetDirectoryName(Assembly.GetExecutingAssembly().GetName().CodeBase), "strConn.txt");
                 //Configura string de conexão E/OU cria a base mobile e todas as suas tabelas.
                 BaseMobile.configurarBaseMobile();
+                //Recupera Permissões a serem usadas no sistema mobile
+                MainConfig.recuperaPermissoes();
                 //Configura Layout
                 this.configControls();
                 //Preenche o combo de Usuários para que seja validado o Login
@@ -73,9 +77,15 @@ namespace TitaniumColector
                 daoUsuario = null;
             }
 
+
         }
 
-    #region "//PRINCIPAIS MÉTODOS DO FORMULÁRIO"
+        void btnImg_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("show deu certo");
+        }
+
+    #region "PRINCIPAIS MÉTODOS DO FORMULÁRIO"
 
         /// <summary>
         /// Preenche a ComboBox com um atributo de classe Usuario.
@@ -219,10 +229,12 @@ namespace TitaniumColector
 
                         if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
                         {
-                            MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(objUsuario, Usuario.statusLogin.LOGADO);
+                            MainConfig.UserOn = objUsuario;
+                            MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(MainConfig.UserOn, Usuario.statusLogin.LOGADO);
                             this.cbUsuario.Text = "";
                             this.txtSenha.Text = "";
                             FrmAcao frmAcao = new FrmAcao();
+
                             frmAcao.Show();
                             this.Hide();
                         }

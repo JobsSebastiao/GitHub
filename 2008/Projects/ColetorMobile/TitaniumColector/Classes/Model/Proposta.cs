@@ -18,11 +18,32 @@ namespace TitaniumColector.Classes
         private Int32 qtdVolumesProposta;
         private List<ProdutoProposta> listItemProposta;
         private Int32 codigoPikingMobile;
+        private Boolean isInterrompido;
 
-    #region "CONSTRUCTORS" 
+        #region "CONSTRUCTORS"
 
-        public Proposta() 
+        public Proposta()
         { }
+
+        /// <summary>
+        /// Recebe outro obj do tipo Proposta e set os parâmetros para a nova instância a ser criada.
+        /// </summary>
+        /// <param name="obj"></param>
+        public Proposta(Object obj)
+        {
+           
+            if (obj.GetType() == typeof(Proposta))
+            {
+                this.Codigo = ((Proposta)obj).Codigo;
+                this.Numero = ((Proposta)obj).Numero;
+                this.DataLiberacao = ((Proposta)obj).DataLiberacao;
+                this.CodigoCliente = ((Proposta)obj).CodigoCliente;
+                this.RazaoCliente = ((Proposta)obj).RazaoCliente;
+                this.Volumes = ((Proposta)obj).Volumes;
+                this.ListObjItemProposta = ((Proposta)obj).ListObjItemProposta;
+                this.CodigoPikingMobile = ((Proposta)obj).CodigoPikingMobile;
+            }
+        }
 
         /// <summary>
         /// Instância um Obj Proposta
@@ -52,8 +73,30 @@ namespace TitaniumColector.Classes
         /// <param name="codigoCliente">Código cliente Proposta</param>
         /// <param name="razaoCliente">Razão cliente Proposta</param>
         /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
-        public Proposta(Int64 codigoProposta,string numeroProposta,string dataLiberacaoProposta,int codigoCliente,
-                        string razaoCliente,Int32 qtdVolumes,Int32 codPKMob)
+        public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
+                        string razaoCliente, Int32 qtdVolumes, Int32 codPKMob, Boolean isInterrompido)
+        {
+            this.Codigo = codigoProposta;
+            this.Numero = numeroProposta;
+            this.DataLiberacao = dataLiberacaoProposta;
+            this.CodigoCliente = codigoCliente;
+            this.RazaoCliente = razaoCliente;
+            this.Volumes = qtdVolumes;
+            this.CodigoPikingMobile = codPKMob;
+            this.IsInterrompido = isInterrompido;
+        }
+
+        /// <summary>
+        /// Instância um Obj Proposta
+        /// </summary>
+        /// <param name="codigoProposta">Código da Proposta</param>
+        /// <param name="numeroProposta">Número da proposta</param>
+        /// <param name="dataLiberacaoProposta">Data liberação Proposta</param>
+        /// <param name="codigoCliente">Código cliente Proposta</param>
+        /// <param name="razaoCliente">Razão cliente Proposta</param>
+        /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
+        public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
+                        string razaoCliente, Int32 qtdVolumes, Int32 codPKMob)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
@@ -63,7 +106,6 @@ namespace TitaniumColector.Classes
             this.Volumes = qtdVolumes;
             this.CodigoPikingMobile = codPKMob;
         }
-
 
         /// <summary>
         /// Instância um Obj Proposta
@@ -77,7 +119,7 @@ namespace TitaniumColector.Classes
         /// <param name="totalItensProposta">Total de itens na Proposta</param>
         /// <param name="totalPecasProposta">Total de Pecas na Proposta</param>
         public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
-                        string razaoCliente, Int32  qtdVolumes,Double totalItensProposta,Double totalPecasProposta)
+                        string razaoCliente, Int32 qtdVolumes, Double totalItensProposta, Double totalPecasProposta)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
@@ -85,14 +127,14 @@ namespace TitaniumColector.Classes
             this.CodigoCliente = codigoCliente;
             this.RazaoCliente = razaoCliente;
             //this.Volumes = QtdVolumes;
-            this.setTotalValoresProposta(totalItensProposta, totalPecasProposta,qtdVolumes);
+            this.setTotalValoresProposta(totalItensProposta, totalPecasProposta, qtdVolumes);
         }
 
         /// <summary>
         /// Recebe outro obj do tipo Proposta e set os parâmetros para a nova instância a ser criada.
         /// </summary>
         /// <param name="obj"></param>
-        public Proposta(Object obj,List<ProdutoProposta> listItens)
+        public Proposta(Object obj, List<ProdutoProposta> listItens)
         {
             if (obj.GetType() == typeof(Proposta))
             {
@@ -105,7 +147,6 @@ namespace TitaniumColector.Classes
                 this.ListObjItemProposta = listItens;
                 this.CodigoPikingMobile = ((Proposta)obj).CodigoPikingMobile;
             }
-
         }
 
 
@@ -120,7 +161,7 @@ namespace TitaniumColector.Classes
         /// <param name="statusOrdemSeparacao">Status de Ordem separação Proposta</param>
         /// <param name="listItemProposta">List de objetos do tipo ProdutoProposta</param>
         public Proposta(Int64 codigoProposta, string numeroProposta, string dataLiberacaoProposta, int codigoCliente,
-                string razaoCliente, Int32 qtdVolumes,List<ProdutoProposta> listItemProposta)
+                string razaoCliente, Int32 qtdVolumes, List<ProdutoProposta> listItemProposta)
         {
             this.Codigo = codigoProposta;
             this.Numero = numeroProposta;
@@ -130,19 +171,18 @@ namespace TitaniumColector.Classes
             this.Volumes = qtdVolumesProposta;
             this.ListObjItemProposta = listItemProposta;
 
-        } 
+        }
 
-    #endregion
+        #endregion
 
         /// <summary>
         /// Status do pedido na tabela de picking Mobile
         /// </summary>
         public enum StatusLiberacao { NAOFINALIZADO = 0, TRABALHANDO = 1, FINALIZADO = 2 }
 
+        #region  "GETS E SETS"
 
-    #region  "GETS E SETS"
-
-        public enum statusOrdemSeparacao 
+        public enum statusOrdemSeparacao
         {
             NAOIMPRESA = 0,
             IMPRESA = 1
@@ -166,7 +206,7 @@ namespace TitaniumColector.Classes
             set { dataLiberacao = value; }
         }
 
-        public Int32  Volumes
+        public Int32 Volumes
         {
             get { return qtdVolumesProposta; }
             set { qtdVolumesProposta = value; }
@@ -214,7 +254,7 @@ namespace TitaniumColector.Classes
         }
 
         /// <summary>
-        /// Set a Quantidade de itens recebendo um valor double como parâmetro.
+        /// Set a Quantidade de itens recebendo um Valor double como parâmetro.
         /// </summary>
         /// <param name="qtdItens"></param>
         public void setTotalItens(Double qtdItens)
@@ -264,19 +304,36 @@ namespace TitaniumColector.Classes
             set { codigoPikingMobile = value; }
         }
 
+        public Boolean IsInterrompido
+        {
+            get { return isInterrompido; }
+            set { isInterrompido = value; }
+        }
+
         /// <summary>
         /// Calcula o total de peças e de itens de uma proposta  recebendo os valores como parâmetro.
         /// </summary>
-        public void setTotalValoresProposta(Double totItens,Double totPecas,int volumes)
-        {    
+        public void setTotalValoresProposta(Double totItens, Double totPecas, int volumes)
+        {
             this.setTotalItens(totItens);
             this.setTotalPecas(totPecas);
-            this.Volumes = (volumes>0)?  volumes : 1 ;
+            //this.Volumes = (volumes > 0) ? volumes : 1;
         }
 
-    #endregion 
+        /// <summary>
+        /// Calcula o total de peças e de itens de uma proposta  recebendo os valores como parâmetro.
+        /// </summary>
+        public void setTotalValoresProposta(Double totItens, Double totPecas)
+        {
+            this.setTotalItens(totItens);
+            this.setTotalPecas(totPecas);
+            //this.Volumes = (volumes > 0) ? volumes : 1;
+        }
 
-    #region"GENERAL METHODS"
+
+        #endregion
+
+        #region"GENERAL METHODS"
 
         /// <summary>
         /// Limpa a list de itens da proposta e adiciona o item passado como parâmetro.
@@ -319,7 +376,7 @@ namespace TitaniumColector.Classes
 
         public void decrementaVolume()
         {
-            if((this.Volumes >0) && this.Volumes - 1 >= 0)
+            if ((this.Volumes > 0) && this.Volumes - 1 >= 0)
             {
                 this.Volumes--;
             }
@@ -327,10 +384,10 @@ namespace TitaniumColector.Classes
 
         public void incrementaVolume()
         {
-           this.Volumes++;
+            this.Volumes++;
         }
 
-    #endregion
+        #endregion
 
     }
 }

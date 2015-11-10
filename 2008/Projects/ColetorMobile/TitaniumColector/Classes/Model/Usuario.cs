@@ -1,5 +1,6 @@
 ﻿using System;
 using TitaniumColector.SqlServer;
+using System.Text;
 
 namespace TitaniumColector.Classes
 {
@@ -12,6 +13,7 @@ namespace TitaniumColector.Classes
         private string strNomeCompleto;
         private statusUsuario enumStatusUsuario;
         private statusLogin enumStatusLogin;
+        private StringBuilder sql01;
 
     #region "ENUMS" 
 
@@ -200,7 +202,7 @@ namespace TitaniumColector.Classes
         /// Valida usuário durante Login
         /// </summary>
         /// <param name="obj">Objeto a ser validado como Objeto Usuário</param>
-        /// <param name="usuario">valor do campo Usuario</param>
+        /// <param name="usuario">Valor do campo Usuario</param>
         /// <param name="senha">Valor do campo senha</param>
         /// <returns>Validação True
         ///          Nao validado False;</returns>
@@ -277,17 +279,83 @@ namespace TitaniumColector.Classes
 
             MainConfig.UsuarioLogado = user.Nome;
             MainConfig.CodigoUsuarioLogado = user.Codigo;
+            sql01 = new StringBuilder();
 
-            string sql01 = null;
-            //Insere o acesso e inicia a transação
-            sql01 = "INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)";
-            sql01 = sql01 + " VALUES (" + user.Codigo + ",'" + MainConfig.HostName + "')";
-            SqlServerConn.execCommandSql(sql01);
+            switch (tipodeAcao)
+            {
+                case statusLogin.LOGADO:
+                    sql01.Length = 0;
+                    //Insere o acesso e inicia a transação
+                    sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
+                    sql01.Append(" VALUES (" + user.Codigo + ",'" + MainConfig.HostName + "')");
+                    SqlServerConn.execCommandSql(sql01.ToString());
+                    break;
+                case statusLogin.NAOLOGADO:
+                    sql01.Length = 0;
+                    sql01.Append("UPDATE tb0207_Acessos");
+                    sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
+                    sql01.AppendFormat(" WHERE codigoACESSO = {0}",MainConfig.CodigoAcesso);
+                    SqlServerConn.execCommandSql(sql01.ToString());
+                    return 0;
+                default:
+                    break;
+            }
 
             //Recupera o código do acesso
-            sql01 = "SELECT MAX(codigoACESSO) AS novoACESSO";
-            sql01 = sql01 + " FROM tb0207_Acessos";
-            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01);
+            sql01.Length = 0;
+            sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
+            sql01.Append(" FROM tb0207_Acessos");
+            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+            if ((dr.FieldCount > 0))
+            {
+                while ((dr.Read()))
+                {
+                    retorno = (Int32)dr["novoACESSO"];
+                }
+            }
+
+            SqlServerConn.closeConn();
+            dr.Close();
+            return retorno;
+
+        }
+
+        public long registrarAcesso(Usuario.statusLogin tipodeAcao)
+        {
+
+            Int64 retorno = 0;
+            this.StatusLogin = tipodeAcao;
+
+            MainConfig.UsuarioLogado = this.Nome;
+            MainConfig.CodigoUsuarioLogado = this.Codigo;
+            sql01 = new StringBuilder();
+
+            switch (tipodeAcao)
+            {
+                case statusLogin.LOGADO:
+                    sql01.Length = 0;
+                    //Insere o acesso e inicia a transação
+                    sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
+                    sql01.Append(" VALUES (" + this.Codigo + ",'" + MainConfig.HostName + "')");
+                    SqlServerConn.execCommandSql(sql01.ToString());
+                    break;
+                case statusLogin.NAOLOGADO:
+                    sql01.Length = 0;
+                    sql01.Append("UPDATE tb0207_Acessos");
+                    sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
+                    sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
+                    SqlServerConn.execCommandSql(sql01.ToString());
+                    return 0;
+                default:
+                    break;
+            }
+
+
+            //Recupera o código do acesso
+            sql01.Length = 0;
+            sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
+            sql01.Append(" FROM tb0207_Acessos");
+            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
             if ((dr.FieldCount > 0))
             {
                 while ((dr.Read()))

@@ -5,61 +5,42 @@ using System.Text;
 
 namespace TitaniumColector.Classes.Model
 {
+
     class Embalagem
     {
-
         private Int32 codigo;
         private String nome;
+        private PadraoEmbalagem padrao;
         private Int32 produtoEmbalagem;
-        private Double quantidade;
-        private PadraoEmbalagem isPadrao;
-        private Int32 tipoEmbalagem;
-        private String ean13Embalagem;
 
         public enum PadraoEmbalagem { NAOPADRAO = 0, PADRAO = 1 }
 
-
         public Embalagem() { }
 
-        public Embalagem(Int32 codigo,String nome,Int32 produtoEmb,Double qtd,
-            PadraoEmbalagem isPadrao,Int32 tipo,String ean13Emb) 
+        public Embalagem(Int32 intCodigo,String strNome,PadraoEmbalagem padrao,Int32 prodEmb) 
         {
-
-            this.Codigo = codigo;
-            this.Nome = nome;
-            this.ProdutoEmbalagem = produtoEmb;
-            this.Quantidade = qtd;
-            this.IsPadrao = isPadrao;
-            this.TipoEmbalagem = tipo;
-            this.Ean13Embalagem = ean13Emb;
-
+            this.Codigo = intCodigo;
+            this.Nome = strNome;
+            this.padrao = padrao;
+            this.ProdutoEmbalagem = prodEmb; 
         }
 
-
-    #region "GET E SETS"
-
-        public String Ean13Embalagem
+        public Int32 Codigo
         {
-            get { return ean13Embalagem; }
-            set { ean13Embalagem = value; }
+          get { return codigo; }
+          set { codigo = value; }
         }
 
-        public Int32 TipoEmbalagem
+        public String Nome
         {
-            get { return tipoEmbalagem; }
-            set { tipoEmbalagem = value; }
+          get { return nome; }
+          set { nome = value; }
         }
-
-        public PadraoEmbalagem IsPadrao
+                
+        internal PadraoEmbalagem Padrao
         {
-            get { return isPadrao; }
-            set { isPadrao = value; }
-        }
-
-        public Double Quantidade
-        {
-            get { return quantidade; }
-            set { quantidade = value; }
+          get { return padrao; }
+          set { padrao = value; }
         }
 
         public Int32 ProdutoEmbalagem
@@ -68,19 +49,10 @@ namespace TitaniumColector.Classes.Model
             set { produtoEmbalagem = value; }
         }
 
-        public String Nome
+        public Boolean isPadrao() 
         {
-            get { return nome; }
-            set { nome = value; }
+            return this.padrao == PadraoEmbalagem.PADRAO;
         }
 
-        public Int32 Codigo
-        {
-            get { return codigo; }
-            set { codigo = value; }
-        }
-
-    #endregion
-        
     }
 }

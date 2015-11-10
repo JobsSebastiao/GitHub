@@ -34,3 +34,16 @@ C:\Users\sebastiao.martins\Desktop\ColetorMobile\TitaniumColector\obj\Debug\Tita
 C:\Users\sebastiao.martins\Desktop\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
 C:\Users\sebastiao.martins\Desktop\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.exe
 C:\Users\sebastiao.martins\Desktop\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.pdb
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\ResolveAssemblyReference.cache
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAcao.resources
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.frmLogin.resources
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmProposta.resources
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Properties.Resources.resources
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.exe
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\bin\Debug\TitaniumColector.exe
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\bin\Debug\TitaniumColector.pdb
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlClient.dll
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.pdb
+C:\Clientes\Tecware\COMPONENTES\ColetorMobile\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmVolumes.resources

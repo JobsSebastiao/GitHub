@@ -3,6 +3,9 @@ using System.Drawing;
 using System.Net;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using TitaniumColector.Classes;
+using TitaniumColector.Classes.Utility;
+using TitaniumColector.Classes.Dao;
 
 namespace TitaniumColector
 {
@@ -17,6 +20,7 @@ namespace TitaniumColector
         private static Size screenSize;
         private static Size clienteSize;
         private static Int64 intCodigoAcesso;
+        private static Usuario userOn;
 
         //Fontes Utiizadas no sistema.
         private static Font fontPequenaRegular;
@@ -37,11 +41,15 @@ namespace TitaniumColector
         private static Font fontGrandeItalic;
         private static Single tamanho;
         private static FontStyle FontStyle;
+        private static Permissoes permissoes_TB1210;
 
         //Contantes
         public const int intPositionX = 0;
         public const int intPositionY = 0;
         public const Char PasswordChar = '*';
+
+        //Permissões do sistema.
+        private static Boolean validarSequenciaEtiqueta;
 
 
         #region "GET & SETS"
@@ -177,6 +185,18 @@ namespace TitaniumColector
             set { MainConfig.clienteSize = value; }
         }
 
+        internal static Usuario UserOn
+        {
+            get { return MainConfig.userOn; }
+            set { MainConfig.userOn = value; }
+        }
+
+        internal static Permissoes Permissoes_TB1210
+        {
+            get { return MainConfig.permissoes_TB1210; }
+            set { MainConfig.permissoes_TB1210 = value; }
+        }
+
         #endregion
 
         #region "MÉTODOS DE CONFIGURAÇÃO"
@@ -213,7 +233,6 @@ namespace TitaniumColector
         private static void capturaHostName()
         {
            string hostName = System.Net.Dns.GetHostName();
-
            HostName = hostName;
         }
 
@@ -222,6 +241,19 @@ namespace TitaniumColector
             IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(HostName);
             IPAddress addr = ipEntry.AddressList[ipEntry.AddressList.Length-1];
             DeviceIp = addr.ToString() ;
+        }
+
+        public static Boolean ValidarSequenciaEtiqueta
+        {
+            get { return MainConfig.validarSequenciaEtiqueta; }
+            set { MainConfig.validarSequenciaEtiqueta = value; }
+        }
+
+        public static void recuperaPermissoes() 
+        {
+            DaoPermissoes daoPermissoes = new DaoPermissoes();
+            Permissoes_TB1210 = new Permissoes();
+            Permissoes_TB1210 = daoPermissoes.recuperarPermissoes(Permissoes_TB1210.ListCodigoParametro);
         }
 
         private static void defineFontPadrao()
@@ -352,7 +384,7 @@ namespace TitaniumColector
         /// <param name="cb">ComboBox a ser preenchida</param>
         /// <param name="objectList">List preenchida com um tipo de Objeto</param>
         /// <param name="displayName">parâmetro do objeto a ser mostrado na ComboBox</param>
-        /// <param name="columnName">parâmetro que terá o seu valor utilizado na ComboBox. </param>
+        /// <param name="columnName">parâmetro que terá o seu Valor utilizado na ComboBox. </param>
         public static void carregarComboBox(System.Windows.Forms.ComboBox cb, List<object> objectList, string displayName, string columnName)
         {
             cb.Items.Clear();
@@ -395,6 +427,19 @@ namespace TitaniumColector
         {
             System.Windows.Forms.MessageBox.Show(msg, head, System.Windows.Forms.MessageBoxButtons.OK,
                                System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+        }
+
+        // Create a bitmap object and fill it with the specified color.   
+        // To make it look like a custom image, draw an ellipse in it.
+        public static Bitmap MakeBitmap(Color color, int width, int height)
+        {
+            Bitmap bmp = new Bitmap(width, height);
+            Graphics g = Graphics.FromImage(bmp);
+            g.FillRectangle(new SolidBrush(color), 0, 0, bmp.Width, bmp.Height);
+            g.DrawEllipse(new Pen(Color.DarkGray), 3, 3, width - 6, height - 6);
+            g.Dispose();
+
+            return bmp;
         }
 
     }

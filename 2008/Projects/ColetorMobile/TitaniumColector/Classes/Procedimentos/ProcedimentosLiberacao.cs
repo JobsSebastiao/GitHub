@@ -7,6 +7,7 @@ using TitaniumColector.Utility;
 using TitaniumColector.Classes.Exceptions;
 using System.Xml;
 using System.Xml.Linq;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
@@ -15,11 +16,13 @@ namespace TitaniumColector.Classes.Procedimentos
         private static Double totalItens;
         private static Double totalPecas;
         private static Double qtdPecasItem;
-        private static Int32 qtdVolumes;
+        private static Int32 totalVolumes;
         private static Int32 proximaEtiqueta;
         private static List<Etiqueta> listEtiquetasLidas;
         private static List<Etiqueta> listEtiquetas;
+        private static List<EmbalagemSeparacao> listEmbalagensSeparacao;
         private static Array arrayStringToEtiqueta;
+        private static String mensagem;
 
         /// <summary>
         /// Carrega as a serem trabalhadas durante o procedimento de liiberção dos itens da proposta.
@@ -61,7 +64,7 @@ namespace TitaniumColector.Classes.Procedimentos
             TotalItens = tItens;
             TotalPecas = tPecas;
             qtdPecasItem = pecasItens;
-            QtdVolumes = qtdVolumes;
+            TotalVolumes = qtdVolumes;
 
             if (ListEtiquetasGeradas != null)
             {
@@ -132,10 +135,10 @@ namespace TitaniumColector.Classes.Procedimentos
  
         }
 
-        public static Int32 QtdVolumes
+        public static Int32 TotalVolumes
         {
-            get { return ProcedimentosLiberacao.qtdVolumes; }
-            set { ProcedimentosLiberacao.qtdVolumes = value; }
+            get { return ProcedimentosLiberacao.totalVolumes; }
+            set { ProcedimentosLiberacao.totalVolumes = value; }
         }
 
         public static Double subtrairQtdPecasItem(Double value)
@@ -146,7 +149,7 @@ namespace TitaniumColector.Classes.Procedimentos
             }
             else 
             {
-                throw new QuantidadeInvalidaException(String.Format ("O valor informado é maior que a quantidade de peças existentes."));
+                throw new QuantidadeInvalidaException(String.Format ("O Valor informado é maior que a Quantidade de peças existentes."));
             }
         }
 
@@ -183,6 +186,12 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             get { return ProcedimentosLiberacao.arrayStringToEtiqueta; }
             set { ProcedimentosLiberacao.arrayStringToEtiqueta = value; }
+        }
+
+        internal static List<EmbalagemSeparacao> ListEmbalagensSeparacao
+        {
+            get { return ProcedimentosLiberacao.listEmbalagensSeparacao; }
+            set { ProcedimentosLiberacao.listEmbalagensSeparacao = value; }
         }
 
     #endregion
@@ -280,35 +289,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-        ///// <summary>
-        // /// Gera etiquetas para testes.
-        // /// </summary>
-        //public static void gerarEtiquetas()
-        //{
-        //    Etiqueta objEtiqueta;
-        //    List<Etiqueta> list = new List<Etiqueta>();
-
-        //    ProximaEtiqueta = 0;
-        //    list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
-        //    for (int i = 1; i <= 8; i++)
-        //    {
-        //        if (i < 5)
-        //        {
-        //            objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
-        //        }
-        //        else 
-        //        {
-        //            objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
-        //        }
-                
-        //        list.Add(objEtiqueta);
-        //        objEtiqueta = null;
-        //    }
-
-        //    list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
-        //    ListEtiquetasGeradas = list;
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -376,7 +356,6 @@ namespace TitaniumColector.Classes.Procedimentos
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
         
-
         /// <summary>
         /// 
         /// </summary>
@@ -403,7 +382,18 @@ namespace TitaniumColector.Classes.Procedimentos
                 tbMensagem.Text = "Próximo Item.";
             }
         }
-
+         
+         /// <summary>
+        /// realiza todo o procedimento para validação de tipo de etiqueta,etiqueta, produto,
+        /// validação de sequência,subtração de quantidade de itens registrados na etiqueta.
+        /// </summary>
+        /// <param name="produto">Produto a ser validado</param>
+        /// <param name="tbProduto">Text Box Nome do Produto</param>
+        /// <param name="tbLote">Text Box Lote</param>
+        /// <param name="tbSequencia">Text Box  Sequencia</param>
+        /// <param name="tbQuantidade">Text Box Quantidade</param>
+        /// <param name="tbMensagem">Text Box Mensagem</param>
+        /// <param name="objEtiqueta">Objeto Etiqueta.</param>
         public static void efetuaLeituraEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tbLote,TextBox tbSequencia,TextBox tbQuantidade,
                                                  TextBox tbMensagem,Etiqueta objEtiqueta)
         {
@@ -419,7 +409,7 @@ namespace TitaniumColector.Classes.Procedimentos
                             tbLote.Text = objEtiqueta.LoteEtiqueta;
                             tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
                             tbQuantidade.Text = (subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)).ToString();
-                            objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.qtdVolumes;
+                            objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.totalVolumes;
                             addToListEtiquetasLidas(objEtiqueta);
                         }
                     }
@@ -431,7 +421,15 @@ namespace TitaniumColector.Classes.Procedimentos
                 }
                 else
                 {
-                    tbMensagem.Text = String.Format("Produto da etiqueta lida não confere com o item a ser liberado.");
+                    if (ProcedimentosLiberacao.mensagem != "" || ProcedimentosLiberacao.mensagem != null)
+                    {
+                        tbMensagem.Text = ProcedimentosLiberacao.mensagem;
+                    }
+                    else 
+                    {
+                        tbMensagem.Text = String.Format("Produto da etiqueta lida não confere com o item a ser liberado.");
+                    }
+                    
                     ProximaEtiqueta += 1;
                 }
 
@@ -439,7 +437,7 @@ namespace TitaniumColector.Classes.Procedimentos
             catch ( QuantidadeInvalidaException qtdEx)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.Append("Quantidade de peças na embalagem é maior que a quantidade a ser liberada!");
+                sb.Append("Quantidade de peças na embalagem é maior que a Quantidade a ser liberada!");
                 sb.AppendFormat("error : {0} ", qtdEx.Message);
                 MainConfig.errorMessage(sb.ToString(),"Etiqueta Inválida!!");
             }
@@ -466,13 +464,34 @@ namespace TitaniumColector.Classes.Procedimentos
 
                     if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
                     {
+                         if(produtoProposta.Embalagens.Count==0){
+                         
+                         }
+
+
                         foreach (var item in produtoProposta.Embalagens)
                         {
-                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem) && (etiquetaLida.QuantidadeEtiqueta == item.Quantidade))
+                            
+                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
                             {
-                                return true;
+                                if (etiquetaLida.QuantidadeEtiqueta == item.Quantidade)
+                                {
+                                    return true;
+                                }
+                                else 
+                                {
+                                    mensagem = "Quantidade da etiqueta não confere com a Quantidade de itens da embalagem do produto.";
+                                }
+                            }
+                            else 
+                            {
+                                mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
                             }
                         }
+                    }
+                    else 
+                    {
+                        mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                     }
 
                     break;
@@ -487,7 +506,15 @@ namespace TitaniumColector.Classes.Procedimentos
                             {
                                 return true;
                             }
+                            else
+                            {
+                                mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
+                            }
                         }
+                    }
+                    else
+                    {
+                        mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                     }
                     
                     break;
@@ -525,12 +552,12 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         ///<summary>
-         ///Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Pecas
+         ///Altera o Valor do atributo Auxiliar que armazena informações sobre a Quantidade de Pecas
          ///</summary>
          ///<param name="qtd">Quantidade a ser diminuida</param>
          ///<returns>Retorna true caso não ocorra erros
          ///         false se o calculo não ocorrer com esperado.</returns>
-        public static  Boolean decrementaQtdTotalPecas(double qtd)
+        public static Boolean decrementaQtdTotalPecas(double qtd)
         {
             try
             {
@@ -551,7 +578,7 @@ namespace TitaniumColector.Classes.Procedimentos
         }
 
         /// <summary>
-        /// Altera o valor do atributo auxiliar que armazena informações sobre a Quantidade de Itens
+        /// Altera o Valor do atributo Auxiliar que armazena informações sobre a Quantidade de Itens
         /// </summary>
         /// <param name="qtd">Quantidade a ser diminuida</param>
         /// <returns>Retorna true caso não ocorra erros
@@ -670,25 +697,220 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <returns>String com a Quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
         public static String decrementaVolume() 
         {
-            if (QtdVolumes > 1)
+            if (TotalVolumes > 1)
             {
-                String teste = QtdVolumes.ToString();
-                --QtdVolumes;
-                return QtdVolumes.ToString();
+                --TotalVolumes;
+                return TotalVolumes.ToString();
             }
             return "Qtd Volumes não pode ser menor que 1.";
         }
 
-         /// <summary>
+        /// <summary>
+        /// Valida a Quantidade de volumes existentes e decrementa 1 se caso for possível.
+        /// </summary>
+        /// <returns>String com a Quantidade restante, ou uma mensagem informando que não foi possível realizar a alteração.</returns>
+        public static String decrementaVolume(int valor)
+        {
+            if (TotalVolumes > valor)
+            {
+                TotalVolumes -= valor;
+                return TotalVolumes.ToString();
+            }
+            return "Qtd Volumes não pode ser menor que 1.";
+        }
+
+        /// <summary>
          /// Encrementa mais 1 a Quantidade de volumes atual.
          /// </summary>
          /// <returns>String com a Quantidade de volumes após a alteração
          /// </returns>
         public static String incrementaVolume() 
         {
-            String teste = QtdVolumes.ToString();
-            ++QtdVolumes;
-            return QtdVolumes.ToString();
+            ++TotalVolumes;
+            return TotalVolumes.ToString();
         }
+
+        /// <summary>
+        /// Encrementa mais 1 a Quantidade de volumes atual.
+        /// </summary>
+        /// <returns>String com a Quantidade de volumes após a alteração
+        /// </returns>
+        public static String incrementaVolume(int valor)
+        {
+            String teste = TotalVolumes.ToString();
+            TotalVolumes += valor;
+            return TotalVolumes.ToString();
+        }
+
+        public static void interromperLiberacao(Proposta proposta)
+        {
+            if (!proposta.IsInterrompido) 
+            {
+                proposta.IsInterrompido = true;
+            }
+        }
+
+        public static void continuarLiberacao(Proposta proposta)
+        {
+            if (proposta.IsInterrompido)
+            {
+                proposta.IsInterrompido = false;
+            }
+        }
+
+        public static EmbalagemSeparacao retornaEmbalagem(int codigo) 
+        {
+            foreach (var item in ListEmbalagensSeparacao)
+            {
+                if (item.Codigo == codigo) 
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+         /// <summary>
+         /// Retorna a Embalagem Setada Como padrão.
+         /// </summary>
+         /// <returns>Objeto Embalagem Separação setado como padrão.</returns>
+        public static EmbalagemSeparacao retornaEmbalagemPadrao()
+        {
+            try
+            {
+                foreach (var item in ListEmbalagensSeparacao)
+                {
+                    if (item.isPadrao())
+                    {
+                        return item;
+                    }
+                }
+
+                throw new InvalidOperationException("Não foi encontrada uma embalagem padrão!\n");
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new Exception("Problemas durante inicialização de volumes!\n" + ex.Message + "\n", ex);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Problemas durante Procedimentos de Liberação!!\n");
+            }         
+        }
+
+        /// <summary>
+        /// Inicializa a quantidade de embalagem como 1 para a embalagem que está setada como padrão
+        /// </summary>
+        /// <exception cref="InvalidOperationException"> Caso não exista uma embalagem padrão setada um erro será mostrado ao usuário.</exception>
+        public static void setarVolumeInicial() 
+        {
+            try 
+            {
+	            foreach (var item in ListEmbalagensSeparacao)
+                {
+                    if (item.isPadrao())
+                    {
+                         item.inicializaQtdEmbalagem();
+                         setTotalVolumes();
+                         return;
+                    }
+                }
+
+                throw new InvalidOperationException("Não foi encontrada uma embalagem padrão!\n");
+            }
+            catch(InvalidOperationException ex)
+            {
+                throw new Exception("Problemas durante inicialização de volumes!\n" + ex.Message + "\n", ex);
+            }
+            catch (Exception)
+            {
+	            throw new Exception("Problemas durante Procedimentos de Liberação!!\n");
+            }         
+        }
+
+        public static void decrementaQtdEmbalagem(int codigoEmbalagem)
+        {
+            try
+            {
+                foreach (var item in ListEmbalagensSeparacao)
+                {
+                    if (item.Codigo == codigoEmbalagem)
+                    {
+                        item.remover();
+                    }
+                }
+            }
+            catch (InvalidOperationException ex)
+            {
+                MainConfig.errorMessage(ex.Message,"Gerenciar Volumes");
+            }   
+        }
+
+        public static void incrementaQtdEmbalagem(int codigoEmbalagem)
+        {
+            foreach (var item in ListEmbalagensSeparacao)
+            {
+                if (item.Codigo == codigoEmbalagem)
+                {
+                     item.adicionar();
+                     return;
+                }
+            }
+
+        }
+
+        public static int setTotalVolumes() 
+        {
+            foreach (var item in ProcedimentosLiberacao.ListEmbalagensSeparacao)
+            {
+                ProcedimentosLiberacao.TotalVolumes += item.Quantidade;
+            }
+
+            return TotalVolumes;
+        }
+
+        #region "Descontinuado"
+
+            ///// <summary>
+            // /// Gera etiquetas para testes.
+            // /// </summary>
+            //public static void gerarEtiquetas()
+            //{
+            //    Etiqueta objEtiqueta;
+            //    List<Etiqueta> list = new List<Etiqueta>();
+
+            //    ProximaEtiqueta = 0;
+            //    list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
+            //    for (int i = 1; i <= 8; i++)
+            //    {
+            //        if (i < 5)
+            //        {
+            //            objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
+            //        }
+            //        else 
+            //        {
+            //            objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
+            //        }
+
+            //        list.Add(objEtiqueta);
+            //        objEtiqueta = null;
+            //    }
+
+            //    list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
+            //    ListEtiquetasGeradas = list;
+            //}
+
+            //public static String decrementaVolume(int codigoEmbalagem)
+            //{
+            //    if (QtdVolumes > 1)
+            //    {
+            //        --QtdVolumes;
+            //        return QtdVolumes.ToString();
+            //    }
+            //    return "Qtd Volumes não pode ser menor que 1.";
+            //}
+
+        #endregion 
     }
 }
