@@ -1,0 +1,6 @@
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\bin\Debug\TesteApplication.exe.config
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\obj\Debug\TesteApplication.csprojResolveAssemblyReference.cache
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\bin\Debug\TesteApplication.exe
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\bin\Debug\TesteApplication.pdb
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\obj\Debug\TesteApplication.exe
+D:\DESENVOLVIMENTO\GitHub\TesteApplication\TesteApplication\obj\Debug\TesteApplication.pdb

@@ -1,0 +1,11 @@
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\bin\Debug\testes alura.exe.config
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\bin\Debug\testes alura.exe
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\bin\Debug\testes alura.pdb
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes alura.csprojResolveAssemblyReference.cache
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes_alura.Form1.resources
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes_alura.Properties.Resources.resources
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes alura.csproj.GenerateResource.Cache
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes alura.exe
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes alura.pdb
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes_alura.View.CadastroConta.resources
+D:\DESENVOLVIMENTO\GitHub\testes alura\testes alura\obj\Debug\testes_alura.View.FrmReader.resources
