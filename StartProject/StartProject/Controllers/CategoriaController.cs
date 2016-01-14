@@ -1,4 +1,5 @@
 ﻿using StartProject.DAO;
+using StartProject.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,18 @@ namespace StartProject.Controllers
             CategoriasDAO dao = new CategoriasDAO();
             ViewBag.Categorias = dao.Lista();
             return View();
+        }
+
+        public ActionResult Form()
+        {
+            return View();
+        }
+
+        public ActionResult Adiciona(CategoriaDoProduto categoria)
+        {
+            var dao = new CategoriasDAO();
+            dao.Adiciona(categoria);
+            return RedirectToAction("Index");
         }
     }
 }
