@@ -129,9 +129,12 @@
     <Content Include="App_Data\DBEstoque_log.ldf">
       <DependentUpon>DBEstoque.mdf</DependentUpon>
     </Content>
+    <Content Include="Content\Css\bootstrap.css" />
+    <Content Include="Content\Css\Site.css" />
     <Content Include="Global.asax" />
-    <Content Include="scripts\ai.0.15.0-build58334.js" />
-    <Content Include="scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="Scripts\ai.0.15.0-build58334.js" />
+    <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
+    <Content Include="Scripts_\jquery-1.11.3.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -163,6 +166,9 @@
     <Content Include="Views\Produto\Form.cshtml" />
     <Content Include="Views\Produto\Adiciona.cshtml" />
     <Content Include="Views\Categoria\Form.cshtml" />
+    <Content Include="Views\Produto\Visualiza.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
