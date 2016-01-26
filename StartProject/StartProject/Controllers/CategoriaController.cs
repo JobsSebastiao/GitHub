@@ -10,10 +10,17 @@ namespace StartProject.Controllers
 {
     public class CategoriaController : Controller
     {
+        private CategoriasDAO dao;
+
+        public CategoriaController(CategoriasDAO dao)
+        {
+            this.dao = dao;
+        }
+
+
         // GET: Categoria
         public ActionResult Index()
         {
-            CategoriasDAO dao = new CategoriasDAO();
             ViewBag.Categorias = dao.Lista();
             return View();
         }
@@ -25,9 +32,14 @@ namespace StartProject.Controllers
 
         public ActionResult Adiciona(CategoriaDoProduto categoria)
         {
-            var dao = new CategoriasDAO();
             dao.Adiciona(categoria);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult NumeroDeProdutosPorCategoria()
+        {
+            var list = dao.ListaNumeroDeProdutosPorCategoria();
+            return View(list);
         }
     }
 }

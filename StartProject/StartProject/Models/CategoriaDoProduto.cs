@@ -14,5 +14,10 @@ namespace StartProject.Models
         public String Nome { get; set; }
 
         public String Descricao { get; set; }
+
+        //indica o relacionamenot one to many entre categoria e produtos
+        //deve ser virtual.
+        //do tipo list referente a classe com qual tenha vínculo.
+        public virtual IList<Produto> Produtos { get;  set; }
     }
 }
