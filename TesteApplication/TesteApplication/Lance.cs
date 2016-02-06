@@ -1,13 +1,13 @@
 ﻿namespace TesteApplication
 {
-    public class Lance
+    public class Lance 
     {
-        private Usuario user;
+        public Usuario Usuario { get; private set; }
         public double ValorLance{ get; set; }
 
         public Lance(Usuario user,double valorLance)
         {
-            this.user = user;
+            this.Usuario = user;
             this.ValorLance = valorLance;
         }
     }
