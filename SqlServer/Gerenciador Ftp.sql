@@ -1,5 +1,5 @@
 --##########################################################################################################################
---# Criar tabela de configurações do Ftp                                                                                   #
+--# Criar tabela de configuraÃ§Ãµes do Ftp                                                                                   #
 --# 17/06/2015												              												   #		
 --# Sebastiao Martins 																									   #	
 --##########################################################################################################################
@@ -29,7 +29,7 @@ IF NOT EXISTS (SELECT * FROM sysobjects WHERE id = object_id('tb0077_FtpConfig')
 GO 
 
  INSERT INTO  tb0077_FtpConfig 
-           VALUES ('ftp.tecwarebrasil.com.br','tecwarebrasil.com.br','jx6ew7p$',
+           VALUES ('*******************','*******************','*******************',
                    'ftp://ftp.tecwarebrasil.com.br/MakeTecware/Scripts/','ftp://ftp.tecwarebrasil.com.br/MakeTecware/Versao/','ftp://ftp.tecwarebrasil.com.br/MakeTecware/Diversos/'
 				   ,'C:\Titanium\Scripts','C:\Titanium\Versao','C:\Titanium\arquivos')
 GO 
@@ -101,7 +101,7 @@ GO
 
 		set @INDEX = 0
 
-			--Recupera a data do último BackUp
+			--Recupera a data do Ãºltimo BackUp
 			SET @BACKUPDATE = (SELECT 
 								COALESCE(CONVERT(datetime, MAX(BUS.BACKUP_FINISH_DATE) ),'-') AS LASTBACKUPTIME
 								FROM SYS.SYSDATABASES SDB
@@ -109,7 +109,7 @@ GO
 								WHERE SDB.NAME = @BASE
 								GROUP BY SDB.NAME,SDB.FILENAME)
          
-			--Verifica se o backup está em um intervalo de tempo de 20 minutos 
+			--Verifica se o backup estÃ¡ em um intervalo de tempo de 20 minutos 
 			IF ((SELECT DATEDIFF(MINUTE,@BACKUPDATE,getDATE())) < 20 )
 				BEGIN 
 					SET @index = 1
