@@ -1,0 +1,27 @@
+{
+  "version": "v2.3.0-RC1",
+  "summary": {
+    "title": "TEstes",
+    "owner": "sebastiao",
+    "description": "......",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [],
+    "diagrams": [
+      {
+        "id": 0,
+        "title": "Testes",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "v2.3.0-RC1",
+        "cells": [],
+        "description": "Testes"
+      }
+    ],
+    "diagramTop": 1,
+    "reviewer": "sebastiao",
+    "threatTop": 0
+  }
+}
